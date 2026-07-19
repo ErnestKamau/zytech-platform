@@ -98,6 +98,11 @@ return [
 
     'waits' => [
         'redis:default' => 60,
+        'redis:mail' => 60,
+        'redis:media' => 120,
+        'redis:search' => 90,
+        'redis:broadcast' => 60,
+        'redis:notifications' => 60,
     ],
 
     /*
@@ -199,15 +204,22 @@ return [
     'defaults' => [
         'supervisor-1' => [
             'connection' => 'redis',
-            'queue' => ['default'],
+            'queue' => [
+                'default',
+                'mail',
+                'notifications',
+                'broadcast',
+                'media',
+                'search',
+            ],
             'balance' => 'auto',
             'autoScalingStrategy' => 'time',
             'maxProcesses' => 1,
             'maxTime' => 0,
             'maxJobs' => 0,
             'memory' => 128,
-            'tries' => 1,
-            'timeout' => 60,
+            'tries' => 3,
+            'timeout' => 90,
             'nice' => 0,
         ],
     ],

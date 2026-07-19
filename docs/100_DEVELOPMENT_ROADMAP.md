@@ -1021,17 +1021,33 @@ Agent Rules
 
 # Definition of Done
 
-- [ ] Folder structure complete
-- [ ] Base classes complete
-- [ ] UUID strategy complete
-- [ ] Redis configured
-- [ ] Reverb configured
-- [ ] Queue configured
-- [ ] Shared traits complete
-- [ ] Shared helpers complete
-- [ ] Shared enums complete
-- [ ] Tests passing
-- [ ] Documentation updated
+- [x] Folder structure complete (`Core`, `Domains`, `Infrastructure`, `Support`)
+- [x] Base classes complete
+- [x] UUID strategy complete
+- [x] Redis configured
+- [x] Reverb configured
+- [x] Queue configured (Horizon named queues)
+- [x] Shared traits complete
+- [x] Shared helpers complete
+- [x] Shared enums complete
+- [x] Spatie Activity Log installed (UUID morphs)
+- [x] Tests passing
+- [x] Documentation updated
+
+---
+
+# Phase 1 Notes
+
+Implemented layout follows `ARCHITECTURE.md`:
+
+```text
+app/Core/
+app/Domains/{Company,Service,Project,Client,Quotation,Knowledge,Media,User,Authentication,Configuration,Notification,System}/
+app/Infrastructure/{Cache,Queue,Redis,Reverb,...}/
+app/Support/
+```
+
+Named queues: `default`, `mail`, `media`, `search`, `broadcast`, `notifications`.
 
 ---
 

@@ -359,6 +359,23 @@ Features should generally be developed in this order:
 
 ---
 
+# Phase 1 Foundation (Implemented)
+
+The application skeleton follows:
+
+```text
+app/Core/            # BaseModel, BaseAction, BaseService, BaseDTO, enums, traits, VOs
+app/Domains/         # Business domain shells (Project, Quotation, Client, ...)
+app/Infrastructure/  # Cache, Queue names, Redis/Reverb integrations
+app/Support/         # Generic helpers
+```
+
+Use `App\Core\Contracts\CacheStore` / `ApplicationCache` instead of scattering raw `Cache::` calls for business keys.
+
+Dispatch heavy work to named Horizon queues via `App\Infrastructure\Queue\QueueName`.
+
+---
+
 # Golden Rule
 
 Every line of code should answer one question:

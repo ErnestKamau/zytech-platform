@@ -203,6 +203,22 @@ Never style the public site or portal with Tailwind utility classes.
 
 ---
 
+## Cache Expensive Reads
+
+Redis first.
+
+Never cache transactional writes.
+
+---
+
+## Policies Everywhere
+
+Every business resource must have a Policy.
+
+Never authorize in controllers.
+
+---
+
 ## Activity Logging
 
 Every important business action must be auditable.
@@ -347,39 +363,35 @@ Never create a "Miscellaneous" module.
 
 # Folder Structure Rules
 
-Every domain should follow a consistent internal structure.
+Every domain should follow a consistent internal structure under `app/Domains/{DomainName}/`.
 
-Example
+Shared abstractions live in `app/Core/`.
 
-app/
+Technical integrations live in `app/Infrastructure/`.
 
-Domain/
+Generic utilities live in `app/Support/`.
 
-Project/
+Example domain layout:
 
-Actions/
-
-DTOs/
-
-Events/
-
-Exceptions/
-
-Listeners/
-
-Models/
-
-Notifications/
-
-Policies/
-
-Repositories/
-
-Services/
-
-Support/
-
-ValueObjects/
+```text
+app/Domains/Project/
+  Actions/
+  Data/
+  Enums/
+  Events/
+  Exceptions/
+  Jobs/
+  Listeners/
+  Livewire/
+  Models/
+  Notifications/
+  Policies/
+  Queries/
+  Rules/
+  Services/
+  Support/
+  ValueObjects/
+```
 
 Never place unrelated classes together.
 
