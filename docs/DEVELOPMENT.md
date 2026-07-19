@@ -27,7 +27,10 @@
 - Livewire Standards
 - Filament Standards
 - Blade Standards
-- Tailwind Standards
+- CSS Standards (Public Website & Portal)
+- Filament Tailwind Standards (Admin Only)
+- Horizon Standards
+- Pulse Standards
 - Redis Standards
 - PostgreSQL Standards
 - Security Standards
@@ -380,14 +383,16 @@ The selected technologies are actively maintained, align with Laravel's first-pa
 | Language | PHP 8.4+ | Backend Language |
 | Frontend | Livewire 4 | Reactive UI |
 | JavaScript | Alpine.js | Lightweight Interactivity |
-| Styling | Tailwind CSS 4 | Utility-first CSS |
+| Public / Portal Styling | Handcrafted CSS | Website & client portal design system |
+| Admin Styling | Filament Tailwind | Admin panel UI only |
 | Build Tool | Vite | Asset Bundling |
 | Admin Panel | Filament 5 | Administration & CMS |
 | Database | PostgreSQL 16+ | Primary Database |
 | Cache | Redis | Application Cache |
-| Queue | Redis | Queue Backend |
+| Queue | Redis + Laravel Horizon | Queue Backend & Worker Dashboard |
 | Sessions | Redis | Session Storage |
 | Broadcasting | Laravel Reverb | WebSockets & Real-time Events |
+| Monitoring | Telescope (local) + Pulse | Debugging & application health |
 | WebSockets | Laravel Reverb | Live Updates |
 | Search | Laravel Scout + Meilisearch *(Future)* | Full-text Search |
 | Storage | Local / S3 Compatible | Media Storage |
@@ -492,19 +497,63 @@ Business logic must never be implemented in Alpine.
 
 ---
 
-# Tailwind CSS
+# Styling Strategy
 
-Tailwind CSS is the official design system.
+The platform uses **two styling pipelines** on purpose.
 
-Benefits include:
+## Public Website & Client Portal — Handcrafted CSS
 
-- Utility-first workflow
-- Responsive design
-- Consistent spacing
-- Rapid development
-- Minimal CSS maintenance
+The marketing website and client portal use organized, handcrafted CSS compiled by Vite.
 
-Custom CSS should only exist when utility classes cannot express the desired design.
+Reasons:
+
+- Full control over brand expression and motion
+- Smaller, intentional CSS surface for public pages
+- Avoids utility-class sprawl on marketing/content pages
+- Clear separation from Filament’s admin UI
+
+CSS lives under:
+
+```text
+resources/css/website/
+resources/css/portal/
+```
+
+Recommended structure:
+
+```text
+website/
+├── app.css
+├── base/          # tokens, reset, typography
+├── layout/        # header, footer, grids
+├── components/    # buttons, forms, cards
+├── pages/         # homepage, projects, services
+└── utilities/
+
+portal/
+├── app.css
+└── ...            # portal-specific modules (import shared tokens)
+```
+
+Rules:
+
+- Prefer CSS custom properties (design tokens) for colors, spacing, and type
+- Prefer semantic class names over utility soup
+- Scope page styles; avoid global leakage
+- Support `prefers-reduced-motion`
+- Critical CSS / above-the-fold performance for the homepage
+
+Do **not** style the public website or portal with Tailwind utility classes.
+
+---
+
+# Filament Admin — Tailwind CSS
+
+Filament continues to use Tailwind CSS for the administration panel.
+
+- Admin UI customization may use Filament’s theme / Tailwind tooling
+- Tailwind in `package.json` exists for Filament theme work only
+- Never import Filament Tailwind into public website or portal entrypoints
 
 ---
 
@@ -661,9 +710,76 @@ Always queue:
 
 Redis is the primary queue backend.
 
-Supervisor will manage workers in production.
+**Laravel Horizon** is the official queue dashboard and worker manager.
 
-Future monitoring will use Laravel Horizon.
+Horizon provides:
+
+- Queue dashboards
+- Failed jobs inspection
+- Retries
+- Throughput monitoring
+- Worker balancing
+- Job metrics over time
+
+Local development:
+
+```bash
+php artisan horizon
+```
+
+Or via `composer dev` (Horizon replaces `queue:listen`).
+
+Production:
+
+- Supervisor runs `php artisan horizon`
+- Deployments should call `php artisan horizon:terminate`
+
+Never process expensive work synchronously when a queue is available.
+
+---
+
+# Monitoring Strategy
+
+## Telescope (Local / Debugging)
+
+Laravel Telescope is for **local development debugging**.
+
+It inspects:
+
+- Requests
+- Queries
+- Jobs
+- Mail
+- Exceptions
+- Cache / Redis interactions
+
+Telescope should remain disabled (or tightly gated) in production.
+
+## Pulse (Application Health)
+
+Laravel Pulse complements Telescope by focusing on **ongoing application health**.
+
+It tracks:
+
+- Response times
+- Slow database queries
+- Queue performance
+- Cache usage
+- Exceptions
+- Overall application metrics
+
+Pulse is valuable in staging and production for operational awareness.
+
+Dashboards:
+
+| Tool | Path | Role |
+|------|------|------|
+| Horizon | `/horizon` | Queues & workers |
+| Pulse | `/pulse` | Application health |
+| Telescope | `/telescope` | Local debugging |
+| Filament | `/admin` | Business administration |
+
+Access is gated (`viewHorizon`, `viewPulse`, `viewTelescope`).
 
 ---
 
@@ -692,14 +808,15 @@ Every developer should have the following services available during development:
 - Redis
 - Mailpit
 - Vite Development Server
-- Queue Worker
+- Laravel Horizon
 - Laravel Reverb
 - Scheduler
+- Laravel Pulse (recording enabled)
 
 Optional
 
 - Meilisearch
-- Horizon
+- Telescope (local debugging)
 
 ---
 
@@ -715,10 +832,11 @@ The production environment is standardized as follows.
 | Database | PostgreSQL |
 | Cache | Redis |
 | Queue | Redis |
+| Queue Dashboard | Laravel Horizon |
+| Health Monitoring | Laravel Pulse |
 | WebSockets | Laravel Reverb |
-| Queue Manager | Supervisor |
+| Process Manager | Supervisor (Horizon + Reverb + Scheduler) |
 | SSL | Let's Encrypt |
-| Process Monitoring | Supervisor |
 | Scheduler | Laravel Scheduler |
 
 Apache should be configured with:

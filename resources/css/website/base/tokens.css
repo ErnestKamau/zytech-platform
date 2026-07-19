@@ -1,0 +1,14 @@
+/**
+ * Design tokens for the public website & client portal.
+ * Prefer CSS custom properties over utility frameworks.
+ */
+
+:root {
+    --zy-color-ink: #1b1b18;
+    --zy-color-paper: #fdfdfc;
+    --zy-color-accent: #c45c26;
+    --zy-font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+    --zy-font-display: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+    --zy-space-unit: 0.25rem;
+    --zy-max-width: 72rem;
+}

@@ -1933,7 +1933,7 @@ If the answer is **no**, the design is not finished.
 
 This appendix defines the frontend engineering standards for the Zytech Contractors Platform.
 
-Its purpose is to ensure every interface is built consistently, remains maintainable as the platform grows, and fully leverages the capabilities of Laravel, Livewire, Alpine.js, Blade, Tailwind CSS, Filament, Redis, and Laravel Reverb.
+Its purpose is to ensure every interface is built consistently, remains maintainable as the platform grows, and fully leverages the capabilities of Laravel, Livewire, Alpine.js, Blade, handcrafted CSS (public/portal), Filament (Tailwind admin), Redis, Laravel Horizon, Laravel Pulse, and Laravel Reverb.
 
 These standards apply to:
 
@@ -1965,7 +1965,9 @@ Presentation belongs in Blade.
 
 Small UI interactions belong in Alpine.
 
-Styling belongs in Tailwind.
+**Public website & client portal styling belongs in handcrafted CSS.**
+
+**Filament administration styling belongs in Filament’s Tailwind stack.**
 
 Administration belongs in Filament.
 

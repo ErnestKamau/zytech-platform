@@ -9530,6 +9530,18 @@ Supervisor Integration
 
 Laravel Horizon Support
 
+Horizon is the **primary** queue operations UI.
+
+Administrators should use `/horizon` for:
+
+- Queue dashboards
+- Failed jobs
+- Retries
+- Throughput monitoring
+- Worker balancing
+
+The Filament Operations Center may deep-link to Horizon rather than duplicating queue tooling.
+
 ---
 
 # Module 4
@@ -9826,6 +9838,10 @@ Memory Usage
 
 CPU Usage
 
+Pulse Dashboard Link (`/pulse`)
+
+Horizon Dashboard Link (`/horizon`)
+
 ---
 
 # Module 15
@@ -9842,7 +9858,7 @@ Redis Check
 
 Storage Check
 
-Queue Check
+Queue Check (Horizon)
 
 Broadcast Check
 
@@ -9862,7 +9878,7 @@ Infrastructure Status
 
 Redis Health
 
-Queue Status
+Queue Status (Horizon)
 
 Failed Jobs
 
@@ -9877,6 +9893,8 @@ System Alerts
 Recent Deployments
 
 Backup Status
+
+Pulse Summary
 
 ---
 
@@ -10102,7 +10120,8 @@ AI agents should:
 
 - Never execute destructive operations automatically.
 - Prefer read-only diagnostics.
-- Queue long-running system tasks.
+- Queue long-running system tasks via Horizon.
+- Prefer Horizon / Pulse over reinventing operational dashboards.
 - Cache monitoring metrics efficiently.
 - Broadcast operational state changes.
 - Log every administrative action.
@@ -10114,11 +10133,11 @@ AI agents should:
 
 # Future Improvements
 
-Laravel Pulse Integration
+~~Laravel Pulse Integration~~ → **Adopted** (`/pulse`)
 
-Laravel Horizon Integration
+~~Laravel Horizon Integration~~ → **Adopted** (`/horizon`)
 
-Laravel Telescope Integration
+~~Laravel Telescope Integration~~ → **Adopted** (local debugging)
 
 OpenTelemetry
 

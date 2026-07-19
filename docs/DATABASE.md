@@ -1530,6 +1530,26 @@ No custom audit logging implementation should be created unless absolutely neces
 
 ---
 
+# Observability Tables
+
+## Pulse
+
+Laravel Pulse stores application health metrics in dedicated PostgreSQL tables created by its package migrations.
+
+Pulse data is operational telemetry — not business domain data.
+
+Do not model Pulse tables inside domain modules.
+
+## Telescope
+
+Telescope tables (local) store debugging entries. Keep Telescope disabled or tightly gated outside local development.
+
+## Horizon
+
+Horizon uses Redis for its metrics and job metadata. No Horizon business tables are required in PostgreSQL.
+
+---
+
 # Domain Independence
 
 Domains should communicate through:

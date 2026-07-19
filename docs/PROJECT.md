@@ -3,8 +3,10 @@
 > Version: 1.0
 > Project Status: Planning
 > Framework: Laravel 13.18.0
-> Frontend: Livewire 3 + Alpine.js + TailwindCSS
-> Admin Panel: Filament 4
+> Frontend: Livewire 4 + Alpine.js + custom CSS (public website & portal)
+> Admin Panel: Filament 5 (Tailwind)
+> Queues: Redis + Laravel Horizon
+> Monitoring: Laravel Telescope (local) + Laravel Pulse
 > Author: Ernest
 > Last Updated: July 2026
 

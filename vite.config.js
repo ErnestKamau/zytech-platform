@@ -6,7 +6,11 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js'],
+            input: [
+                'resources/css/website/app.css',
+                'resources/css/portal/app.css',
+                'resources/js/app.js',
+            ],
             refresh: true,
             fonts: [
                 bunny('Instrument Sans', {
@@ -14,6 +18,8 @@ export default defineConfig({
                 }),
             ],
         }),
+        // Tailwind remains available only for Filament theme customization.
+        // Public website and client portal use handcrafted CSS.
         tailwindcss(),
     ],
     server: {

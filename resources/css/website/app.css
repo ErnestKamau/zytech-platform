@@ -1,0 +1,15 @@
+/**
+ * Zytech Contractors — Public Website styles.
+ *
+ * Public website and client portal use handcrafted CSS (not Tailwind).
+ * Filament admin continues to use its built-in Tailwind stack.
+ *
+ * Structure (expand as modules grow):
+ *   base/       resets, tokens, typography
+ *   layout/     header, footer, grids, containers
+ *   components/ buttons, forms, cards used by the public site
+ *   pages/      homepage, projects, services, etc.
+ *   utilities/  helpers that do not belong in components
+ */
+
+@import './base/tokens.css';

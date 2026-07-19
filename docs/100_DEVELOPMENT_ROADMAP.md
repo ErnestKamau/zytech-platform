@@ -156,14 +156,16 @@ No phase should begin until the previous phase satisfies its Definition of Done.
 |----------|------------|
 | Language | PHP 8.4 |
 | Framework | Laravel 13 |
-| Admin Panel | Filament 5 |
+| Admin Panel | Filament 5 (Tailwind) |
 | Frontend | Livewire 4 |
 | JavaScript | Alpine.js |
-| CSS | Bootstrap 5 (customized) |
+| Public / Portal CSS | Handcrafted CSS (Vite) |
+| Admin CSS | Filament Tailwind |
 | Database | PostgreSQL 16 |
 | Cache | Redis |
-| Queue | Redis |
+| Queue | Redis + Laravel Horizon |
 | Broadcasting | Laravel Reverb |
+| Monitoring | Telescope (local) + Laravel Pulse |
 | Permissions | Spatie Permission |
 | Media | Spatie Media Library |
 | Search | PostgreSQL Full Text Search |
@@ -348,10 +350,12 @@ Create a professional local development environment.
 - PostgreSQL configured
 - Redis configured
 - Reverb configured
-- Queue configured
+- Queue configured (Horizon)
 - Filament installed
 - Livewire installed
 - Spatie packages installed
+- Laravel Horizon installed
+- Laravel Pulse installed
 - UUID strategy configured
 - Apache configured
 - Git repository initialized
@@ -364,6 +368,8 @@ Create a professional local development environment.
 - Filament
 - Livewire
 - Laravel Reverb
+- Laravel Horizon
+- Laravel Pulse
 - Redis
 - Spatie Permission
 - Spatie Media Library
@@ -379,7 +385,7 @@ Configure:
 
 - PostgreSQL
 - Redis
-- Queue
+- Queue (Horizon)
 - Cache
 - Session
 - Broadcasting
@@ -387,23 +393,28 @@ Configure:
 - Filesystem
 - Timezone
 - UUIDs
+- Pulse monitoring
+- Public website CSS pipeline (Vite)
 
 ---
 
 ## Acceptance Criteria
 
 - [x] Laravel boots successfully
-- [ ] PostgreSQL connected *(you are configuring)*
-- [ ] Redis connected *(you are configuring)*
-- [ ] Queue worker operational *(pending Redis)*
-- [ ] Reverb operational *(pending Redis + `php artisan reverb:start`)*
+- [x] PostgreSQL connected
+- [x] Redis connected
+- [x] Queue worker operational *(Horizon)*
+- [x] Reverb operational
 - [x] Filament accessible
-- [x] Tests passing *(DB-dependent UUID test skipped until PostgreSQL is ready)*
+- [x] Tests passing
 - [x] Spatie Permission + Media Library installed
 - [x] Telescope + Debugbar installed
+- [x] Horizon installed
+- [x] Pulse installed
 - [x] UUID strategy configured
 - [x] Git repository initialized
-- [x] `.env.example` prepared for pgsql/redis/reverb
+- [x] `.env.example` prepared for pgsql/redis/reverb/horizon/pulse
+- [x] Public/portal CSS entrypoints created (`resources/css/website`, `resources/css/portal`)
 
 ---
 
@@ -585,15 +596,17 @@ Before deployment verify:
 - [ ] APP_DEBUG disabled
 - [ ] HTTPS configured
 - [ ] Redis operational
-- [ ] Queue workers supervised
+- [ ] Horizon workers supervised
+- [ ] Pulse enabled and gated
 - [ ] Reverb running
 - [ ] Apache optimized
 - [ ] PostgreSQL backups enabled
 - [ ] Activity logging operational
-- [ ] Monitoring configured
+- [ ] Monitoring configured (Pulse + Horizon)
 - [ ] Security headers enabled
 - [ ] SSL certificate installed
 - [ ] Scheduled tasks configured
+- [ ] `php artisan horizon:terminate` wired into deploys
 
 ---
 
@@ -5277,5 +5290,3394 @@ API Documentation
 - [ ] Redis integrated
 - [ ] Reverb integrated
 - [ ] Queues operational
+- [ ] Tests passing
+- [ ] Documentation updated
+
+# =============================================================================
+# PHASE 11
+# CLIENT PORTAL
+# =============================================================================
+
+# Objective
+
+Develop a premium self-service Client Portal that enables customers to manage
+their relationship with Zytech Contractors from a single secure location.
+
+The Client Portal should become the customer's primary communication channel
+throughout the project lifecycle.
+
+It must reduce manual communication, improve transparency and increase customer
+confidence.
+
+---
+
+# Estimated Duration
+
+3 Weeks
+
+---
+
+# Dependencies
+
+- Phase 10 Complete
+
+---
+
+# Deliverables
+
+- Client Dashboard
+- Profile Management
+- Quotation Management
+- Project Tracking
+- Document Centre
+- Communication Centre
+- Notifications
+- Activity Timeline
+- Downloads
+- Saved Projects
+- Appointment Scheduling
+- Account Settings
+- Security Settings
+- Support Centre
+
+---
+
+# Database
+
+Tables
+
+portal_sessions
+
+portal_messages
+
+portal_conversations
+
+portal_notifications
+
+portal_downloads
+
+portal_favorites
+
+portal_security_logs
+
+portal_devices
+
+portal_preferences
+
+portal_announcements
+
+support_tickets
+
+support_replies
+
+meeting_requests
+
+meeting_slots
+
+---
+
+# Models
+
+PortalMessage
+
+Conversation
+
+SupportTicket
+
+SupportReply
+
+MeetingRequest
+
+MeetingSlot
+
+PortalNotification
+
+PortalAnnouncement
+
+TrustedDevice
+
+---
+
+# Enums
+
+PortalNotificationType
+
+ConversationStatus
+
+TicketStatus
+
+MeetingStatus
+
+MeetingType
+
+DeviceStatus
+
+PortalTheme
+
+---
+
+# DTOs
+
+DashboardData
+
+MessageData
+
+TicketData
+
+MeetingData
+
+NotificationData
+
+---
+
+# Repositories
+
+PortalRepository
+
+MessageRepository
+
+SupportRepository
+
+MeetingRepository
+
+---
+
+# Services
+
+PortalService
+
+CommunicationService
+
+MeetingService
+
+SupportService
+
+DashboardService
+
+NotificationService
+
+---
+
+# Actions
+
+OpenConversation
+
+SendMessage
+
+CreateSupportTicket
+
+ReplyToTicket
+
+ScheduleMeeting
+
+CancelMeeting
+
+UploadDocument
+
+DownloadDocument
+
+MarkNotificationRead
+
+SaveProject
+
+FavoriteService
+
+UpdatePortalPreferences
+
+---
+
+# Events
+
+ClientLoggedIn
+
+MessageSent
+
+TicketOpened
+
+TicketClosed
+
+MeetingScheduled
+
+MeetingCancelled
+
+DocumentUploaded
+
+NotificationCreated
+
+ProjectUpdated
+
+QuotationUpdated
+
+---
+
+# Listeners
+
+SendEmailNotification
+
+BroadcastPortalUpdate
+
+UpdateDashboard
+
+LogPortalActivity
+
+GenerateActivityFeed
+
+ClearDashboardCache
+
+---
+
+# Policies
+
+PortalPolicy
+
+MessagePolicy
+
+SupportPolicy
+
+MeetingPolicy
+
+DocumentPolicy
+
+---
+
+# Livewire Components
+
+Dashboard
+
+Sidebar Navigation
+
+Notifications Dropdown
+
+Project Progress Widget
+
+Quotation Widget
+
+Message Centre
+
+Support Centre
+
+Meeting Scheduler
+
+Document Library
+
+Activity Timeline
+
+Profile Settings
+
+Security Settings
+
+Saved Projects
+
+Favorite Services
+
+Announcements
+
+---
+
+# Filament Resources
+
+Portal Announcement Resource
+
+Meeting Resource
+
+Support Resource
+
+Notification Resource
+
+---
+
+# Dashboard Widgets
+
+Welcome Card
+
+Current Quotations
+
+Active Projects
+
+Upcoming Meetings
+
+Unread Messages
+
+Recent Documents
+
+Project Progress
+
+Latest Announcements
+
+Knowledge Centre Suggestions
+
+Recommended Services
+
+---
+
+# Client Dashboard
+
+The dashboard should provide an immediate overview of the client's relationship
+with Zytech.
+
+Display
+
+Current Projects
+
+Project Status
+
+Recent Progress Updates
+
+Unread Messages
+
+Outstanding Quotations
+
+Upcoming Meetings
+
+Downloaded Documents
+
+Support Tickets
+
+Notifications
+
+Recommended Articles
+
+Saved Services
+
+---
+
+# Project Tracking
+
+Each project displays
+
+Progress Percentage
+
+Timeline
+
+Milestones
+
+Latest Photos
+
+Latest Videos
+
+Latest Documents
+
+Project Manager
+
+Estimated Completion
+
+Recent Updates
+
+---
+
+# Document Centre
+
+Clients can access
+
+Approved Quotations
+
+Contracts
+
+Blueprints
+
+Progress Reports
+
+Completion Certificates
+
+Inspection Reports
+
+Warranty Documents
+
+Invoices (Future)
+
+Receipts (Future)
+
+Manuals
+
+Documents should support
+
+Search
+
+Categories
+
+Version History
+
+Download History
+
+---
+
+# Communication Centre
+
+Support
+
+Direct Messaging
+
+Project Discussions
+
+Sales Discussions
+
+Document Comments
+
+Meeting Notes
+
+Future
+
+Video Meetings
+
+Voice Messages
+
+WhatsApp Integration
+
+---
+
+# Appointment Scheduling
+
+Clients should be able to request
+
+Site Visits
+
+Consultations
+
+Virtual Meetings
+
+Design Reviews
+
+Project Reviews
+
+Completion Inspections
+
+---
+
+# Notification Centre
+
+Display
+
+Project Updates
+
+Quotation Changes
+
+New Documents
+
+Meeting Confirmations
+
+Support Replies
+
+Announcements
+
+Knowledge Articles
+
+System Notifications
+
+---
+
+# Activity Timeline
+
+Chronological history of
+
+Portal Login
+
+Quotation Submitted
+
+Quotation Approved
+
+Project Started
+
+Project Updated
+
+Document Uploaded
+
+Meeting Scheduled
+
+Message Sent
+
+Support Ticket Created
+
+Project Completed
+
+---
+
+# Downloads
+
+Allow clients to download
+
+PDF Quotations
+
+Contracts
+
+Drawings
+
+Certificates
+
+Reports
+
+Project Images
+
+Completion Packs
+
+---
+
+# Homepage Integration
+
+Client Login
+
+Portal Preview
+
+Customer Success Stories
+
+---
+
+# Redis Strategy
+
+Cache
+
+Dashboard
+
+Notifications
+
+Recent Documents
+
+Announcements
+
+Recommended Content
+
+---
+
+# Queue Strategy
+
+Queue
+
+Notifications
+
+Emails
+
+Document Generation
+
+Dashboard Analytics
+
+Meeting Reminders
+
+Support Escalation
+
+---
+
+# Laravel Reverb
+
+Broadcast
+
+New Messages
+
+Project Progress
+
+Quotation Updates
+
+Meeting Updates
+
+Support Replies
+
+Live Notifications
+
+---
+
+# Search
+
+Search
+
+Messages
+
+Projects
+
+Documents
+
+Knowledge Articles
+
+Services
+
+Quotations
+
+Support Tickets
+
+---
+
+# Security
+
+Require verified email.
+
+Support trusted devices.
+
+Allow active session management.
+
+Log every login.
+
+Enable optional MFA.
+
+Protect downloads using signed URLs.
+
+---
+
+# Performance
+
+Lazy-load widgets.
+
+Cache dashboard data.
+
+Cursor pagination for timelines.
+
+Optimize queries.
+
+Eager load relationships.
+
+---
+
+# Testing
+
+Dashboard
+
+Portal Authentication
+
+Messaging
+
+Support
+
+Downloads
+
+Notifications
+
+Policies
+
+Performance
+
+Accessibility
+
+---
+
+# Documentation
+
+Update
+
+Client Portal Guide
+
+Architecture
+
+README
+
+API Documentation
+
+---
+
+# Definition of Done
+
+- [ ] Dashboard complete
+- [ ] Messaging operational
+- [ ] Project tracking complete
+- [ ] Document Centre operational
+- [ ] Meeting scheduling working
+- [ ] Notifications operational
+- [ ] Redis integrated
+- [ ] Reverb broadcasting working
+- [ ] Queues operational
+- [ ] Tests passing
+- [ ] Documentation updated
+
+Enterprise Enhancement: Make the Client Portal a "Digital Twin" of the Project
+
+This is the architectural improvement I believe will elevate Zytech above most construction firms.
+
+Instead of showing static information, the portal should reflect the live state of the project.
+
+Client Portal
+│
+├── Dashboard
+│
+├── Current Project
+│   ├── Progress %
+│   ├── Timeline
+│   ├── Milestones
+│   ├── Photos
+│   ├── Videos
+│   ├── Documents
+│   ├── Site Reports
+│   ├── Team
+│   ├── Budget Summary (Future)
+│   └── Next Steps
+│
+├── Quotations
+│
+├── Communication Hub
+│
+├── Meetings
+│
+├── Support
+│
+├── Knowledge Centre
+│
+├── Notifications
+│
+└── Account
+
+Customer Journey Map to guide development and UX decisions.
+
+Anonymous Visitor
+        │
+        ▼
+Reads Knowledge Article
+        │
+        ▼
+Views Related Service
+        │
+        ▼
+Views Related Projects
+        │
+        ▼
+Requests Quotation
+        │
+        ▼
+Sales Qualification
+        │
+        ▼
+Quotation Created
+        │
+        ▼
+Client Account Created
+        │
+        ▼
+Client Portal Access
+        │
+        ▼
+Project Execution
+        │
+        ▼
+Project Completion
+        │
+        ▼
+Testimonial
+        │
+        ▼
+Referral
+        │
+        ▼
+Repeat Customer
+
+# =============================================================================
+# PHASE 12
+# PUBLIC WEBSITE
+# =============================================================================
+
+# Objective
+
+Develop a premium, high-performance marketing website that establishes Zytech
+Contractors as a leading construction, architecture, and interior design company.
+
+The website should inspire confidence, showcase expertise, generate qualified
+leads, and seamlessly integrate with the Sales, Projects, Knowledge Centre,
+and Client Portal.
+
+The website should emphasize storytelling, professionalism, transparency, and
+customer experience rather than acting as a simple brochure.
+
+---
+
+# Estimated Duration
+
+3–4 Weeks
+
+---
+
+# Dependencies
+
+- Phase 11 Complete
+
+---
+
+# Deliverables
+
+- Homepage
+- About Company
+- Services
+- Projects
+- Project Details
+- Knowledge Centre
+- Contact
+- Request Quotation
+- Testimonials
+- Careers (Future)
+- FAQs
+- Downloads
+- Search
+- 404 Page
+- Privacy Policy
+- Terms & Conditions
+
+---
+
+# Core Principles
+
+The website should be:
+
+- Fast
+- Beautiful
+- Accessible
+- SEO Optimized
+- AI Ready
+- Mobile First
+- Conversion Focused
+
+---
+
+# Website Structure
+
+Home
+
+↓
+
+About
+
+↓
+
+Services
+
+↓
+
+Projects
+
+↓
+
+Knowledge Centre
+
+↓
+
+Request Quotation
+
+↓
+
+Contact
+
+↓
+
+Client Portal
+
+---
+
+# Homepage
+
+Sections
+
+Hero Banner
+
+Company Introduction
+
+Featured Services
+
+Construction Statistics
+
+Why Choose Zytech
+
+Featured Projects
+
+Interactive Kenya Map
+
+Construction Process
+
+Testimonials
+
+Knowledge Centre
+
+Request Quotation CTA
+
+Partners
+
+Footer
+
+---
+
+# Hero Section
+
+Display
+
+Large Hero Image or Video
+
+Company Tagline
+
+Primary Call To Action
+
+Secondary Call To Action
+
+Quick Statistics
+
+Animated Background
+
+---
+
+# Company Section
+
+Display
+
+History
+
+Mission
+
+Vision
+
+Leadership
+
+Core Values
+
+Awards
+
+Certifications
+
+Partners
+
+Branches
+
+---
+
+# Services Section
+
+Display
+
+Featured Services
+
+Categories
+
+Service Cards
+
+Icons
+
+Pricing CTA
+
+Related Projects
+
+Related Articles
+
+Request Quotation
+
+---
+
+# Projects Section
+
+Display
+
+Featured Projects
+
+Latest Projects
+
+Project Categories
+
+Project Search
+
+Interactive Filters
+
+Before & After
+
+Interactive Kenya Map
+
+Construction Timeline Preview
+
+---
+
+# Project Details
+
+Display
+
+Gallery
+
+Videos
+
+Timeline
+
+Milestones
+
+Statistics
+
+Team
+
+Technologies
+
+Materials
+
+Downloads
+
+Testimonials
+
+Related Services
+
+Related Articles
+
+Request Quotation CTA
+
+---
+
+# Knowledge Centre
+
+Display
+
+Featured Articles
+
+Popular Articles
+
+Categories
+
+Search
+
+Downloads
+
+Related Projects
+
+Newsletter
+
+---
+
+# Contact
+
+Display
+
+Branches
+
+Google Maps
+
+Email
+
+Phone
+
+Office Hours
+
+WhatsApp
+
+Social Media
+
+Contact Form
+
+Quotation CTA
+
+---
+
+# Request Quotation
+
+Multi-step wizard
+
+Personal Details
+
+Project Details
+
+Required Services
+
+Budget
+
+Attachments
+
+Review
+
+Submit
+
+---
+
+# Client Portal
+
+Login
+
+Register
+
+Forgot Password
+
+Dashboard Preview
+
+Benefits
+
+---
+
+# Search
+
+Global search should include
+
+Services
+
+Projects
+
+Knowledge Articles
+
+Downloads
+
+FAQs
+
+---
+
+# Navigation
+
+Desktop Navigation
+
+Sticky Header
+
+Mega Menu
+
+Search
+
+Client Login
+
+Request Quotation
+
+---
+
+# Mobile Navigation
+
+Drawer Menu
+
+Sticky Bottom Actions
+
+Quick Call
+
+WhatsApp
+
+Request Quote
+
+---
+
+# Footer
+
+Company Information
+
+Quick Links
+
+Services
+
+Projects
+
+Knowledge Centre
+
+Newsletter
+
+Social Media
+
+Contact Information
+
+Copyright
+
+Privacy
+
+Terms
+
+---
+
+# Homepage Widgets
+
+Construction Statistics
+
+Completed Projects
+
+Years of Experience
+
+Satisfied Clients
+
+Current Projects
+
+Awards
+
+---
+
+# Interactive Components
+
+Before & After Slider
+
+Interactive Kenya Map
+
+Animated Counters
+
+Project Timeline
+
+Project Gallery
+
+Video Gallery
+
+Service Comparison
+
+Quotation Wizard
+
+Knowledge Search
+
+Newsletter Signup
+
+---
+
+# Livewire Components
+
+Navigation
+
+Hero Banner
+
+Statistics
+
+Services Grid
+
+Projects Grid
+
+Featured Projects
+
+Testimonials
+
+Knowledge Articles
+
+Quotation Form
+
+Contact Form
+
+Search
+
+Newsletter
+
+Footer
+
+---
+
+# SEO
+
+Support
+
+Meta Tags
+
+Structured Data
+
+JSON-LD
+
+OpenGraph
+
+Twitter Cards
+
+Canonical URLs
+
+XML Sitemap
+
+Robots.txt
+
+Breadcrumbs
+
+Organization Schema
+
+Project Schema
+
+Article Schema
+
+FAQ Schema
+
+Service Schema
+
+---
+
+# Accessibility
+
+WCAG 2.2 AA
+
+Keyboard Navigation
+
+Screen Readers
+
+Alt Text
+
+Semantic HTML
+
+Focus Indicators
+
+Contrast Compliance
+
+Skip Links
+
+---
+
+# Performance
+
+Redis Cache
+
+Lazy Loading
+
+Responsive Images
+
+WebP
+
+AVIF (Future)
+
+Critical CSS
+
+Deferred JavaScript
+
+Image Compression
+
+Route Caching
+
+Database Optimization
+
+---
+
+# Redis Strategy
+
+Cache
+
+Homepage
+
+Featured Projects
+
+Featured Services
+
+Knowledge Articles
+
+Navigation
+
+Footer
+
+SEO Metadata
+
+---
+
+# Queue Strategy
+
+Queue
+
+Image Optimization
+
+Email Delivery
+
+Search Indexing
+
+SEO Generation
+
+Analytics
+
+Newsletter
+
+---
+
+# Laravel Reverb
+
+Broadcast
+
+New Testimonials
+
+New Articles
+
+Project Updates
+
+Homepage Notifications
+
+---
+
+# Security
+
+CSRF Protection
+
+Rate Limiting
+
+Spam Protection
+
+Honeypot Fields
+
+Google reCAPTCHA
+
+Signed Downloads
+
+Secure Uploads
+
+Content Security Policy
+
+---
+
+# Analytics
+
+Track
+
+Visitors
+
+Page Views
+
+Popular Services
+
+Popular Projects
+
+Search Queries
+
+Lead Sources
+
+Conversion Rate
+
+Bounce Rate
+
+Downloads
+
+Newsletter Signups
+
+---
+
+# Testing
+
+Responsive Design
+
+Accessibility
+
+SEO
+
+Performance
+
+Forms
+
+Search
+
+Navigation
+
+Caching
+
+Browser Compatibility
+
+---
+
+# Documentation
+
+Update
+
+Website Guide
+
+Frontend Guide
+
+Architecture
+
+README
+
+Deployment Guide
+
+---
+
+# Definition of Done
+
+- [ ] Homepage complete
+- [ ] Company pages complete
+- [ ] Services complete
+- [ ] Projects complete
+- [ ] Knowledge Centre complete
+- [ ] Contact page complete
+- [ ] Search operational
+- [ ] SEO complete
+- [ ] Accessibility compliant
+- [ ] Performance targets achieved
+- [ ] Redis integrated
+- [ ] Queues operational
+- [ ] Tests passing
+- [ ] Documentation updated
+
+Enterprise Improvement: Component-Driven Website
+
+Rather than treating pages as unique templates, design the frontend as a library of reusable content blocks.
+Website
+│
+├── Hero
+├── Statistics
+├── CTA Banner
+├── Feature Grid
+├── Project Grid
+├── Service Grid
+├── Gallery
+├── Timeline
+├── Testimonials
+├── Team Members
+├── FAQ
+├── Article Cards
+├── Contact Block
+├── Newsletter
+├── Partners
+└── Footer
+
+# =============================================================================
+# PHASE 13
+# COMMUNICATION & NOTIFICATION HUB
+# =============================================================================
+
+# Objective
+
+Develop a centralized communication platform responsible for every notification,
+announcement, message, broadcast and communication event across the Zytech Platform.
+
+No business module should send emails, notifications or broadcasts directly.
+
+Instead, every module dispatches domain events, and the Communication Hub
+handles delivery.
+
+This ensures loose coupling, maintainability and scalability.
+
+---
+
+# Estimated Duration
+
+2 Weeks
+
+---
+
+# Dependencies
+
+- Phase 12 Complete
+
+---
+
+# Deliverables
+
+- Notification Centre
+- Email Notifications
+- Database Notifications
+- Real-time Notifications
+- Browser Notifications
+- Announcement System
+- Internal Messaging
+- Communication Templates
+- Notification Preferences
+- Scheduled Notifications
+- Activity Feed
+- Delivery Logs
+- Notification Analytics
+
+---
+
+# Architecture
+
+Business Module
+
+↓
+
+Dispatch Event
+
+↓
+
+Communication Hub
+
+↓
+
+Notification Pipeline
+
+↓
+
+Email
+
+↓
+
+Database
+
+↓
+
+Broadcast
+
+↓
+
+Client Portal
+
+↓
+
+Future SMS
+
+↓
+
+Future WhatsApp
+
+↓
+
+Future Mobile Push
+
+---
+
+# Database
+
+Tables
+
+notifications
+
+notification_templates
+
+notification_channels
+
+notification_preferences
+
+notification_logs
+
+announcements
+
+announcement_reads
+
+message_threads
+
+messages
+
+message_attachments
+
+scheduled_notifications
+
+broadcast_messages
+
+activity_feed
+
+communication_settings
+
+---
+
+# Models
+
+Notification
+
+NotificationTemplate
+
+Announcement
+
+MessageThread
+
+Message
+
+ScheduledNotification
+
+BroadcastMessage
+
+ActivityFeed
+
+NotificationPreference
+
+---
+
+# Enums
+
+NotificationType
+
+NotificationChannel
+
+Priority
+
+DeliveryStatus
+
+AnnouncementType
+
+MessageStatus
+
+BroadcastScope
+
+---
+
+# DTOs
+
+NotificationData
+
+MessageData
+
+AnnouncementData
+
+TemplateData
+
+BroadcastData
+
+---
+
+# Repositories
+
+NotificationRepository
+
+MessageRepository
+
+AnnouncementRepository
+
+---
+
+# Services
+
+CommunicationService
+
+NotificationService
+
+MessagingService
+
+AnnouncementService
+
+BroadcastService
+
+TemplateService
+
+ActivityFeedService
+
+---
+
+# Actions
+
+SendNotification
+
+BroadcastNotification
+
+ScheduleNotification
+
+CreateAnnouncement
+
+PublishAnnouncement
+
+ArchiveAnnouncement
+
+SendEmail
+
+CreateMessage
+
+MarkNotificationRead
+
+DeleteNotification
+
+GenerateDigest
+
+---
+
+# Events
+
+NotificationCreated
+
+NotificationSent
+
+AnnouncementPublished
+
+MessageSent
+
+NotificationRead
+
+BroadcastCompleted
+
+DigestGenerated
+
+---
+
+# Listeners
+
+SendEmailNotification
+
+StoreDatabaseNotification
+
+BroadcastRealtimeNotification
+
+GenerateActivityFeed
+
+UpdateNotificationAnalytics
+
+LogNotificationDelivery
+
+---
+
+# Policies
+
+NotificationPolicy
+
+AnnouncementPolicy
+
+MessagePolicy
+
+---
+
+# Livewire Components
+
+Notification Dropdown
+
+Notification Centre
+
+Activity Feed
+
+Message Centre
+
+Announcements
+
+Unread Counter
+
+Communication Preferences
+
+---
+
+# Filament Resources
+
+Notification Resource
+
+Announcement Resource
+
+Template Resource
+
+Scheduled Notification Resource
+
+---
+
+# Notification Channels
+
+Support
+
+Email
+
+Database
+
+Laravel Reverb
+
+Browser
+
+Future
+
+SMS
+
+WhatsApp
+
+Mobile Push
+
+Microsoft Teams
+
+Slack
+
+Webhook
+
+---
+
+# Notification Types
+
+Project Update
+
+Quotation Update
+
+Support Reply
+
+Meeting Reminder
+
+Document Uploaded
+
+Project Milestone
+
+Knowledge Article
+
+System Alert
+
+Security Alert
+
+Announcement
+
+Maintenance Notice
+
+Marketing
+
+---
+
+# Announcement System
+
+Support
+
+Homepage Announcements
+
+Portal Announcements
+
+Internal Staff Announcements
+
+Scheduled Announcements
+
+Priority Levels
+
+Expiry Dates
+
+Audience Targeting
+
+---
+
+# Internal Messaging
+
+Support
+
+Client ↔ Staff
+
+Staff ↔ Staff (Future)
+
+Project Discussions
+
+Quotation Discussions
+
+Support Conversations
+
+Attachments
+
+Read Receipts
+
+Typing Indicator (Future)
+
+---
+
+# Activity Feed
+
+Track
+
+Logins
+
+Project Updates
+
+Quotation Updates
+
+Document Uploads
+
+Messages
+
+Announcements
+
+Support Tickets
+
+Meetings
+
+Notifications
+
+---
+
+# Notification Preferences
+
+Users may configure
+
+Email
+
+Realtime
+
+Portal
+
+Marketing
+
+Newsletter
+
+Project Updates
+
+Quotation Updates
+
+Support
+
+Announcements
+
+---
+
+# Email Templates
+
+Quotation
+
+Welcome
+
+Password Reset
+
+Meeting Invitation
+
+Project Update
+
+Document Uploaded
+
+Support Reply
+
+Newsletter
+
+Announcement
+
+System Notification
+
+---
+
+# Redis Strategy
+
+Cache
+
+Unread Counts
+
+Recent Notifications
+
+Announcements
+
+Activity Feed
+
+Templates
+
+---
+
+# Queue Strategy
+
+Queue
+
+Emails
+
+Broadcasts
+
+Announcements
+
+Scheduled Notifications
+
+Analytics
+
+Digest Emails
+
+---
+
+# Laravel Reverb
+
+Broadcast
+
+New Notifications
+
+Messages
+
+Announcements
+
+Project Updates
+
+Support Replies
+
+Meeting Updates
+
+Unread Counts
+
+---
+
+# Search
+
+Search
+
+Messages
+
+Announcements
+
+Notifications
+
+Activity Feed
+
+---
+
+# Security
+
+Encrypt sensitive messages.
+
+Authorize every conversation.
+
+Validate attachments.
+
+Log every delivery attempt.
+
+Protect private broadcasts.
+
+---
+
+# Performance
+
+Queue all outbound communication.
+
+Cache unread counts.
+
+Lazy-load activity feeds.
+
+Paginate message history.
+
+Use Redis pub/sub for broadcasts.
+
+---
+
+# Analytics
+
+Track
+
+Delivery Rate
+
+Open Rate
+
+Read Rate
+
+Click Rate
+
+Failed Deliveries
+
+Most Active Channels
+
+Notification Volume
+
+User Engagement
+
+---
+
+# Testing
+
+Email Delivery
+
+Realtime Notifications
+
+Announcements
+
+Messaging
+
+Broadcasting
+
+Queues
+
+Policies
+
+Analytics
+
+---
+
+# Documentation
+
+Update
+
+Communication Guide
+
+Notification Guide
+
+Architecture
+
+README
+
+API Documentation
+
+---
+
+# Definition of Done
+
+- [ ] Notification Centre operational
+- [ ] Email delivery working
+- [ ] Realtime broadcasting working
+- [ ] Announcements operational
+- [ ] Internal messaging complete
+- [ ] Activity feed working
+- [ ] Redis integrated
+- [ ] Reverb operational
+- [ ] Queues operational
+- [ ] Tests passing
+- [ ] Documentation updated
+
+Enterprise Architecture Enhancement
+
+Instead of treating notifications as isolated events, implement them as a Notification Pipeline.
+
+Business Event
+        │
+        ▼
+Communication Hub
+        │
+        ├── Email
+        ├── Database
+        ├── Reverb
+        ├── Activity Feed
+        ├── Audit Log
+        ├── Analytics
+        └── Future Integrations
+
+This has several advantages:
+
+Every business module only dispatches events—it never worries about delivery.
+New communication channels (SMS, WhatsApp, Push Notifications) can be added without changing business logic.
+Notification templates and delivery preferences remain centralized.
+Logging, analytics, retries, and auditing become consistent across the platform.
+
+# =============================================================================
+# PHASE 14
+# GLOBAL SEARCH & DISCOVERY
+# =============================================================================
+
+# Objective
+
+Develop a centralized search and discovery platform that enables users to locate
+content, documents, projects, services, quotations and other resources from a
+single unified search experience.
+
+Search should become a platform capability rather than a feature belonging to
+individual modules.
+
+The architecture must support future AI-powered semantic search and intelligent
+recommendations.
+
+---
+
+# Estimated Duration
+
+2 Weeks
+
+---
+
+# Dependencies
+
+- Phase 13 Complete
+
+---
+
+# Deliverables
+
+- Global Search
+- Full-Text Search
+- Search Suggestions
+- Autocomplete
+- Search Filters
+- Recent Searches
+- Popular Searches
+- Saved Searches
+- Search Analytics
+- Search Highlighting
+- Related Content
+- AI Search Foundation
+
+---
+
+# Architecture
+
+Website
+
+        │
+
+Client Portal
+
+        │
+
+Filament Admin
+
+        │
+
+API
+
+        │
+
+───────────────
+
+Unified Search Engine
+
+        │
+
+───────────────
+
+Projects
+
+Services
+
+Knowledge Centre
+
+Quotations
+
+Clients
+
+Documents
+
+Messages
+
+Media
+
+Downloads
+
+FAQs
+
+---
+
+# Database
+
+Tables
+
+search_indexes
+
+search_keywords
+
+search_logs
+
+saved_searches
+
+popular_searches
+
+search_filters
+
+search_statistics
+
+search_synonyms
+
+search_boosts
+
+---
+
+# Models
+
+SearchIndex
+
+SearchLog
+
+SavedSearch
+
+PopularSearch
+
+SearchStatistic
+
+SearchKeyword
+
+SearchSynonym
+
+---
+
+# Enums
+
+SearchType
+
+SearchSource
+
+SortOrder
+
+SearchScope
+
+HighlightType
+
+---
+
+# DTOs
+
+SearchQueryData
+
+SearchResultData
+
+SearchFilterData
+
+SearchAnalyticsData
+
+---
+
+# Repositories
+
+SearchRepository
+
+AnalyticsRepository
+
+IndexRepository
+
+---
+
+# Services
+
+SearchService
+
+IndexingService
+
+SearchAnalyticsService
+
+SuggestionService
+
+SearchRankingService
+
+RecommendationService
+
+---
+
+# Actions
+
+SearchContent
+
+IndexContent
+
+RebuildIndex
+
+LogSearch
+
+GenerateSuggestions
+
+SaveSearch
+
+DeleteSavedSearch
+
+GenerateRecommendations
+
+---
+
+# Events
+
+SearchPerformed
+
+ContentIndexed
+
+SearchIndexUpdated
+
+SearchSaved
+
+RecommendationGenerated
+
+---
+
+# Listeners
+
+UpdateSearchStatistics
+
+StoreSearchLog
+
+ClearSearchCache
+
+GenerateRecommendations
+
+---
+
+# Policies
+
+SavedSearchPolicy
+
+SearchAnalyticsPolicy
+
+---
+
+# Livewire Components
+
+Global Search
+
+Search Overlay
+
+Autocomplete
+
+Recent Searches
+
+Popular Searches
+
+Search Filters
+
+Search Results
+
+Search Suggestions
+
+Saved Searches
+
+---
+
+# Filament Resources
+
+Search Analytics
+
+Search Keywords
+
+Search Synonyms
+
+Search Index
+
+---
+
+# Search Sources
+
+Projects
+
+Services
+
+Knowledge Articles
+
+Downloads
+
+FAQs
+
+Company Pages
+
+Media
+
+Client Documents
+
+Quotations
+
+Messages
+
+Support Tickets
+
+---
+
+# Search Features
+
+Autocomplete
+
+Did You Mean?
+
+Suggestions
+
+Highlight Matches
+
+Related Results
+
+Recently Viewed
+
+Popular Content
+
+Trending Searches
+
+Saved Searches
+
+---
+
+# Filters
+
+Category
+
+Project Type
+
+Service
+
+County
+
+Completion Year
+
+Author
+
+Document Type
+
+Status
+
+Date
+
+Tags
+
+---
+
+# Ranking
+
+Boost
+
+Featured Content
+
+Recent Content
+
+Popular Content
+
+Exact Matches
+
+Business Priority
+
+SEO Score
+
+---
+
+# Redis Strategy
+
+Cache
+
+Search Results
+
+Popular Searches
+
+Suggestions
+
+Autocomplete
+
+Trending Searches
+
+Search Filters
+
+---
+
+# Queue Strategy
+
+Queue
+
+Index Generation
+
+Content Indexing
+
+Search Analytics
+
+Recommendation Generation
+
+---
+
+# PostgreSQL Full-Text Search
+
+Use
+
+GIN Indexes
+
+tsvector
+
+tsquery
+
+Weighted Search Columns
+
+Ranking Functions
+
+Phrase Matching
+
+Language Dictionaries
+
+---
+
+# Future AI Search
+
+Architecture prepared for
+
+Vector Search
+
+Embeddings
+
+Natural Language Queries
+
+Semantic Search
+
+Retrieval-Augmented Generation (RAG)
+
+AI Recommendations
+
+Conversational Search
+
+---
+
+# Laravel Reverb
+
+Broadcast
+
+Trending Searches
+
+Index Updates
+
+Realtime Suggestions
+
+---
+
+# Search Analytics
+
+Track
+
+Most searched keywords
+
+Zero-result searches
+
+Popular filters
+
+Search conversions
+
+Average response time
+
+User behavior
+
+Click-through rate
+
+---
+
+# Security
+
+Respect authorization rules.
+
+Private resources must never appear in public search results.
+
+Search indexes must only include content visible to the current user.
+
+---
+
+# Performance
+
+Redis caching
+
+GIN indexes
+
+Cursor pagination
+
+Incremental indexing
+
+Background indexing
+
+Optimized ranking queries
+
+---
+
+# Testing
+
+Global Search
+
+Autocomplete
+
+Filters
+
+Permissions
+
+Ranking
+
+Performance
+
+Analytics
+
+Caching
+
+---
+
+# Documentation
+
+Update
+
+Search Guide
+
+Architecture
+
+README
+
+API Documentation
+
+---
+
+# Definition of Done
+
+- [ ] Global search operational
+- [ ] PostgreSQL full-text search implemented
+- [ ] Autocomplete working
+- [ ] Filters operational
+- [ ] Suggestions operational
+- [ ] Analytics complete
+- [ ] Redis integrated
+- [ ] Queues operational
+- [ ] Tests passing
+- [ ] Documentation updated
+
+Enterprise Architecture Enhancement
+
+Instead of thinking of search as a query against tables, model it as a Search Domain.
+
+                        Search Engine
+                             │
+     ┌───────────────────────┼───────────────────────┐
+     │                       │                       │
+ Public Website         Client Portal          Filament Admin
+     │                       │                       │
+     └───────────────────────┼───────────────────────┘
+                             │
+                   Search Orchestrator
+                             │
+        ┌──────────┬─────────┬──────────┬──────────┐
+        │          │         │          │          │
+     Projects   Services   Articles   Clients   Documents
+        │          │         │          │          │
+        └──────────┴─────────┴──────────┴──────────┘
+                             │
+                   PostgreSQL Full-Text
+                             │
+                      Redis Cache Layer
+                             │
+                  Future Semantic Search
+
+
+# =============================================================================
+# PHASE 15
+# SEO, AI SEO & DISCOVERABILITY
+# =============================================================================
+
+# Objective
+
+Develop an enterprise-grade SEO and discoverability platform that automatically
+optimizes every public-facing resource for traditional search engines,
+AI-powered search systems, social sharing, and future semantic discovery.
+
+SEO should not be a page-level feature.
+
+It should be deeply integrated into every domain of the platform.
+
+---
+
+# Estimated Duration
+
+2 Weeks
+
+---
+
+# Dependencies
+
+- Phase 14 Complete
+
+---
+
+# Deliverables
+
+- Dynamic SEO Management
+- Metadata Generation
+- Structured Data
+- XML Sitemaps
+- Robots.txt
+- Canonical URLs
+- Breadcrumbs
+- Open Graph
+- Twitter Cards
+- AI SEO
+- Content Quality Analysis
+- Internal Linking Engine
+- SEO Dashboard
+- Search Console Integration
+- Bing Webmaster Integration
+
+---
+
+# Architecture
+
+Public Website
+
+↓
+
+SEO Layer
+
+↓
+
+Projects
+
+Services
+
+Knowledge Centre
+
+Company
+
+Downloads
+
+FAQs
+
+Testimonials
+
+↓
+
+Search Engines
+
+↓
+
+AI Search
+
+↓
+
+Social Platforms
+
+---
+
+# Database
+
+Tables
+
+seo_metadata
+
+seo_redirects
+
+seo_sitemaps
+
+seo_keywords
+
+seo_scores
+
+seo_audits
+
+seo_internal_links
+
+seo_broken_links
+
+seo_crawl_logs
+
+seo_schema_cache
+
+---
+
+# Models
+
+SeoMetadata
+
+SeoRedirect
+
+SeoKeyword
+
+SeoScore
+
+SeoAudit
+
+InternalLink
+
+BrokenLink
+
+---
+
+# Enums
+
+SeoStatus
+
+RedirectType
+
+SchemaType
+
+IndexingStatus
+
+PriorityLevel
+
+---
+
+# DTOs
+
+SeoData
+
+MetadataData
+
+AuditData
+
+SchemaData
+
+---
+
+# Repositories
+
+SeoRepository
+
+AuditRepository
+
+MetadataRepository
+
+---
+
+# Services
+
+SeoService
+
+MetadataService
+
+SchemaService
+
+SitemapService
+
+InternalLinkService
+
+AuditService
+
+AiSeoService
+
+---
+
+# Actions
+
+GenerateMetadata
+
+GenerateSchema
+
+GenerateSitemap
+
+GenerateBreadcrumbs
+
+GenerateCanonicalUrl
+
+RunSeoAudit
+
+AnalyzeContent
+
+GenerateInternalLinks
+
+GenerateSlug
+
+CreateRedirect
+
+---
+
+# Events
+
+MetadataGenerated
+
+SchemaGenerated
+
+SitemapUpdated
+
+SeoAuditCompleted
+
+RedirectCreated
+
+---
+
+# Listeners
+
+ClearSeoCache
+
+SubmitUpdatedSitemap
+
+UpdateSearchIndex
+
+StoreAuditResults
+
+---
+
+# Policies
+
+SeoPolicy
+
+RedirectPolicy
+
+---
+
+# Livewire Components
+
+SEO Preview
+
+SEO Score
+
+SEO Audit
+
+Metadata Editor
+
+Redirect Manager
+
+Schema Viewer
+
+Internal Link Suggestions
+
+---
+
+# Filament Resources
+
+SEO Resource
+
+Redirect Resource
+
+Keyword Resource
+
+Audit Resource
+
+Sitemap Resource
+
+---
+
+# Metadata
+
+Automatically generate
+
+Meta Title
+
+Meta Description
+
+Meta Keywords (Optional)
+
+Canonical URL
+
+Slug
+
+Author
+
+Robots
+
+Language
+
+Locale
+
+---
+
+# Open Graph
+
+Support
+
+Title
+
+Description
+
+Image
+
+Type
+
+Site Name
+
+Locale
+
+---
+
+# Twitter Cards
+
+Support
+
+Summary
+
+Large Image
+
+Creator
+
+Site
+
+---
+
+# Structured Data
+
+Generate
+
+Organization
+
+LocalBusiness
+
+Service
+
+Article
+
+Project
+
+FAQ
+
+Breadcrumb
+
+Person
+
+ImageObject
+
+VideoObject
+
+WebSite
+
+SearchAction
+
+---
+
+# XML Sitemaps
+
+Generate
+
+Main Sitemap
+
+Projects Sitemap
+
+Services Sitemap
+
+Knowledge Centre Sitemap
+
+Images Sitemap
+
+Videos Sitemap
+
+Downloads Sitemap
+
+---
+
+# Robots
+
+Generate
+
+robots.txt
+
+Crawler Directives
+
+Disallow Rules
+
+Sitemap References
+
+---
+
+# Canonical URLs
+
+Automatically detect
+
+Duplicate Content
+
+Pagination
+
+Canonical Relationships
+
+Alternate Languages (Future)
+
+---
+
+# Breadcrumbs
+
+Generate
+
+Home
+
+↓
+
+Section
+
+↓
+
+Category
+
+↓
+
+Page
+
+---
+
+# Internal Linking Engine
+
+Automatically recommend
+
+Related Projects
+
+Related Services
+
+Related Articles
+
+FAQs
+
+Downloads
+
+Testimonials
+
+Team Members
+
+---
+
+# AI SEO
+
+Generate
+
+SEO Score
+
+Readability Score
+
+Topic Coverage
+
+Keyword Density
+
+Related Questions
+
+Suggested Titles
+
+Suggested Meta Descriptions
+
+Suggested Headings
+
+Suggested Internal Links
+
+Future
+
+LLM Metadata
+
+Embedding Preparation
+
+Semantic Graph
+
+---
+
+# Local SEO
+
+Support
+
+Google Business Profile
+
+NAP Consistency
+
+County Pages
+
+Service Areas
+
+Location Schema
+
+Maps Integration
+
+Customer Reviews
+
+---
+
+# Social Sharing
+
+Support
+
+Facebook
+
+LinkedIn
+
+X (Twitter)
+
+WhatsApp
+
+Email
+
+Pinterest (Future)
+
+---
+
+# Redis Strategy
+
+Cache
+
+Metadata
+
+Schema
+
+Sitemaps
+
+SEO Scores
+
+Popular Pages
+
+Internal Links
+
+---
+
+# Queue Strategy
+
+Queue
+
+Sitemap Generation
+
+Metadata Generation
+
+Schema Generation
+
+SEO Audits
+
+Broken Link Checks
+
+Search Console Sync
+
+---
+
+# Laravel Reverb
+
+Broadcast
+
+SEO Audit Completed
+
+Sitemap Updated
+
+Broken Link Detected
+
+---
+
+# Analytics
+
+Track
+
+Organic Traffic
+
+Keyword Rankings
+
+Top Landing Pages
+
+CTR
+
+Bounce Rate
+
+Indexed Pages
+
+Broken Links
+
+Search Queries
+
+---
+
+# Security
+
+Validate redirect targets.
+
+Prevent redirect loops.
+
+Sanitize metadata.
+
+Restrict SEO editing permissions.
+
+---
+
+# Performance
+
+Cache metadata
+
+Cache schema
+
+Lazy-generate sitemaps
+
+Queue audits
+
+Optimize structured data generation
+
+---
+
+# Testing
+
+Metadata
+
+Structured Data
+
+Sitemaps
+
+Redirects
+
+Canonical URLs
+
+Breadcrumbs
+
+SEO Scores
+
+Performance
+
+---
+
+# Documentation
+
+Update
+
+SEO Guide
+
+Architecture
+
+README
+
+Deployment Guide
+
+---
+
+# Definition of Done
+
+- [ ] Dynamic metadata operational
+- [ ] Structured data complete
+- [ ] XML sitemaps generated
+- [ ] Internal linking engine operational
+- [ ] AI SEO scoring implemented
+- [ ] Redis integrated
+- [ ] Queues operational
+- [ ] SEO dashboard complete
 - [ ] Tests passing
 - [ ] Documentation updated

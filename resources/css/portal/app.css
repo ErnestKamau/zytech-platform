@@ -1,0 +1,7 @@
+/**
+ * Zytech Contractors — Client Portal styles.
+ * Shares design tokens with the public website; portal-specific
+ * layout and components live under this tree.
+ */
+
+@import '../website/base/tokens.css';

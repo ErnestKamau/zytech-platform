@@ -29,6 +29,10 @@ The portal should feel:
 
 Professional
 
+The portal UI uses the same **handcrafted CSS** design system as the public website (`resources/css/portal`), sharing tokens from `resources/css/website/base/tokens.css`.
+
+Do not style the portal with Tailwind. Filament Tailwind remains admin-only.
+
 Minimal
 
 Fast

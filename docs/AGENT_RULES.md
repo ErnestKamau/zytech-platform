@@ -182,21 +182,24 @@ Every significant business event dispatches a Laravel Event.
 
 Never process expensive work during HTTP requests.
 
----
-
-## Cache Expensive Reads
-
-Redis first.
-
-Never cache transactional writes.
+Use **Laravel Horizon** as the queue worker manager and operations dashboard.
 
 ---
 
-## Policies Everywhere
+## Observability
 
-Every business resource must have a Policy.
+- Telescope → local debugging
+- Pulse → application health (response times, slow queries, queues, cache, exceptions)
+- Horizon → queue dashboards, failed jobs, retries, throughput, worker balancing
 
-Never authorize in controllers.
+---
+
+## Styling Split
+
+- Public website & client portal → handcrafted CSS (Vite entrypoints under `resources/css/website` and `resources/css/portal`)
+- Filament admin → Tailwind (Filament’s stack)
+
+Never style the public site or portal with Tailwind utility classes.
 
 ---
 
@@ -227,3 +230,867 @@ New features require documentation updates.
 # Architecture Rules
 
 (continued...)
+
+# Architecture Rules
+
+> Every feature developed for the Zytech Platform must conform to these architectural principles.
+
+The architecture is intentionally modular, loosely coupled, event-driven, and domain-oriented.
+
+Every implementation should strengthen—not weaken—the architecture.
+
+---
+
+# The Architectural Hierarchy
+
+Business Requirement
+
+↓
+
+Domain
+
+↓
+
+Feature
+
+↓
+
+Models
+
+↓
+
+DTOs
+
+↓
+
+Repositories
+
+↓
+
+Services
+
+↓
+
+Actions
+
+↓
+
+Events
+
+↓
+
+Listeners
+
+↓
+
+Notifications
+
+↓
+
+Policies
+
+↓
+
+Livewire Components
+
+↓
+
+Blade Views
+
+↓
+
+Tests
+
+↓
+
+Documentation
+
+No layer should be skipped without justification.
+
+---
+
+# Domain First Development
+
+Every new feature belongs to a Domain.
+
+Never build isolated features.
+
+Examples
+
+Company
+
+Projects
+
+Services
+
+Clients
+
+Quotations
+
+Knowledge Centre
+
+Media
+
+Authentication
+
+Configuration
+
+Notifications
+
+System
+
+Every file should clearly belong to one domain.
+
+Never create a "Miscellaneous" module.
+
+---
+
+# Folder Structure Rules
+
+Every domain should follow a consistent internal structure.
+
+Example
+
+app/
+
+Domain/
+
+Project/
+
+Actions/
+
+DTOs/
+
+Events/
+
+Exceptions/
+
+Listeners/
+
+Models/
+
+Notifications/
+
+Policies/
+
+Repositories/
+
+Services/
+
+Support/
+
+ValueObjects/
+
+Never place unrelated classes together.
+
+---
+
+# Layer Responsibilities
+
+Every layer has exactly one responsibility.
+
+Models
+
+↓
+
+Represent data
+
+Repositories
+
+↓
+
+Retrieve data
+
+DTOs
+
+↓
+
+Transport structured data
+
+Services
+
+↓
+
+Business rules
+
+Actions
+
+↓
+
+Single operations
+
+Events
+
+↓
+
+Announce business changes
+
+Listeners
+
+↓
+
+React to events
+
+Policies
+
+↓
+
+Authorization
+
+Livewire
+
+↓
+
+Presentation
+
+Blade
+
+↓
+
+Rendering
+
+Resources
+
+↓
+
+Administration UI
+
+Never mix responsibilities.
+
+---
+
+# Dependency Direction
+
+Dependencies should always point downward.
+
+Example
+
+Livewire
+
+↓
+
+Service
+
+↓
+
+Repository
+
+↓
+
+Model
+
+Never reverse dependencies.
+
+Repositories should never know about Livewire.
+
+Models should never know about Services.
+
+Views should never know about Repositories.
+
+---
+
+# Feature Development Order
+
+Always build features in this order.
+
+Migration
+
+↓
+
+Model
+
+↓
+
+Policy
+
+↓
+
+DTO
+
+↓
+
+Repository
+
+↓
+
+Service
+
+↓
+
+Actions
+
+↓
+
+Events
+
+↓
+
+Listeners
+
+↓
+
+Notifications
+
+↓
+
+Livewire
+
+↓
+
+Filament Resource
+
+↓
+
+Tests
+
+↓
+
+Documentation
+
+Skipping steps usually creates technical debt.
+
+---
+
+# Service Layer Rules
+
+Business logic belongs only inside Services.
+
+Services should:
+
+Validate business rules
+
+Coordinate repositories
+
+Dispatch events
+
+Start transactions
+
+Trigger actions
+
+Queue jobs
+
+Return DTOs where appropriate
+
+Services should never render UI.
+
+---
+
+# Repository Rules
+
+Repositories own data retrieval.
+
+Repositories should:
+
+Build queries
+
+Handle eager loading
+
+Handle pagination
+
+Handle searching
+
+Handle filtering
+
+Handle sorting
+
+Never place business rules inside repositories.
+
+---
+
+# DTO Rules
+
+Every complex operation should receive a Data Transfer Object.
+
+DTOs should be:
+
+Immutable
+
+Strongly typed
+
+Validated before use
+
+Never pass large arrays between layers.
+
+Never pass Request objects into Services.
+
+---
+
+# Action Rules
+
+Actions perform one business operation.
+
+Good examples
+
+CreateProject
+
+PublishProject
+
+ApproveQuotation
+
+GeneratePDF
+
+SendQuotationEmail
+
+ArchiveClient
+
+Bad example
+
+ProjectManager
+
+Do not create "God" action classes.
+
+Actions should be composable.
+
+---
+
+# Value Objects
+
+Prefer Value Objects over primitive strings where appropriate.
+
+Examples
+
+Money
+
+EmailAddress
+
+PhoneNumber
+
+Coordinates
+
+Address
+
+Measurement
+
+ProjectStatus
+
+QuotationStatus
+
+ApprovalStatus
+
+Future
+
+GeoLocation
+
+ColorPalette
+
+WorkingHours
+
+---
+
+# Event-Driven Architecture
+
+Every meaningful business action should dispatch an event.
+
+Examples
+
+ProjectCreated
+
+ProjectUpdated
+
+ProjectCompleted
+
+QuotationRequested
+
+QuotationAccepted
+
+ClientRegistered
+
+MediaUploaded
+
+ArticlePublished
+
+Events should describe something that already happened.
+
+---
+
+# Listener Rules
+
+Listeners react to events.
+
+Listeners may:
+
+Send email
+
+Generate PDFs
+
+Create notifications
+
+Clear Redis cache
+
+Broadcast Reverb events
+
+Queue AI processing
+
+Update search indexes
+
+Listeners should never modify unrelated business logic.
+
+---
+
+# Notification Rules
+
+Notifications should be triggered by events.
+
+Never send notifications directly from controllers.
+
+Support:
+
+Email
+
+Database
+
+Broadcast
+
+Future
+
+SMS
+
+WhatsApp
+
+Push Notifications
+
+---
+
+# Policy Rules
+
+Every business resource must have a Policy.
+
+Policies own authorization.
+
+Never authorize inside:
+
+Controllers
+
+Services
+
+Repositories
+
+Blade
+
+Livewire render methods
+
+Policies should remain small and readable.
+
+---
+
+# Transactions
+
+Wrap related business operations inside database transactions.
+
+Example
+
+Create Project
+
+↓
+
+Upload Media
+
+↓
+
+Assign Team
+
+↓
+
+Create Timeline
+
+↓
+
+Dispatch Event
+
+↓
+
+Commit
+
+Rollback on failure.
+
+---
+
+# Exception Handling
+
+Create domain-specific exceptions.
+
+Example
+
+ProjectAlreadyCompletedException
+
+QuotationExpiredException
+
+InvalidApprovalStateException
+
+MediaConversionFailedException
+
+Avoid generic exceptions when business meaning matters.
+
+---
+
+# Soft Deletes
+
+Prefer Soft Deletes.
+
+Deletion should be rare.
+
+Use:
+
+Archive
+
+Deactivate
+
+Suspend
+
+Complete
+
+before permanent deletion.
+
+---
+
+# UUID Rules
+
+Every domain entity uses UUIDs.
+
+UUIDs should be used for:
+
+Routes
+
+Relationships
+
+Public APIs
+
+Broadcast payloads
+
+Search indexing
+
+Never expose incremental IDs.
+
+---
+
+# Configuration Rules
+
+Never hardcode:
+
+URLs
+
+Email addresses
+
+Phone numbers
+
+Company names
+
+Currencies
+
+Timezones
+
+API keys
+
+Store configuration inside the Configuration Domain.
+
+---
+
+# Cross-Domain Communication
+
+Domains communicate through:
+
+Events
+
+Interfaces
+
+DTOs
+
+Never directly manipulate another domain's internals.
+
+Example
+
+Quotation Domain
+
+↓
+
+Dispatch Event
+
+↓
+
+Notification Domain
+
+↓
+
+Send Email
+
+Instead of
+
+Quotation Service
+
+↓
+
+Email Service
+
+↓
+
+SMTP
+
+Loose coupling is preferred.
+
+---
+
+# AI Architecture Decision Tree
+
+When implementing a feature, follow this decision process.
+
+Need persistent data?
+
+↓
+
+Yes
+
+↓
+
+Create Migration
+
+↓
+
+Create Model
+
+↓
+
+Need business rules?
+
+↓
+
+Yes
+
+↓
+
+Create Service
+
+↓
+
+Need reusable operation?
+
+↓
+
+Yes
+
+↓
+
+Create Action
+
+↓
+
+Need side effects?
+
+↓
+
+Yes
+
+↓
+
+Dispatch Event
+
+↓
+
+Need email, notifications or indexing?
+
+↓
+
+Yes
+
+↓
+
+Create Listener
+
+↓
+
+Expensive operation?
+
+↓
+
+Yes
+
+↓
+
+Queue Job
+
+↓
+
+Need authorization?
+
+↓
+
+Yes
+
+↓
+
+Create Policy
+
+↓
+
+Need administration?
+
+↓
+
+Create Filament Resource
+
+↓
+
+Need customer interaction?
+
+↓
+
+Create Livewire Component
+
+↓
+
+Write Tests
+
+↓
+
+Update Documentation
+
+Never bypass this workflow without a documented architectural reason.
+
+---
+
+# Architecture Quality Checklist
+
+Before considering a feature complete, verify:
+
+□ Domain identified
+
+□ Migration created
+
+□ UUIDs implemented
+
+□ Model created
+
+□ Policy implemented
+
+□ DTOs used
+
+□ Repository created
+
+□ Service created
+
+□ Actions extracted
+
+□ Events dispatched
+
+□ Listeners registered
+
+□ Notifications implemented
+
+□ Queued where appropriate
+
+□ Horizon managing workers
+
+□ Redis integrated
+
+□ Reverb events broadcast
+
+□ Pulse recording enabled (non-test)
+
+□ Activity logged
+
+□ Feature tested
+
+□ Documentation updated
+
+□ Architecture remains modular
+
+□ Public/portal CSS follows handcrafted CSS standards (not Tailwind)

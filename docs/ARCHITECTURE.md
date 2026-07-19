@@ -487,15 +487,19 @@ Examples
 ```text
 Infrastructure/
 
-Broadcasting/
-
 Cache/
+
+Broadcasting/
 
 Filesystem/
 
 Mail/
 
 Queue/
+
+Horizon/
+
+Pulse/
 
 Reverb/
 
@@ -1224,6 +1228,33 @@ SEO Sitemap Generation
 Backups
 
 Large Imports
+
+Queue workers are managed by **Laravel Horizon**.
+
+Horizon is the operational interface for:
+
+- Throughput
+- Failed jobs
+- Retries
+- Balancing
+- Per-queue visibility
+
+Do not run ad-hoc `queue:work` processes in production — use Horizon under Supervisor.
+
+---
+
+# Observability
+
+```text
+Development debugging  → Laravel Telescope
+Application health     → Laravel Pulse
+Queue operations       → Laravel Horizon
+Business administration → Filament
+```
+
+Pulse stores metrics in PostgreSQL and should be enabled in environments where operational visibility matters.
+
+Telescope remains a local-first debugging tool.
 
 ---
 
