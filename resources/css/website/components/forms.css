@@ -1,0 +1,168 @@
+/**
+ * Form controls — fields, inputs, choices, dropzone.
+ */
+
+.zy-field {
+    display: grid;
+    gap: var(--zy-space-2);
+}
+
+.zy-label {
+    font-size: var(--zy-text-sm);
+    font-weight: 600;
+    color: var(--zy-color-ink);
+}
+
+.zy-label__required {
+    color: var(--zy-danger-500);
+}
+
+.zy-input,
+.zy-select,
+.zy-textarea {
+    width: 100%;
+    padding: var(--zy-space-3) var(--zy-space-4);
+    border: 1px solid var(--zy-color-border);
+    border-radius: var(--zy-radius-md);
+    background: var(--zy-color-surface);
+    color: var(--zy-color-ink);
+    font-size: var(--zy-text-sm);
+    line-height: 1.4;
+    transition:
+        border-color var(--zy-duration-fast) var(--zy-ease),
+        box-shadow var(--zy-duration-fast) var(--zy-ease);
+}
+
+.zy-input::placeholder,
+.zy-textarea::placeholder {
+    color: var(--zy-slate-400);
+}
+
+.zy-input:hover,
+.zy-select:hover,
+.zy-textarea:hover {
+    border-color: var(--zy-slate-300);
+}
+
+.zy-input:focus-visible,
+.zy-select:focus-visible,
+.zy-textarea:focus-visible {
+    border-color: var(--zy-color-primary);
+    box-shadow: 0 0 0 3px rgb(42 176 223 / 0.2);
+}
+
+.zy-textarea {
+    min-height: 7rem;
+    resize: vertical;
+}
+
+.zy-field__message {
+    font-size: var(--zy-text-xs);
+    line-height: var(--zy-leading-body);
+}
+
+.zy-field__message--error {
+    color: var(--zy-danger-700);
+}
+
+.zy-field__message--success {
+    color: var(--zy-success-700);
+}
+
+.zy-field--error .zy-input,
+.zy-field--error .zy-select,
+.zy-field--error .zy-textarea {
+    border-color: var(--zy-danger-500);
+}
+
+.zy-field--success .zy-input,
+.zy-field--success .zy-select,
+.zy-field--success .zy-textarea {
+    border-color: var(--zy-success-500);
+}
+
+.zy-checkbox,
+.zy-radio {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--zy-space-2);
+    font-size: var(--zy-text-sm);
+    color: var(--zy-color-ink);
+    cursor: pointer;
+}
+
+.zy-checkbox input,
+.zy-radio input {
+    width: 1rem;
+    height: 1rem;
+    accent-color: var(--zy-color-primary);
+}
+
+.zy-switch {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.zy-switch input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.zy-switch__track {
+    position: relative;
+    width: 2.5rem;
+    height: 1.375rem;
+    border-radius: var(--zy-radius-full);
+    background: var(--zy-slate-300);
+    transition: background var(--zy-duration-fast) var(--zy-ease);
+}
+
+.zy-switch__track::after {
+    content: "";
+    position: absolute;
+    top: 0.125rem;
+    left: 0.125rem;
+    width: 1.125rem;
+    height: 1.125rem;
+    border-radius: var(--zy-radius-full);
+    background: #fff;
+    box-shadow: var(--zy-shadow-sm);
+    transition: transform var(--zy-duration-fast) var(--zy-ease);
+}
+
+.zy-switch input:checked + .zy-switch__track {
+    background: var(--zy-color-primary);
+}
+
+.zy-switch input:checked + .zy-switch__track::after {
+    transform: translateX(1.125rem);
+}
+
+.zy-switch input:focus-visible + .zy-switch__track {
+    outline: 2px solid var(--zy-color-primary);
+    outline-offset: 2px;
+}
+
+.zy-dropzone {
+    display: grid;
+    place-items: center;
+    min-height: 8rem;
+    padding: var(--zy-space-8);
+    border: 2px dashed var(--zy-color-border);
+    border-radius: var(--zy-radius-lg);
+    background: var(--zy-slate-50);
+    color: var(--zy-color-muted);
+    font-size: var(--zy-text-sm);
+    text-align: center;
+    transition:
+        border-color var(--zy-duration-fast) var(--zy-ease),
+        background var(--zy-duration-fast) var(--zy-ease);
+}
+
+.zy-dropzone:hover {
+    border-color: var(--zy-color-primary);
+    background: var(--zy-sky-50);
+}

@@ -1,0 +1,24 @@
+/**
+ * Page containers — center content and cap width.
+ */
+
+.zy-container {
+    width: 100%;
+    max-width: var(--zy-max-width);
+    margin-inline: auto;
+    padding-inline: var(--zy-space-4);
+}
+
+.zy-container--wide {
+    max-width: var(--zy-max-width-wide);
+}
+
+.zy-container--narrow {
+    max-width: var(--zy-max-width-narrow);
+}
+
+@media (min-width: 768px) {
+    .zy-container {
+        padding-inline: var(--zy-space-8);
+    }
+}

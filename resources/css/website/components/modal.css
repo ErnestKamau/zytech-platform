@@ -1,0 +1,66 @@
+/**
+ * Modal overlay + panel.
+ */
+
+.zy-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: grid;
+    place-items: center;
+    padding: var(--zy-space-4);
+}
+
+.zy-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgb(15 23 42 / 0.5);
+}
+
+.zy-modal__panel {
+    position: relative;
+    z-index: 1;
+    width: min(100%, 28rem);
+    padding: var(--zy-space-6);
+    border-radius: var(--zy-radius-lg);
+    background: var(--zy-color-surface);
+    box-shadow: var(--zy-shadow-lg);
+    display: grid;
+    gap: var(--zy-space-6);
+}
+
+.zy-modal__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--zy-space-4);
+}
+
+.zy-modal__title {
+    font-size: var(--zy-text-xl);
+    font-weight: 600;
+    line-height: var(--zy-leading-snug);
+}
+
+.zy-modal__close {
+    color: var(--zy-color-muted);
+    padding: var(--zy-space-1);
+    border-radius: var(--zy-radius-sm);
+}
+
+.zy-modal__close:hover {
+    color: var(--zy-color-ink);
+    background: var(--zy-slate-100);
+}
+
+.zy-modal__body {
+    display: grid;
+    gap: var(--zy-space-4);
+}
+
+.zy-modal__footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: var(--zy-space-3);
+}

@@ -1,0 +1,70 @@
+/**
+ * Wizard / stepper chrome — visual only.
+ */
+
+.zy-wizard {
+    display: grid;
+    gap: var(--zy-space-4);
+}
+
+.zy-wizard__steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--zy-space-2);
+}
+
+.zy-wizard__step {
+    display: flex;
+    align-items: center;
+    gap: var(--zy-space-2);
+    flex: 1 1 10rem;
+    min-width: 0;
+    padding: var(--zy-space-3) var(--zy-space-4);
+    border: 1px solid var(--zy-color-border);
+    border-radius: var(--zy-radius-md);
+    background: var(--zy-color-surface);
+    color: var(--zy-color-muted);
+}
+
+.zy-wizard__index {
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: var(--zy-radius-full);
+    font-size: var(--zy-text-xs);
+    font-weight: 700;
+    background: var(--zy-slate-100);
+    color: var(--zy-slate-600);
+    flex-shrink: 0;
+}
+
+.zy-wizard__label {
+    font-size: var(--zy-text-sm);
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.zy-wizard__step--done {
+    color: var(--zy-success-700);
+    border-color: var(--zy-success-300);
+    background: var(--zy-success-50);
+}
+
+.zy-wizard__step--done .zy-wizard__index {
+    background: var(--zy-success-500);
+    color: #fff;
+}
+
+.zy-wizard__step--current {
+    color: var(--zy-sky-700);
+    border-color: var(--zy-sky-300);
+    background: var(--zy-sky-50);
+}
+
+.zy-wizard__step--current .zy-wizard__index {
+    background: var(--zy-gradient-brand);
+    color: #fff;
+}

@@ -1,0 +1,49 @@
+/**
+ * Site footer.
+ */
+
+.zy-footer {
+    margin-top: auto;
+    border-top: 1px solid var(--zy-color-border);
+    background: var(--zy-color-surface);
+    padding-block: var(--zy-space-12);
+}
+
+.zy-footer__inner {
+    display: grid;
+    gap: var(--zy-space-8);
+}
+
+.zy-footer__brand {
+    font-size: var(--zy-text-lg);
+    font-weight: 700;
+}
+
+.zy-footer__copy {
+    font-size: var(--zy-text-sm);
+    color: var(--zy-color-muted);
+    max-width: none;
+}
+
+.zy-footer__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--zy-space-4) var(--zy-space-6);
+}
+
+.zy-footer__links a {
+    font-size: var(--zy-text-sm);
+    color: var(--zy-slate-600);
+    text-decoration: none;
+}
+
+.zy-footer__links a:hover {
+    color: var(--zy-color-primary);
+}
+
+@media (min-width: 768px) {
+    .zy-footer__inner {
+        grid-template-columns: 1fr auto;
+        align-items: end;
+    }
+}

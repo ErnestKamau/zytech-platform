@@ -1,0 +1,46 @@
+/**
+ * Tabs — Alpine-driven panel switching.
+ */
+
+.zy-tabs {
+    display: grid;
+    gap: var(--zy-space-6);
+}
+
+.zy-tabs__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--zy-space-2);
+    border-bottom: 1px solid var(--zy-color-border);
+}
+
+.zy-tabs__tab {
+    padding: var(--zy-space-3) var(--zy-space-4);
+    margin-bottom: -1px;
+    border-bottom: 2px solid transparent;
+    font-size: var(--zy-text-sm);
+    font-weight: 600;
+    color: var(--zy-color-muted);
+    background: transparent;
+    transition:
+        color var(--zy-duration-fast) var(--zy-ease),
+        border-color var(--zy-duration-fast) var(--zy-ease);
+}
+
+.zy-tabs__tab:hover {
+    color: var(--zy-color-ink);
+}
+
+.zy-tabs__tab[aria-selected="true"] {
+    color: var(--zy-color-primary);
+    border-bottom-color: var(--zy-color-primary);
+}
+
+.zy-tabs__panel {
+    font-size: var(--zy-text-sm);
+    color: var(--zy-slate-700);
+}
+
+.zy-tabs__panel[hidden] {
+    display: none;
+}

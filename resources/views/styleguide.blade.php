@@ -113,28 +113,28 @@
 
         <p class="zy-text-sm" style="margin-bottom: var(--zy-space-3);">Variants</p>
         <div class="sg-row">
-            <button class="zy-btn zy-btn--primary">Primary</button>
-            <button class="zy-btn zy-btn--gradient">Gradient CTA</button>
-            <button class="zy-btn zy-btn--secondary">Secondary</button>
-            <button class="zy-btn zy-btn--ghost">Ghost</button>
-            <button class="zy-btn zy-btn--success">Success</button>
-            <button class="zy-btn zy-btn--danger">Danger</button>
-            <button class="zy-btn zy-btn--warning">Warning</button>
+            <x-ui.button variant="primary">Primary</x-ui.button>
+            <x-ui.button variant="gradient">Gradient CTA</x-ui.button>
+            <x-ui.button variant="secondary">Secondary</x-ui.button>
+            <x-ui.button variant="ghost">Ghost</x-ui.button>
+            <x-ui.button variant="success">Success</x-ui.button>
+            <x-ui.button variant="danger">Danger</x-ui.button>
+            <x-ui.button variant="warning">Warning</x-ui.button>
         </div>
 
         <p class="zy-text-sm" style="margin: var(--zy-space-6) 0 var(--zy-space-3);">States</p>
         <div class="sg-row">
-            <button class="zy-btn zy-btn--primary">Default</button>
-            <button class="zy-btn zy-btn--primary" style="background: var(--zy-color-primary-hover);">Hover (forced)</button>
-            <button class="zy-btn zy-btn--primary" disabled>Disabled</button>
-            <button class="zy-btn zy-btn--primary zy-btn--loading">Loading</button>
+            <x-ui.button variant="primary">Default</x-ui.button>
+            <x-ui.button variant="primary" style="background: var(--zy-color-primary-hover);">Hover (forced)</x-ui.button>
+            <x-ui.button variant="primary" disabled>Disabled</x-ui.button>
+            <x-ui.button variant="primary" class="zy-btn--loading">Loading</x-ui.button>
         </div>
 
         <p class="zy-text-sm" style="margin: var(--zy-space-6) 0 var(--zy-space-3);">Sizes</p>
         <div class="sg-row">
-            <button class="zy-btn zy-btn--primary zy-btn--sm">Small</button>
-            <button class="zy-btn zy-btn--primary">Base</button>
-            <button class="zy-btn zy-btn--primary zy-btn--lg">Large</button>
+            <x-ui.button variant="primary" size="sm">Small</x-ui.button>
+            <x-ui.button variant="primary">Base</x-ui.button>
+            <x-ui.button variant="primary" size="lg">Large</x-ui.button>
         </div>
     </section>
 
@@ -269,7 +269,7 @@
     {{-- ============================================================ MODAL ============================================================ --}}
     <section class="sg-block" x-data="{ sgModal: false }">
         <h2>Modal</h2>
-        <button class="zy-btn zy-btn--primary" @click="sgModal = true">Open modal</button>
+        <button class="zy-btn zy-btn--primary" x-on:click="sgModal = true">Open modal</button>
 
         <x-ui.modal show="sgModal" title="Request a Quote">
             <div class="zy-field">
@@ -280,7 +280,7 @@
                 </select>
             </div>
             <x-slot:footer>
-                <button class="zy-btn zy-btn--secondary" @click="sgModal = false">Cancel</button>
+                <button class="zy-btn zy-btn--secondary" x-on:click="sgModal = false">Cancel</button>
                 <button class="zy-btn zy-btn--primary">Submit</button>
             </x-slot:footer>
         </x-ui.modal>

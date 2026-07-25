@@ -1,0 +1,95 @@
+/**
+ * Cards — project, featured, and statistic surfaces.
+ */
+
+.zy-card {
+    display: grid;
+    gap: var(--zy-space-2);
+    padding: var(--zy-space-6);
+    border: 1px solid var(--zy-color-border);
+    border-radius: var(--zy-radius-lg);
+    background: var(--zy-color-surface);
+    box-shadow: var(--zy-shadow-sm);
+    transition:
+        box-shadow var(--zy-duration-base) var(--zy-ease),
+        transform var(--zy-duration-base) var(--zy-ease),
+        border-color var(--zy-duration-base) var(--zy-ease);
+}
+
+.zy-card--interactive {
+    cursor: pointer;
+}
+
+.zy-card--interactive:hover {
+    border-color: var(--zy-sky-200);
+    box-shadow: var(--zy-shadow-md);
+    transform: translateY(-2px);
+}
+
+.zy-card--featured {
+    border-color: transparent;
+    background:
+        linear-gradient(var(--zy-color-surface), var(--zy-color-surface)) padding-box,
+        var(--zy-gradient-brand) border-box;
+    border: 1px solid transparent;
+}
+
+.zy-card--stat {
+    align-content: center;
+    text-align: center;
+    padding-block: var(--zy-space-8);
+}
+
+.zy-card__media {
+    margin: calc(var(--zy-space-6) * -1);
+    margin-bottom: 0;
+    aspect-ratio: 16 / 10;
+    border-radius: var(--zy-radius-lg) var(--zy-radius-lg) 0 0;
+    background: var(--zy-gradient-hero);
+    overflow: hidden;
+}
+
+.zy-card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.zy-card__eyebrow {
+    font-size: var(--zy-text-xs);
+    font-weight: 600;
+    letter-spacing: var(--zy-tracking-wide);
+    text-transform: uppercase;
+    color: var(--zy-color-muted);
+}
+
+.zy-card__title {
+    font-size: var(--zy-text-lg);
+    font-weight: 600;
+    line-height: var(--zy-leading-snug);
+    color: var(--zy-color-ink);
+    max-width: none;
+}
+
+.zy-card__body {
+    font-size: var(--zy-text-sm);
+    color: var(--zy-color-muted);
+    max-width: none;
+}
+
+.zy-stat__value {
+    font-size: var(--zy-text-4xl);
+    font-weight: 700;
+    letter-spacing: var(--zy-tracking-tight);
+    background: var(--zy-gradient-brand);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    max-width: none;
+}
+
+.zy-stat__label {
+    font-size: var(--zy-text-sm);
+    color: var(--zy-color-muted);
+    max-width: none;
+}

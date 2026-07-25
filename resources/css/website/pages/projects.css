@@ -1,0 +1,30 @@
+/**
+ * Projects listing — page-specific overrides only.
+ */
+
+.zy-page-projects {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.zy-projects-intro {
+    padding-block: var(--zy-space-12) var(--zy-space-8);
+}
+
+.zy-projects-intro p {
+    color: var(--zy-color-muted);
+    margin-top: var(--zy-space-3);
+}
+
+.zy-projects-grid {
+    padding-bottom: var(--zy-space-16);
+}
+
+.zy-project-card__cover {
+    margin: calc(var(--zy-space-6) * -1) calc(var(--zy-space-6) * -1) 0;
+    margin-bottom: var(--zy-space-4);
+    aspect-ratio: 16 / 10;
+    border-radius: var(--zy-radius-lg) var(--zy-radius-lg) 0 0;
+    background: var(--zy-gradient-hero);
+}

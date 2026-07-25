@@ -1,0 +1,81 @@
+/**
+ * Badges and status chips.
+ */
+
+.zy-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--zy-space-1);
+    padding: var(--zy-space-1) var(--zy-space-3);
+    border-radius: var(--zy-radius-full);
+    font-size: var(--zy-text-xs);
+    font-weight: 600;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+.zy-badge--neutral {
+    color: var(--zy-slate-700);
+    background: var(--zy-slate-100);
+}
+
+.zy-badge--primary {
+    color: var(--zy-sky-700);
+    background: var(--zy-sky-100);
+}
+
+.zy-badge--success {
+    color: var(--zy-success-700);
+    background: var(--zy-success-50);
+}
+
+.zy-badge--danger {
+    color: var(--zy-danger-700);
+    background: var(--zy-danger-50);
+}
+
+.zy-badge--warning {
+    color: var(--zy-warning-700);
+    background: var(--zy-warning-50);
+}
+
+.zy-badge--gradient {
+    color: #fff;
+    background: var(--zy-gradient-brand);
+}
+
+.zy-status {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--zy-space-2);
+    font-size: var(--zy-text-xs);
+    font-weight: 600;
+}
+
+.zy-status::before {
+    content: "";
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: var(--zy-radius-full);
+    background: currentColor;
+}
+
+.zy-status--success {
+    color: var(--zy-success-700);
+}
+
+.zy-status--warning {
+    color: var(--zy-warning-700);
+}
+
+.zy-status--danger {
+    color: var(--zy-danger-700);
+}
+
+.zy-status--info {
+    color: var(--zy-info-700);
+}
+
+.zy-status--neutral {
+    color: var(--zy-slate-500);
+}

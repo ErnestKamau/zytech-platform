@@ -1,0 +1,32 @@
+/**
+ * Simple responsive grid.
+ */
+
+.zy-grid {
+    display: grid;
+    gap: var(--zy-space-6);
+}
+
+.zy-grid--2 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.zy-grid--3 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+@media (min-width: 640px) {
+    .zy-grid--2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .zy-grid--3 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 1024px) {
+    .zy-grid--3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}

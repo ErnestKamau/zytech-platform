@@ -1,0 +1,129 @@
+/**
+ * Buttons — variants, sizes, and interactive states.
+ */
+
+.zy-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--zy-space-2);
+    padding: var(--zy-space-3) var(--zy-space-6);
+    border-radius: var(--zy-radius-md);
+    border: 1px solid transparent;
+    font-size: var(--zy-text-sm);
+    font-weight: 600;
+    line-height: 1.25;
+    text-decoration: none;
+    white-space: nowrap;
+    transition:
+        background var(--zy-duration-fast) var(--zy-ease),
+        color var(--zy-duration-fast) var(--zy-ease),
+        border-color var(--zy-duration-fast) var(--zy-ease),
+        box-shadow var(--zy-duration-fast) var(--zy-ease),
+        filter var(--zy-duration-fast) var(--zy-ease);
+}
+
+.zy-btn:disabled,
+.zy-btn[disabled] {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.zy-btn--sm {
+    padding: var(--zy-space-2) var(--zy-space-4);
+    font-size: var(--zy-text-xs);
+}
+
+.zy-btn--lg {
+    padding: var(--zy-space-4) var(--zy-space-8);
+    font-size: var(--zy-text-base);
+}
+
+.zy-btn--primary {
+    color: #fff;
+    background: var(--zy-color-primary);
+}
+
+.zy-btn--primary:hover {
+    background: var(--zy-color-primary-hover);
+}
+
+.zy-btn--gradient {
+    color: #fff;
+    background: var(--zy-gradient-brand);
+}
+
+.zy-btn--gradient:hover {
+    filter: brightness(0.96);
+}
+
+.zy-btn--secondary {
+    color: var(--zy-color-ink);
+    background: var(--zy-slate-100);
+    border-color: var(--zy-color-border);
+}
+
+.zy-btn--secondary:hover {
+    background: var(--zy-slate-200);
+}
+
+.zy-btn--ghost {
+    color: var(--zy-color-primary);
+    background: transparent;
+}
+
+.zy-btn--ghost:hover {
+    background: var(--zy-sky-50);
+}
+
+.zy-btn--success {
+    color: #fff;
+    background: var(--zy-success-500);
+}
+
+.zy-btn--success:hover {
+    background: var(--zy-success-700);
+}
+
+.zy-btn--danger {
+    color: #fff;
+    background: var(--zy-danger-500);
+}
+
+.zy-btn--danger:hover {
+    background: var(--zy-danger-700);
+}
+
+.zy-btn--warning {
+    color: var(--zy-slate-900);
+    background: var(--zy-warning-500);
+}
+
+.zy-btn--warning:hover {
+    background: var(--zy-warning-700);
+    color: #fff;
+}
+
+.zy-btn--loading {
+    position: relative;
+    color: transparent !important;
+    pointer-events: none;
+}
+
+.zy-btn--loading::after {
+    content: "";
+    position: absolute;
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: var(--zy-radius-full);
+    animation: zy-spin 0.7s linear infinite;
+    color: #fff;
+}
+
+@keyframes zy-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

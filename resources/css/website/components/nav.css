@@ -1,0 +1,37 @@
+/**
+ * Navigation — public site header links.
+ */
+
+.zy-nav {
+    display: flex;
+    align-items: center;
+    gap: var(--zy-space-6);
+}
+
+.zy-nav__link {
+    font-size: var(--zy-text-sm);
+    font-weight: 500;
+    color: var(--zy-slate-700);
+    text-decoration: none;
+    transition: color var(--zy-duration-fast) var(--zy-ease);
+}
+
+.zy-nav__link:hover,
+.zy-nav__link[aria-current="page"] {
+    color: var(--zy-color-primary);
+}
+
+.zy-nav__brand {
+    font-size: var(--zy-text-lg);
+    font-weight: 700;
+    letter-spacing: var(--zy-tracking-tight);
+    text-decoration: none;
+    color: var(--zy-color-ink);
+}
+
+.zy-nav__brand span {
+    background: var(--zy-gradient-brand);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}

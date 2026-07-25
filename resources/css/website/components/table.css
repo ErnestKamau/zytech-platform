@@ -1,0 +1,46 @@
+/**
+ * Data tables.
+ */
+
+.zy-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--zy-color-border);
+    border-radius: var(--zy-radius-lg);
+    background: var(--zy-color-surface);
+}
+
+.zy-table {
+    width: 100%;
+    font-size: var(--zy-text-sm);
+    text-align: left;
+}
+
+.zy-table th,
+.zy-table td {
+    padding: var(--zy-space-3) var(--zy-space-4);
+    border-bottom: 1px solid var(--zy-color-border);
+    white-space: nowrap;
+}
+
+.zy-table th {
+    font-weight: 600;
+    color: var(--zy-slate-600);
+    background: var(--zy-slate-50);
+}
+
+.zy-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.zy-table tbody tr:hover td {
+    background: var(--zy-sky-50);
+}
+
+.zy-table--striped tbody tr:nth-child(even) td {
+    background: var(--zy-slate-50);
+}
+
+.zy-table--striped tbody tr:nth-child(even):hover td {
+    background: var(--zy-sky-50);
+}

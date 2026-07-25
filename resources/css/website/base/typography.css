@@ -1,0 +1,86 @@
+/**
+ * Base typography — raw HTML elements + text utility classes.
+ */
+
+body {
+    font-family: var(--zy-font-sans);
+    font-size: var(--zy-text-base);
+    font-weight: 400;
+    color: var(--zy-color-ink);
+    background-color: var(--zy-color-paper);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    font-family: var(--zy-font-display);
+    font-weight: 600;
+    line-height: var(--zy-leading-tight);
+    letter-spacing: var(--zy-tracking-tight);
+    color: var(--zy-color-ink);
+}
+
+h1 {
+    font-size: clamp(var(--zy-text-3xl), 4vw, var(--zy-text-5xl));
+}
+
+h2 {
+    font-size: clamp(var(--zy-text-2xl), 3vw, var(--zy-text-4xl));
+}
+
+h3 {
+    font-size: var(--zy-text-xl);
+    line-height: var(--zy-leading-snug);
+}
+
+h4 {
+    font-size: var(--zy-text-lg);
+    line-height: var(--zy-leading-snug);
+}
+
+p {
+    max-width: 65ch;
+    line-height: var(--zy-leading-body);
+}
+
+a.zy-link,
+.zy-link {
+    color: var(--zy-color-primary);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+    transition: color var(--zy-duration-fast) var(--zy-ease);
+}
+
+a.zy-link:hover,
+.zy-link:hover {
+    color: var(--zy-color-primary-hover);
+}
+
+.zy-eyebrow {
+    display: inline-block;
+    font-size: var(--zy-text-xs);
+    font-weight: 600;
+    letter-spacing: var(--zy-tracking-wide);
+    text-transform: uppercase;
+    color: var(--zy-color-muted);
+}
+
+.zy-text-sm {
+    font-size: var(--zy-text-sm);
+    line-height: var(--zy-leading-body);
+    color: var(--zy-color-muted);
+}
+
+.zy-text-gradient {
+    background: var(--zy-gradient-brand);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.zy-stack > * + * {
+    margin-top: var(--zy-space-4);
+}

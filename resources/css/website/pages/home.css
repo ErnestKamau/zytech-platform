@@ -1,0 +1,80 @@
+/**
+ * Homepage — page-specific overrides only.
+ */
+
+.zy-page-home {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.zy-hero {
+    position: relative;
+    display: grid;
+    align-items: end;
+    min-height: min(88vh, 52rem);
+    padding-block: var(--zy-space-16) var(--zy-space-12);
+    color: #fff;
+    overflow: hidden;
+}
+
+.zy-hero__media {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(180deg, rgb(15 23 42 / 0.25) 0%, rgb(15 23 42 / 0.72) 100%),
+        var(--zy-gradient-hero);
+    background-size: cover;
+    background-position: center;
+}
+
+.zy-hero__content {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: var(--zy-space-6);
+    max-width: 40rem;
+}
+
+.zy-hero__brand {
+    font-size: clamp(var(--zy-text-2xl), 4vw, var(--zy-text-4xl));
+    font-weight: 700;
+    letter-spacing: var(--zy-tracking-tight);
+    line-height: var(--zy-leading-tight);
+    max-width: none;
+}
+
+.zy-hero__headline {
+    font-size: clamp(var(--zy-text-xl), 2.5vw, var(--zy-text-3xl));
+    font-weight: 500;
+    line-height: var(--zy-leading-snug);
+    color: rgb(255 255 255 / 0.92);
+    max-width: 28ch;
+}
+
+.zy-hero__support {
+    font-size: var(--zy-text-base);
+    color: rgb(255 255 255 / 0.8);
+    max-width: 42ch;
+}
+
+.zy-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--zy-space-3);
+    margin-top: var(--zy-space-2);
+}
+
+.zy-section {
+    padding-block: var(--zy-space-16);
+}
+
+.zy-section__header {
+    display: grid;
+    gap: var(--zy-space-2);
+    margin-bottom: var(--zy-space-8);
+}
+
+.zy-section__header p {
+    color: var(--zy-color-muted);
+}

@@ -1,0 +1,51 @@
+/**
+ * Dropdown menu — Alpine open/close shell.
+ */
+
+.zy-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.zy-dropdown__menu {
+    position: absolute;
+    top: calc(100% + var(--zy-space-2));
+    left: 0;
+    z-index: 40;
+    min-width: 12rem;
+    padding: var(--zy-space-2);
+    border: 1px solid var(--zy-color-border);
+    border-radius: var(--zy-radius-md);
+    background: var(--zy-color-surface);
+    box-shadow: var(--zy-shadow-md);
+}
+
+.zy-dropdown__item {
+    display: block;
+    width: 100%;
+    padding: var(--zy-space-2) var(--zy-space-3);
+    border-radius: var(--zy-radius-sm);
+    font-size: var(--zy-text-sm);
+    text-align: left;
+    color: var(--zy-color-ink);
+    background: transparent;
+    transition: background var(--zy-duration-fast) var(--zy-ease);
+}
+
+.zy-dropdown__item:hover {
+    background: var(--zy-slate-100);
+}
+
+.zy-dropdown__item--danger {
+    color: var(--zy-danger-700);
+}
+
+.zy-dropdown__item--danger:hover {
+    background: var(--zy-danger-50);
+}
+
+.zy-dropdown__divider {
+    height: 1px;
+    margin: var(--zy-space-2) 0;
+    background: var(--zy-color-border);
+}

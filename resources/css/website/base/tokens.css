@@ -1,14 +1,148 @@
 /**
- * Design tokens for the public website & client portal.
- * Prefer CSS custom properties over utility frameworks.
+ * Design tokens — Zytech public website & client portal theme.
+ * Primitives hold raw values; semantic aliases are what components consume.
+ * Brand signature: linear-gradient(90deg, #48c6ef 0%, #6f86d6 100%)
  */
 
 :root {
-    --zy-color-ink: #1b1b18;
-    --zy-color-paper: #fdfdfc;
-    --zy-color-accent: #c45c26;
+    /* ------------------------------------------------------------------ */
+    /* Primitive — Sky (primary family, anchored on #48c6ef)               */
+    /* ------------------------------------------------------------------ */
+    --zy-sky-50: #eef9fe;
+    --zy-sky-100: #d6f1fc;
+    --zy-sky-200: #ade3f9;
+    --zy-sky-300: #7ad2f3;
+    --zy-sky-400: #48c6ef;
+    --zy-sky-500: #2ab0df;
+    --zy-sky-600: #1a8fbd;
+    --zy-sky-700: #167296;
+    --zy-sky-800: #165d7a;
+    --zy-sky-900: #174d65;
+
+    /* ------------------------------------------------------------------ */
+    /* Primitive — Indigo (secondary family, anchored on #6f86d6)          */
+    /* ------------------------------------------------------------------ */
+    --zy-indigo-50: #f2f4fb;
+    --zy-indigo-100: #e2e7f6;
+    --zy-indigo-200: #c5cef0;
+    --zy-indigo-300: #9aabe3;
+    --zy-indigo-400: #6f86d6;
+    --zy-indigo-500: #556dcb;
+    --zy-indigo-600: #4355b8;
+    --zy-indigo-700: #394696;
+    --zy-indigo-800: #323d78;
+    --zy-indigo-900: #2d3661;
+
+    /* ------------------------------------------------------------------ */
+    /* Primitive — Slate (cool neutrals)                                  */
+    /* ------------------------------------------------------------------ */
+    --zy-slate-50: #f8fafc;
+    --zy-slate-100: #f1f5f9;
+    --zy-slate-200: #e2e8f0;
+    --zy-slate-300: #cbd5e1;
+    --zy-slate-400: #94a3b8;
+    --zy-slate-500: #64748b;
+    --zy-slate-600: #475569;
+    --zy-slate-700: #334155;
+    --zy-slate-800: #1e293b;
+    --zy-slate-900: #0f172a;
+
+    /* ------------------------------------------------------------------ */
+    /* Primitive — Semantic status scales                                 */
+    /* ------------------------------------------------------------------ */
+    --zy-success-50: #ecfdf5;
+    --zy-success-300: #6ee7b7;
+    --zy-success-500: #10b981;
+    --zy-success-700: #047857;
+
+    --zy-danger-50: #fef2f2;
+    --zy-danger-300: #fca5a5;
+    --zy-danger-500: #ef4444;
+    --zy-danger-700: #b91c1c;
+
+    --zy-warning-50: #fffbeb;
+    --zy-warning-300: #fcd34d;
+    --zy-warning-500: #f59e0b;
+    --zy-warning-700: #b45309;
+
+    --zy-info-50: #eff6ff;
+    --zy-info-300: #93c5fd;
+    --zy-info-500: #3b82f6;
+    --zy-info-700: #1d4ed8;
+
+    /* ------------------------------------------------------------------ */
+    /* Semantic aliases — use these in components                         */
+    /* ------------------------------------------------------------------ */
+    --zy-color-primary: var(--zy-sky-500);
+    --zy-color-primary-hover: var(--zy-sky-600);
+    --zy-color-secondary: var(--zy-indigo-400);
+    --zy-color-ink: var(--zy-slate-900);
+    --zy-color-muted: var(--zy-slate-500);
+    --zy-color-border: var(--zy-slate-200);
+    --zy-color-surface: #ffffff;
+    --zy-color-paper: var(--zy-slate-50);
+
+    --zy-gradient-brand: linear-gradient(90deg, #48c6ef 0%, #6f86d6 100%);
+    --zy-gradient-hero: linear-gradient(135deg, #48c6ef 0%, #6f86d6 55%, #394696 100%);
+
+    /* ------------------------------------------------------------------ */
+    /* Typography                                                         */
+    /* ------------------------------------------------------------------ */
     --zy-font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
     --zy-font-display: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
-    --zy-space-unit: 0.25rem;
+
+    --zy-text-xs: 0.75rem;    /* 12 */
+    --zy-text-sm: 0.875rem;   /* 14 */
+    --zy-text-base: 1rem;     /* 16 */
+    --zy-text-lg: 1.125rem;   /* 18 */
+    --zy-text-xl: 1.25rem;    /* 20 */
+    --zy-text-2xl: 1.5rem;    /* 24 */
+    --zy-text-3xl: 1.875rem;  /* 30 */
+    --zy-text-4xl: 2.25rem;   /* 36 */
+    --zy-text-5xl: 3rem;      /* 48 */
+
+    --zy-leading-tight: 1.2;
+    --zy-leading-snug: 1.35;
+    --zy-leading-body: 1.6;
+
+    --zy-tracking-tight: -0.02em;
+    --zy-tracking-wide: 0.06em;
+
+    /* ------------------------------------------------------------------ */
+    /* Spacing — 8pt system (styleguide map)                              */
+    /* ------------------------------------------------------------------ */
+    --zy-space-1: 0.25rem;   /* 4 */
+    --zy-space-2: 0.5rem;    /* 8 */
+    --zy-space-3: 0.75rem;   /* 12 */
+    --zy-space-4: 1rem;      /* 16 */
+    --zy-space-6: 1.5rem;    /* 24 */
+    --zy-space-8: 2rem;      /* 32 */
+    --zy-space-10: 2.5rem;   /* 40 */
+    --zy-space-12: 3rem;     /* 48 */
+    --zy-space-16: 4rem;     /* 64 */
+    --zy-space-20: 5rem;     /* 80 */
+    --zy-space-24: 6rem;     /* 96 */
+
+    /* ------------------------------------------------------------------ */
+    /* Radius / elevation / motion                                        */
+    /* ------------------------------------------------------------------ */
+    --zy-radius-sm: 0.375rem;
+    --zy-radius-md: 0.5rem;
+    --zy-radius-lg: 0.75rem;
+    --zy-radius-full: 9999px;
+
+    --zy-shadow-sm: 0 1px 2px rgb(15 23 42 / 0.06);
+    --zy-shadow-md: 0 4px 12px rgb(15 23 42 / 0.08);
+    --zy-shadow-lg: 0 12px 32px rgb(15 23 42 / 0.12);
+
+    --zy-duration-fast: 150ms;
+    --zy-duration-base: 220ms;
+    --zy-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+    /* ------------------------------------------------------------------ */
+    /* Layout                                                             */
+    /* ------------------------------------------------------------------ */
     --zy-max-width: 72rem;
+    --zy-max-width-wide: 90rem;
+    --zy-max-width-narrow: 42rem;
 }

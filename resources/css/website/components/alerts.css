@@ -1,0 +1,48 @@
+/**
+ * Alerts — semantic feedback banners.
+ */
+
+.zy-alert {
+    display: grid;
+    gap: var(--zy-space-1);
+    padding: var(--zy-space-4);
+    border-radius: var(--zy-radius-md);
+    border: 1px solid transparent;
+    border-left-width: 4px;
+}
+
+.zy-alert__title {
+    font-size: var(--zy-text-sm);
+    font-weight: 600;
+    line-height: var(--zy-leading-snug);
+}
+
+.zy-alert__body {
+    font-size: var(--zy-text-sm);
+    line-height: var(--zy-leading-body);
+    max-width: none;
+}
+
+.zy-alert--info {
+    color: var(--zy-info-700);
+    background: var(--zy-info-50);
+    border-color: var(--zy-info-300);
+}
+
+.zy-alert--success {
+    color: var(--zy-success-700);
+    background: var(--zy-success-50);
+    border-color: var(--zy-success-300);
+}
+
+.zy-alert--warning {
+    color: var(--zy-warning-700);
+    background: var(--zy-warning-50);
+    border-color: var(--zy-warning-300);
+}
+
+.zy-alert--danger {
+    color: var(--zy-danger-700);
+    background: var(--zy-danger-50);
+    border-color: var(--zy-danger-300);
+}
