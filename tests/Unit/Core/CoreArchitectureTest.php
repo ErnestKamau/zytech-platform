@@ -5,6 +5,8 @@ namespace Tests\Unit\Core;
 use App\Core\Data\ExampleDTO;
 use App\Core\Enums\ProjectStatus;
 use App\Core\Enums\QuotationStatus;
+use App\Core\Enums\RoleType;
+use App\Core\Enums\UserType;
 use App\Core\Helpers\SlugGenerator;
 use App\Core\ValueObjects\Address;
 use App\Core\ValueObjects\Coordinates;
@@ -21,6 +23,13 @@ class CoreArchitectureTest extends TestCase
     {
         $this->assertSame('published', ProjectStatus::Published->value);
         $this->assertSame('Published', ProjectStatus::Published->label());
+    }
+
+    public function test_user_and_role_type_enums(): void
+    {
+        $this->assertSame('client', UserType::Client->value);
+        $this->assertTrue(RoleType::Administrator->canAccessAdminPanel());
+        $this->assertFalse(RoleType::Client->canAccessAdminPanel());
     }
 
     public function test_quotation_status_enum_covers_lifecycle(): void

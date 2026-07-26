@@ -11,6 +11,12 @@
         </nav>
 
         <div class="zy-header__actions">
+            <x-ui.theme-toggle />
+            @auth
+                <a href="{{ route('account.profile') }}" class="zy-btn zy-btn--secondary zy-btn--sm">Account</a>
+            @else
+                <a href="{{ route('login') }}" class="zy-btn zy-btn--secondary zy-btn--sm">Sign in</a>
+            @endauth
             <a href="#quote" class="zy-btn zy-btn--gradient zy-btn--sm">Request a Quote</a>
         </div>
     </div>

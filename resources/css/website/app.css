@@ -36,6 +36,7 @@
 /* pages */
 @import './pages/home.css';
 @import './pages/projects.css';
+@import './pages/auth.css';
 
 /* utilities — always last */
 @import './utilities/helpers.css';

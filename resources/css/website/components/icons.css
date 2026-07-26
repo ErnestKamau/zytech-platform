@@ -173,3 +173,17 @@
     background: var(--zy-frost-bg);
     color: #fff;
 }
+
+/* Theme toggle — slightly stronger chrome so it reads as a control,
+   not a decorative icon floating near section headings. */
+.zy-theme-toggle {
+    border-color: var(--zy-color-border);
+    background: var(--zy-color-surface);
+    color: var(--zy-slate-600);
+}
+
+.zy-theme-toggle:hover {
+    background: var(--zy-slate-100);
+    color: var(--zy-color-ink);
+    border-color: var(--zy-slate-300);
+}

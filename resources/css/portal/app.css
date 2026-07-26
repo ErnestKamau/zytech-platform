@@ -1,7 +1,160 @@
 /**
  * Zytech Contractors — Client Portal styles.
- * Shares design tokens with the public website; portal-specific
- * layout and components live under this tree.
+ * Shares design tokens / base / forms with the public website.
  */
 
 @import '../website/base/tokens.css';
+@import '../website/base/reset.css';
+@import '../website/base/typography.css';
+@import '../website/components/buttons.css';
+@import '../website/components/badges.css';
+@import '../website/components/alerts.css';
+@import '../website/components/forms.css';
+@import '../website/pages/auth.css';
+
+.zy-portal-body {
+    min-height: 100vh;
+    margin: 0;
+    background: var(--zy-slate-50);
+    color: var(--zy-color-ink);
+    font-family: var(--zy-font-sans);
+}
+
+.zy-portal {
+    display: grid;
+    grid-template-columns: 16rem 1fr;
+    min-height: 100vh;
+}
+
+.zy-portal__nav {
+    padding: var(--zy-space-6);
+    background: var(--zy-color-surface);
+    border-right: 1px solid var(--zy-color-border);
+}
+
+.zy-portal__brand {
+    display: inline-block;
+    margin-bottom: var(--zy-space-8);
+    font-size: var(--zy-text-xl);
+    font-weight: 700;
+    color: var(--zy-color-ink);
+    text-decoration: none;
+}
+
+.zy-portal__links {
+    display: grid;
+    gap: var(--zy-space-2);
+}
+
+.zy-portal__links a {
+    padding: var(--zy-space-2) var(--zy-space-3);
+    border-radius: var(--zy-radius-md);
+    color: var(--zy-color-muted);
+    text-decoration: none;
+}
+
+.zy-portal__links a.is-active,
+.zy-portal__links a:hover {
+    background: var(--zy-slate-100);
+    color: var(--zy-color-ink);
+}
+
+.zy-portal__main {
+    padding: var(--zy-space-8);
+}
+
+.zy-portal-card {
+    max-width: 42rem;
+    background: var(--zy-color-surface);
+    border: 1px solid var(--zy-color-border);
+    border-radius: var(--zy-radius-xl);
+    padding: var(--zy-space-8);
+}
+
+.zy-portal-card__header {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--zy-space-4);
+    align-items: start;
+    margin-bottom: var(--zy-space-4);
+}
+
+.zy-portal-card__title {
+    margin: 0;
+    font-size: var(--zy-text-2xl);
+}
+
+.zy-portal-card__subtitle {
+    margin: 0;
+    font-size: var(--zy-text-lg);
+}
+
+.zy-portal-card__lead,
+.zy-muted {
+    color: var(--zy-color-muted);
+    font-size: var(--zy-text-sm);
+}
+
+.zy-session-list {
+    list-style: none;
+    margin: var(--zy-space-6) 0 0;
+    padding: 0;
+    display: grid;
+    gap: var(--zy-space-4);
+}
+
+.zy-session-list__item {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--zy-space-4);
+    padding: var(--zy-space-4);
+    border: 1px solid var(--zy-color-border);
+    border-radius: var(--zy-radius-lg);
+}
+
+.zy-definition-list {
+    display: grid;
+    gap: var(--zy-space-4);
+    margin-top: var(--zy-space-6);
+}
+
+.zy-definition-list div {
+    display: grid;
+    gap: var(--zy-space-1);
+}
+
+.zy-definition-list dt {
+    font-size: var(--zy-text-sm);
+    color: var(--zy-color-muted);
+}
+
+.zy-definition-list dd {
+    margin: 0;
+    font-weight: 600;
+}
+
+.zy-btn--danger {
+    background: var(--zy-danger-500);
+    color: white;
+}
+
+.zy-btn--ghost {
+    background: transparent;
+    border: 1px solid var(--zy-color-border);
+}
+
+@media (max-width: 800px) {
+    .zy-portal {
+        grid-template-columns: 1fr;
+    }
+
+    .zy-portal__nav {
+        border-right: 0;
+        border-bottom: 1px solid var(--zy-color-border);
+    }
+
+    .zy-portal__links {
+        grid-auto-flow: column;
+        overflow-x: auto;
+    }
+}

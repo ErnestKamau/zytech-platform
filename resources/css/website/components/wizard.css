@@ -65,7 +65,6 @@
     flex-shrink: 0;
     transition: background var(--zy-duration-base) var(--zy-ease),
         border-color var(--zy-duration-base) var(--zy-ease),
-        box-shadow var(--zy-duration-base) var(--zy-ease),
         color var(--zy-duration-base) var(--zy-ease);
 }
 
@@ -83,8 +82,11 @@
 }
 
 .zy-wizard__step--done .zy-wizard__index {
+    /* border: none (not a transparent 2px border) — a transparent border
+       on a 50%-radius circle anti-aliases separately from the fill in
+       Chromium, leaving thin unfilled slivers at the curved edge. */
+    border: none;
     background: var(--zy-success-500);
-    border-color: var(--zy-success-500);
     color: #fff;
 }
 
@@ -93,10 +95,9 @@
 }
 
 .zy-wizard__step--current .zy-wizard__index {
+    border: none;
     background: var(--zy-gradient-brand);
-    border-color: transparent;
     color: #fff;
-    box-shadow: 0 0 0 4px var(--zy-sky-100), var(--zy-shadow-glow-sky);
 }
 
 .zy-wizard__step--current .zy-wizard__label {

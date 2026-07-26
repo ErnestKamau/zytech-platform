@@ -1,0 +1,106 @@
+/**
+ * Authentication screens (login / register / reset).
+ */
+
+.zy-auth-body {
+    min-height: 100vh;
+    margin: 0;
+    background:
+        radial-gradient(1200px 600px at 10% -10%, color-mix(in srgb, var(--zy-amber-400) 28%, transparent), transparent 60%),
+        linear-gradient(160deg, var(--zy-slate-50), var(--zy-color-surface));
+    color: var(--zy-color-ink);
+    font-family: var(--zy-font-sans);
+}
+
+.zy-auth {
+    min-height: 100vh;
+    display: grid;
+    place-content: center;
+    gap: var(--zy-space-8);
+    padding: var(--zy-space-6);
+}
+
+.zy-auth__brand {
+    text-align: center;
+}
+
+.zy-auth__logo {
+    font-size: var(--zy-text-3xl);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--zy-color-ink);
+    text-decoration: none;
+}
+
+.zy-auth__tagline {
+    margin: var(--zy-space-2) 0 0;
+    color: var(--zy-color-muted);
+    font-size: var(--zy-text-sm);
+}
+
+.zy-auth__panel,
+.zy-auth-form {
+    width: min(100%, 28rem);
+}
+
+.zy-auth__panel {
+    background: var(--zy-color-surface);
+    border: 1px solid var(--zy-color-border);
+    border-radius: var(--zy-radius-xl);
+    padding: var(--zy-space-8);
+    box-shadow: var(--zy-shadow-md);
+}
+
+.zy-auth-form__title {
+    margin: 0;
+    font-size: var(--zy-text-2xl);
+    letter-spacing: -0.02em;
+}
+
+.zy-auth-form__lead,
+.zy-auth-form__footer {
+    color: var(--zy-color-muted);
+    font-size: var(--zy-text-sm);
+}
+
+.zy-auth-form__footer a {
+    color: var(--zy-color-ink);
+}
+
+.zy-stack {
+    display: grid;
+    gap: var(--zy-space-4);
+    margin-top: var(--zy-space-6);
+}
+
+.zy-stack--gap {
+    margin-top: var(--zy-space-8);
+}
+
+.zy-field-error {
+    margin: 0;
+    color: var(--zy-danger-500);
+    font-size: var(--zy-text-sm);
+}
+
+.zy-check {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--zy-space-2);
+    font-size: var(--zy-text-sm);
+}
+
+.zy-input-group {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--zy-space-2);
+    align-items: center;
+}
+
+.zy-input-group__action {
+    border: 0;
+    background: transparent;
+    color: var(--zy-color-muted);
+    cursor: pointer;
+    font-size: var(--zy-text-sm);
+}

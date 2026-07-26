@@ -20,10 +20,17 @@
 
 .zy-tabs__tab {
     position: relative;
-    padding: var(--zy-space-2) var(--zy-space-5);
+    z-index: 0;
+    /* --zy-space-5 does not exist in the token scale (it jumps 4 -> 6);
+       an invalid custom property inside a shorthand invalidates the
+       whole declaration, so this was silently computing to padding: 0.
+       Use real tokens, and go a notch taller per the "increase height"
+       request. */
+    padding: var(--zy-space-3) var(--zy-space-6);
     border-radius: var(--zy-radius-full);
     font-size: var(--zy-text-sm);
     font-weight: 600;
+    line-height: 1.25;
     color: var(--zy-slate-500);
     background: transparent;
     white-space: nowrap;
@@ -48,13 +55,17 @@
     box-shadow: var(--zy-focus-ring);
 }
 
-/* The active tab carries the same brand gradient as the primary CTA —
-   one visual language across the whole component library, not a
-   different accent invented per-component. */
+/* Active tab — solid brand fill, no glow. Soft offset shadows on a
+   small pill read as a second misaligned background. */
 .zy-tabs__tab[aria-selected="true"] {
+    z-index: 1;
     color: #fff;
     background: var(--zy-gradient-brand);
-    box-shadow: var(--zy-shadow-glow-sky);
+    box-shadow: none;
+}
+
+.zy-tabs__tab[aria-selected="true"]:focus-visible {
+    box-shadow: var(--zy-focus-ring);
 }
 
 .zy-tabs__panel {

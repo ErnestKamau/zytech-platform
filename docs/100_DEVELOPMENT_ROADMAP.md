@@ -1328,15 +1328,31 @@ Session Handling
 
 # Definition of Done
 
-- [ ] Authentication complete
-- [ ] Roles complete
-- [ ] Permissions complete
-- [ ] Policies complete
-- [ ] Activity logs working
-- [ ] Tests passing
-- [ ] Documentation updated
+- [x] Authentication complete
+- [x] Roles complete
+- [x] Permissions complete
+- [x] Policies complete
+- [x] Activity logs working
+- [x] Tests passing
+- [x] Documentation updated
 
 ---
+
+# Phase 2 Notes
+
+Implemented under domain architecture:
+
+```text
+app/Domains/Authentication/   # login, register, sessions, lock, MFA foundation
+app/Domains/User/             # profile, roles, permissions cache
+app/Filament/Resources/{Users,Roles,Permissions,Sessions}/
+routes/auth.php
+docs/AUTHENTICATION.md
+```
+
+Packages: Spatie Permission, Laravel Sanctum (API token foundation), Reverb listener stub for auth broadcasts.
+
+Seeded roles: `super-admin`, `administrator`, `staff`, `client`.
 
 # =============================================================================
 # PHASE 3

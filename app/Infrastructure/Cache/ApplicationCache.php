@@ -21,7 +21,7 @@ final class ApplicationCache implements CacheStore
         return Cache::get($this->key($key), $default);
     }
 
-    public function put(string $key, mixed $value, int|\DateInterval|null $ttl = null): bool
+    public function put(string $key, mixed $value, int|\DateInterval|\DateTimeInterface|null $ttl = null): bool
     {
         return Cache::put($this->key($key), $value, $ttl);
     }
@@ -36,7 +36,7 @@ final class ApplicationCache implements CacheStore
         return Cache::forget($this->key($key));
     }
 
-    public function remember(string $key, int|\DateInterval|null $ttl, callable $callback): mixed
+    public function remember(string $key, int|\DateInterval|\DateTimeInterface|null $ttl, callable $callback): mixed
     {
         return Cache::remember($this->key($key), $ttl, $callback);
     }
