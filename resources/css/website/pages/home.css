@@ -25,6 +25,10 @@
 .zy-hero__media {
     position: absolute;
     inset: 0;
+    /* Negative z-index keeps the media above the hero's own background but
+       below the ::before glow and ::after grain (both z-index 0). Without
+       this the opaque gradient hides both pseudo-element layers. */
+    z-index: -1;
     background:
         linear-gradient(200deg, rgb(15 23 42 / 0.35) 0%, rgb(15 23 42 / 0.88) 100%),
         var(--zy-gradient-hero);
@@ -95,6 +99,9 @@
 }
 
 .zy-hero__brand {
+    /* Explicit white — the global h1 rule sets ink and would win over the
+       hero's inherited color otherwise. */
+    color: #fff;
     font-size: clamp(var(--zy-text-4xl), 6vw, 4rem);
     font-weight: 700;
     letter-spacing: var(--zy-tracking-tight);
@@ -168,15 +175,132 @@
 }
 
 .zy-section {
-    padding-block: var(--zy-space-16);
+    padding-block: var(--zy-space-20);
+}
+
+.zy-section--alt {
+    background: var(--zy-color-surface);
+    border-block: 1px solid var(--zy-color-border);
 }
 
 .zy-section__header {
     display: grid;
-    gap: var(--zy-space-2);
-    margin-bottom: var(--zy-space-8);
+    gap: var(--zy-space-3);
+    max-width: 44rem;
+    margin-bottom: var(--zy-space-12);
 }
 
 .zy-section__header p {
     color: var(--zy-color-muted);
+}
+
+/* Eyebrow with a short brand rule — small, repeated signature that ties
+   sections together without shouting. */
+.zy-section__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--zy-space-3);
+    width: fit-content;
+    font-size: var(--zy-text-xs);
+    font-weight: 600;
+    letter-spacing: var(--zy-tracking-wide);
+    text-transform: uppercase;
+    color: var(--zy-color-primary);
+}
+
+.zy-section__eyebrow::before {
+    content: "";
+    width: 2rem;
+    height: 2px;
+    border-radius: var(--zy-radius-full);
+    background: var(--zy-gradient-brand);
+}
+
+/* ------------------------------------------------------------------ */
+/* Stats band — quiet numbers, gradient values, hairline separators    */
+/* ------------------------------------------------------------------ */
+
+.zy-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--zy-space-8) var(--zy-space-6);
+}
+
+.zy-stat {
+    display: grid;
+    gap: var(--zy-space-1);
+    padding-left: var(--zy-space-4);
+    border-left: 2px solid var(--zy-color-border);
+}
+
+.zy-stat:hover {
+    border-left-color: var(--zy-sky-400);
+}
+
+@media (min-width: 768px) {
+    .zy-stats {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+/* ------------------------------------------------------------------ */
+/* CTA panel — the hero's dark surface + glow, reprised once at the    */
+/* bottom of the page. Always dark in both themes.                     */
+/* ------------------------------------------------------------------ */
+
+.zy-cta {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    gap: var(--zy-space-6);
+    padding: var(--zy-space-16) var(--zy-space-8);
+    border-radius: calc(var(--zy-radius-lg) * 2);
+    background: var(--zy-slate-800);
+    color: #fff;
+    text-align: center;
+    justify-items: center;
+}
+
+[data-zy-theme="dark"] .zy-cta {
+    background: #1e293b;
+    border: 1px solid var(--zy-color-border);
+}
+
+.zy-cta::before {
+    content: "";
+    position: absolute;
+    top: -60%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 42rem;
+    height: 42rem;
+    background: radial-gradient(circle, rgb(72 198 239 / 0.35) 0%, rgb(111 134 214 / 0.18) 45%, transparent 70%);
+    filter: blur(12px);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.zy-cta h2 {
+    color: #fff;
+    max-width: 22ch;
+}
+
+.zy-cta p {
+    color: rgb(255 255 255 / 0.7);
+    max-width: 46ch;
+}
+
+.zy-cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--zy-space-3);
+    margin-top: var(--zy-space-2);
+}
+
+@media (min-width: 768px) {
+    .zy-cta {
+        padding: var(--zy-space-20) var(--zy-space-16);
+    }
 }

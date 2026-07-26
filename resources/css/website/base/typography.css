@@ -10,6 +10,14 @@ body {
     background-color: var(--zy-color-paper);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    transition:
+        background-color var(--zy-duration-base) var(--zy-ease),
+        color var(--zy-duration-base) var(--zy-ease);
+}
+
+::selection {
+    background: var(--zy-sky-200);
+    color: var(--zy-color-ink);
 }
 
 h1,

@@ -1,0 +1,287 @@
+diff --git a/resources/css/website/components/dropdown.css b/resources/css/website/components/dropdown.css
+index aab326b..1098c1a 100644
+--- a/resources/css/website/components/dropdown.css
++++ b/resources/css/website/components/dropdown.css
+@@ -12,36 +12,70 @@ .zy-dropdown__menu {
+     top: calc(100% + var(--zy-space-2));
+     left: 0;
+     z-index: 40;
+-    min-width: 12rem;
++    min-width: 13rem;
+     padding: var(--zy-space-2);
+     border: 1px solid var(--zy-color-border);
+-    border-radius: var(--zy-radius-md);
++    border-radius: var(--zy-radius-lg);
+     background: var(--zy-color-surface);
+-    box-shadow: var(--zy-shadow-md);
++    box-shadow: var(--zy-shadow-lg);
++    transform-origin: top left;
+ }
+ 
+ .zy-dropdown__item {
+-    display: block;
++    display: flex;
++    align-items: center;
++    gap: var(--zy-space-3);
+     width: 100%;
+     padding: var(--zy-space-2) var(--zy-space-3);
+     border-radius: var(--zy-radius-sm);
+     font-size: var(--zy-text-sm);
++    font-weight: 500;
+     text-align: left;
+     color: var(--zy-color-ink);
+     background: transparent;
+-    transition: background var(--zy-duration-fast) var(--zy-ease);
++    cursor: pointer;
++    transition: background var(--zy-duration-fast) var(--zy-ease),
++        color var(--zy-duration-fast) var(--zy-ease),
++        transform var(--zy-duration-fast) var(--zy-ease);
++}
++
++.zy-dropdown__item .zy-icon {
++    width: 1.125rem;
++    height: 1.125rem;
++    color: var(--zy-slate-400);
+ }
+ 
+ .zy-dropdown__item:hover {
+-    background: var(--zy-slate-100);
++    background: var(--zy-sky-50);
++    color: var(--zy-sky-700);
++    transform: translateX(2px);
++}
++
++.zy-dropdown__item:hover .zy-icon {
++    color: var(--zy-color-primary);
++}
++
++.zy-dropdown__item:focus-visible {
++    outline: none;
++    background: var(--zy-sky-50);
++    box-shadow: var(--zy-focus-ring);
+ }
+ 
+ .zy-dropdown__item--danger {
+     color: var(--zy-danger-700);
+ }
+ 
++.zy-dropdown__item--danger .zy-icon {
++    color: var(--zy-danger-300);
++}
++
+ .zy-dropdown__item--danger:hover {
+     background: var(--zy-danger-50);
++    color: var(--zy-danger-700);
++}
++
++.zy-dropdown__item--danger:hover .zy-icon {
++    color: var(--zy-danger-500);
+ }
+ 
+ .zy-dropdown__divider {
+@@ -49,3 +83,22 @@ .zy-dropdown__divider {
+     margin: var(--zy-space-2) 0;
+     background: var(--zy-color-border);
+ }
++
++/* Trigger chevron — rotates open, telegraphs state without extra copy. */
++.zy-dropdown__chevron {
++    width: 1rem;
++    height: 1rem;
++    margin-left: var(--zy-space-1);
++    transition: transform var(--zy-duration-base) var(--zy-ease);
++}
++
++.zy-dropdown__trigger[aria-expanded="true"] .zy-dropdown__chevron {
++    transform: rotate(180deg);
++}
++
++/* Entrance animation classes — wired via Alpine's x-transition:enter etc.
++   Scale-from-corner + fade reads as considerably more considered than a
++   flat opacity toggle. */
++.zy-dropdown__menu[x-cloak] {
++    display: none;
++}
+diff --git a/resources/css/website/components/icons.css b/resources/css/website/components/icons.css
+index 3dc32f1..8eb2a5c 100644
+--- a/resources/css/website/components/icons.css
++++ b/resources/css/website/components/icons.css
+@@ -9,6 +9,7 @@ .zy-icon {
+     height: 1.5rem;
+     stroke-width: 1.5;
+     color: inherit;
++    transition: color var(--zy-duration-fast) var(--zy-ease), transform var(--zy-duration-fast) var(--zy-ease);
+ }
+ 
+ .zy-icon--sm {
+@@ -30,3 +31,111 @@ .zy-icon svg {
+     width: 100%;
+     height: 100%;
+ }
++
++/**
++ * Icon tiles — a housed icon for feature lists, service cards, statistic
++ * cards. This is the piece that was missing: on their own, Heroicons at
++ * 24px sitting directly on white read as an afterthought. A tile gives
++ * every icon a consistent footprint and a single deliberate surface.
++ */
++.zy-icon-tile {
++    display: inline-flex;
++    align-items: center;
++    justify-content: center;
++    flex-shrink: 0;
++    width: 2.75rem;
++    height: 2.75rem;
++    border-radius: var(--zy-radius-md);
++    background: var(--zy-sky-50);
++    color: var(--zy-color-primary);
++    transition: transform var(--zy-duration-base) var(--zy-ease), box-shadow var(--zy-duration-base) var(--zy-ease);
++}
++
++.zy-icon-tile .zy-icon {
++    width: 1.375rem;
++    height: 1.375rem;
++}
++
++.zy-icon-tile--sm {
++    width: 2.25rem;
++    height: 2.25rem;
++}
++
++.zy-icon-tile--sm .zy-icon {
++    width: 1.125rem;
++    height: 1.125rem;
++}
++
++.zy-icon-tile--lg {
++    width: 3.5rem;
++    height: 3.5rem;
++    border-radius: var(--zy-radius-lg);
++}
++
++.zy-icon-tile--lg .zy-icon {
++    width: 1.75rem;
++    height: 1.75rem;
++}
++
++/* Reserve the gradient fill for one tile per view — a genuine featured
++   moment, not a default state for every icon on the page. */
++.zy-icon-tile--gradient {
++    background: var(--zy-gradient-brand);
++    color: #fff;
++    box-shadow: var(--zy-shadow-glow-sky);
++}
++
++.zy-icon-tile--slate {
++    background: var(--zy-slate-100);
++    color: var(--zy-slate-600);
++}
++
++/* Lift the tile when its containing card is hovered/interactive — pair
++   with .zy-card--interactive:hover .zy-icon-tile in cards.css, or apply
++   directly where a tile sits inside an <a>/<button>. */
++.zy-icon-tile--interactive:hover {
++    transform: translateY(-2px);
++}
++
++/**
++ * Icon-only button — ghost circular control for triggers, close buttons,
++ * and toolbar actions. Distinct from .zy-btn, which always carries text.
++ */
++.zy-icon-btn {
++    display: inline-flex;
++    align-items: center;
++    justify-content: center;
++    width: 2.25rem;
++    height: 2.25rem;
++    border-radius: var(--zy-radius-full);
++    border: 1px solid transparent;
++    background: transparent;
++    color: var(--zy-slate-500);
++    cursor: pointer;
++    transition: background var(--zy-duration-fast) var(--zy-ease),
++        color var(--zy-duration-fast) var(--zy-ease),
++        transform var(--zy-duration-fast) var(--zy-ease);
++}
++
++.zy-icon-btn:hover {
++    background: var(--zy-slate-100);
++    color: var(--zy-color-ink);
++}
++
++.zy-icon-btn:active {
++    transform: scale(0.94);
++}
++
++.zy-icon-btn:focus-visible {
++    outline: none;
++    box-shadow: var(--zy-focus-ring);
++}
++
++.zy-icon-btn--frost {
++    color: rgb(255 255 255 / 0.85);
++}
++
++.zy-icon-btn--frost:hover {
++    background: var(--zy-frost-bg);
++    color: #fff;
++}
+diff --git a/resources/css/website/utilities/helpers.css b/resources/css/website/utilities/helpers.css
+index 310c29b..27b53ad 100644
+--- a/resources/css/website/utilities/helpers.css
++++ b/resources/css/website/utilities/helpers.css
+@@ -29,3 +29,22 @@ .text-left {
+ .text-right {
+     text-align: right;
+ }
++
++/**
++ * Alpine transition utilities — scale+fade from the trigger corner.
++ * Used by dropdown/popover-style menus (x-transition:enter="zy-transition-fast"
++ * etc.) so the entrance reads as deliberate rather than a flat opacity toggle.
++ */
++.zy-transition-fast {
++    transition: opacity var(--zy-duration-fast) var(--zy-ease), transform var(--zy-duration-fast) var(--zy-ease);
++}
++
++.zy-transition-scale-start {
++    opacity: 0;
++    transform: scale(0.96) translateY(-4px);
++}
++
++.zy-transition-scale-end {
++    opacity: 1;
++    transform: scale(1) translateY(0);
++}
+diff --git a/resources/views/components/ui/dropdown.blade.php b/resources/views/components/ui/dropdown.blade.php
+index 5c30429..e701ca9 100644
+--- a/resources/views/components/ui/dropdown.blade.php
++++ b/resources/views/components/ui/dropdown.blade.php
+@@ -11,17 +11,26 @@ class="zy-dropdown"
+     <x-ui.button
+         type="button"
+         variant="secondary"
++        class="zy-dropdown__trigger"
+         x-on:click="open = !open"
+         x-bind:aria-expanded="open.toString()"
+     >
+         {{ $label }}
++        <svg class="zy-icon zy-dropdown__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
++            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
++        </svg>
+     </x-ui.button>
+ 
+     <div
+         class="zy-dropdown__menu"
+         x-show="open"
+         x-cloak
+-        x-transition
++        x-transition:enter="zy-transition-fast"
++        x-transition:enter-start="zy-transition-scale-start"
++        x-transition:enter-end="zy-transition-scale-end"
++        x-transition:leave="zy-transition-fast"
++        x-transition:leave-start="zy-transition-scale-end"
++        x-transition:leave-end="zy-transition-scale-start"
+         role="menu"
+     >
+         {{ $slot }}

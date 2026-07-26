@@ -18,9 +18,38 @@
         .sg-icon-grid svg { margin-inline: auto; color: var(--zy-color-primary); }
         .sg-icon-grid span { display: block; font-size: 11px; color: var(--zy-color-muted); margin-top: var(--zy-space-1); }
         .sg-hero-preview { background: var(--zy-gradient-hero); border-radius: var(--zy-radius-lg); padding: var(--zy-space-16); color: white; }
+        .sg-dark-strip { background: var(--zy-slate-900); border-radius: var(--zy-radius-lg); padding: var(--zy-space-8); }
+        .sg-theme-toggle {
+            position: fixed; top: var(--zy-space-4); right: var(--zy-space-4); z-index: 60;
+            background: var(--zy-color-surface); border: 1px solid var(--zy-color-border);
+            box-shadow: var(--zy-shadow-md);
+        }
     </style>
 </head>
-<body>
+<body
+    x-data="{ dark: localStorage.getItem('zy-theme') === 'dark' }"
+    x-bind:data-zy-theme="dark ? 'dark' : 'light'"
+    x-effect="localStorage.setItem('zy-theme', dark ? 'dark' : 'light')"
+>
+<script>
+    /* Apply saved theme before Alpine boots to avoid a light-mode flash. */
+    document.body.dataset.zyTheme = localStorage.getItem('zy-theme') || 'light';
+</script>
+
+<button
+    type="button"
+    class="zy-icon-btn sg-theme-toggle"
+    x-on:click="dark = !dark"
+    x-bind:aria-label="dark ? 'Switch to light mode' : 'Switch to dark mode'"
+>
+    <svg x-show="!dark" class="zy-icon zy-icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+    </svg>
+    <svg x-show="dark" x-cloak class="zy-icon zy-icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+    </svg>
+</button>
+
 <div class="zy-container zy-container--wide" style="padding-block: var(--zy-space-16);">
 
     <p class="zy-eyebrow">Internal / Not Public</p>
@@ -28,6 +57,7 @@
     <p style="max-width: 60ch; color: var(--zy-color-muted); margin-top: var(--zy-space-2);">
         Live reference for every token and component. If something on the real site doesn't
         match what's shown here, the site is wrong — this page is the source of truth.
+        Toggle the moon icon (top right) to audit every component in dark mode.
     </p>
 
     {{-- ============================================================ HERO / GRADIENT ============================================================ --}}
@@ -286,6 +316,47 @@
         </x-ui.modal>
     </section>
 
+    {{-- ============================================================ ICON TILES + ICON BUTTONS ============================================================ --}}
+    <section class="sg-block">
+        <h2>Icon Tiles &amp; Icon Buttons</h2>
+
+        <p class="zy-text-sm" style="margin-bottom: var(--zy-space-3);">Tiles — sm / default / lg / gradient (one per view) / slate / ring</p>
+        <div class="sg-row">
+            @php
+                $sgTileIcon = 'M2.25 12l8.954-8.955a1.5 1.5 0 012.122 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75';
+            @endphp
+            @foreach (['zy-icon-tile--sm', '', 'zy-icon-tile--lg', 'zy-icon-tile--gradient', 'zy-icon-tile--slate', 'zy-icon-tile--ring'] as $tileVariant)
+                <span class="zy-icon-tile {{ $tileVariant }}">
+                    <svg class="zy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="{{ $sgTileIcon }}" />
+                    </svg>
+                </span>
+            @endforeach
+        </div>
+
+        <p class="zy-text-sm" style="margin: var(--zy-space-6) 0 var(--zy-space-3);">Icon-only buttons — ghost / frost (on dark)</p>
+        <div class="sg-row">
+            <button type="button" class="zy-icon-btn" aria-label="Close">
+                <svg class="zy-icon zy-icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <span class="sg-dark-strip" style="padding: var(--zy-space-3);">
+                <button type="button" class="zy-icon-btn zy-icon-btn--frost" aria-label="Settings">
+                    <svg class="zy-icon zy-icon--sm zy-icon--spin-hover" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12a7.5 7.5 0 0015 0m-15 0a7.5 7.5 0 1115 0m-15 0H3m16.5 0H21m-1.5 0H12m-8.457 3.077l1.41-.513m14.095-5.13l1.41-.513M5.106 17.785l1.15-.964m11.49-9.642l1.149-.964M7.501 19.795l.75-1.3m7.5-12.99l.75-1.3m-6.063 16.658l.26-1.477m2.605-14.772l.26-1.477m0 17.726l-.26-1.477M10.698 4.614l-.26-1.477M16.5 19.794l-.75-1.299M7.5 4.205L12 12m6.894 5.785l-1.149-.964M6.256 7.178l-1.15-.964m15.352 8.864l-1.41-.513M4.954 9.435l-1.41-.514M12.002 12l-3.75 6.495" />
+                    </svg>
+                </button>
+            </span>
+        </div>
+
+        <p class="zy-text-sm" style="margin: var(--zy-space-6) 0 var(--zy-space-3);">Frost buttons — for CTAs on dark / photographic surfaces</p>
+        <div class="sg-dark-strip sg-row" style="margin-bottom: 0;">
+            <button class="zy-btn zy-btn--gradient">Request a Quote</button>
+            <button class="zy-btn zy-btn--frost">View Projects</button>
+        </div>
+    </section>
+
     {{-- ============================================================ ICONS ============================================================ --}}
     <section class="sg-block">
         <h2>Iconography (Heroicons, per UI_UX.md)</h2>
@@ -322,9 +393,9 @@
             <div style="width:80px;height:80px;background:var(--zy-color-primary);border-radius:var(--zy-radius-full);"></div>
         </div>
         <div class="sg-row" style="margin-top: var(--zy-space-6);">
-            <div style="width:100px;height:70px;background:white;border-radius:var(--zy-radius-md);box-shadow:var(--zy-shadow-sm);"></div>
-            <div style="width:100px;height:70px;background:white;border-radius:var(--zy-radius-md);box-shadow:var(--zy-shadow-md);"></div>
-            <div style="width:100px;height:70px;background:white;border-radius:var(--zy-radius-md);box-shadow:var(--zy-shadow-lg);"></div>
+            <div style="width:100px;height:70px;background:var(--zy-color-surface);border:1px solid var(--zy-color-border);border-radius:var(--zy-radius-md);box-shadow:var(--zy-shadow-sm);"></div>
+            <div style="width:100px;height:70px;background:var(--zy-color-surface);border:1px solid var(--zy-color-border);border-radius:var(--zy-radius-md);box-shadow:var(--zy-shadow-md);"></div>
+            <div style="width:100px;height:70px;background:var(--zy-color-surface);border:1px solid var(--zy-color-border);border-radius:var(--zy-radius-md);box-shadow:var(--zy-shadow-lg);"></div>
         </div>
     </section>
 

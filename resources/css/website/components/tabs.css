@@ -8,32 +8,53 @@
 }
 
 .zy-tabs__list {
-    display: flex;
+    display: inline-flex;
     flex-wrap: wrap;
-    gap: var(--zy-space-2);
-    border-bottom: 1px solid var(--zy-color-border);
+    gap: var(--zy-space-1);
+    width: fit-content;
+    max-width: 100%;
+    padding: var(--zy-space-1);
+    border-radius: var(--zy-radius-full);
+    background: var(--zy-slate-100);
 }
 
 .zy-tabs__tab {
-    padding: var(--zy-space-3) var(--zy-space-4);
-    margin-bottom: -1px;
-    border-bottom: 2px solid transparent;
+    position: relative;
+    padding: var(--zy-space-2) var(--zy-space-5);
+    border-radius: var(--zy-radius-full);
     font-size: var(--zy-text-sm);
     font-weight: 600;
-    color: var(--zy-color-muted);
+    color: var(--zy-slate-500);
     background: transparent;
+    white-space: nowrap;
+    cursor: pointer;
     transition:
         color var(--zy-duration-fast) var(--zy-ease),
-        border-color var(--zy-duration-fast) var(--zy-ease);
+        background var(--zy-duration-base) var(--zy-ease),
+        box-shadow var(--zy-duration-base) var(--zy-ease),
+        transform var(--zy-duration-fast) var(--zy-ease);
 }
 
 .zy-tabs__tab:hover {
     color: var(--zy-color-ink);
 }
 
+.zy-tabs__tab:active {
+    transform: scale(0.97);
+}
+
+.zy-tabs__tab:focus-visible {
+    outline: none;
+    box-shadow: var(--zy-focus-ring);
+}
+
+/* The active tab carries the same brand gradient as the primary CTA —
+   one visual language across the whole component library, not a
+   different accent invented per-component. */
 .zy-tabs__tab[aria-selected="true"] {
-    color: var(--zy-color-primary);
-    border-bottom-color: var(--zy-color-primary);
+    color: #fff;
+    background: var(--zy-gradient-brand);
+    box-shadow: var(--zy-shadow-glow-sky);
 }
 
 .zy-tabs__panel {

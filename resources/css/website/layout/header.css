@@ -6,8 +6,9 @@
     position: sticky;
     top: 0;
     z-index: 30;
-    background: rgb(248 250 252 / 0.9);
+    background: var(--zy-header-bg);
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--zy-color-border);
 }
 

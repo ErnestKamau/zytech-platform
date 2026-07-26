@@ -27,4 +27,6 @@
     aspect-ratio: 16 / 10;
     border-radius: var(--zy-radius-lg) var(--zy-radius-lg) 0 0;
     background: var(--zy-gradient-hero);
+    overflow: hidden;
+    transition: filter var(--zy-duration-base) var(--zy-ease);
 }

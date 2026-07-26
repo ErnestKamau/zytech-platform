@@ -80,7 +80,11 @@
     --zy-color-muted: var(--zy-slate-500);
     --zy-color-border: var(--zy-slate-200);
     --zy-color-surface: #ffffff;
-    --zy-color-paper: var(--zy-slate-50);
+    --zy-color-paper: #f8fafc;
+
+    /* Chrome surfaces that need their own dark values */
+    --zy-header-bg: rgb(248 250 252 / 0.9);
+    --zy-backdrop: rgb(15 23 42 / 0.5);
 
     --zy-gradient-brand: linear-gradient(90deg, #48c6ef 0%, #6f86d6 100%);
     --zy-gradient-hero: linear-gradient(135deg, #48c6ef 0%, #6f86d6 55%, #394696 100%);
@@ -155,4 +159,71 @@
     --zy-max-width: 72rem;
     --zy-max-width-wide: 90rem;
     --zy-max-width-narrow: 42rem;
+
+    color-scheme: light;
+}
+
+/**
+ * Dark theme.
+ *
+ * Strategy: components consume tints (slate-50…300 as fills/borders,
+ * sky-50/100 as brand-hover fills, status *-50 as soft fills, *-700 as
+ * readable text). Remapping those tints here means every component adapts
+ * without per-component dark rules. The 800/900 anchors are NOT remapped —
+ * they are used as true-dark surfaces (hero, CTA panel) in both themes.
+ * Apply with: <html data-zy-theme="dark"> (or on <body>).
+ */
+[data-zy-theme="dark"] {
+    color-scheme: dark;
+
+    /* Neutral tints — inverted for dark surfaces */
+    --zy-slate-50: #111a2e;
+    --zy-slate-100: #182339;
+    --zy-slate-200: #243450;
+    --zy-slate-300: #334768;
+    --zy-slate-400: #64748b;
+    --zy-slate-500: #94a3b8;
+    --zy-slate-600: #cbd5e1;
+    --zy-slate-700: #e2e8f0;
+
+    /* Brand hover fills become translucent glows instead of pale tints */
+    --zy-sky-50: rgb(72 198 239 / 0.08);
+    --zy-sky-100: rgb(72 198 239 / 0.16);
+    --zy-sky-200: rgb(72 198 239 / 0.3);
+    --zy-sky-700: #7ad2f3;
+
+    /* Status scales — soft translucent fills, light readable text */
+    --zy-success-50: rgb(16 185 129 / 0.12);
+    --zy-success-300: rgb(16 185 129 / 0.45);
+    --zy-success-700: #6ee7b7;
+
+    --zy-danger-50: rgb(239 68 68 / 0.12);
+    --zy-danger-300: rgb(239 68 68 / 0.45);
+    --zy-danger-700: #fca5a5;
+
+    --zy-warning-50: rgb(245 158 11 / 0.12);
+    --zy-warning-300: rgb(245 158 11 / 0.45);
+    --zy-warning-700: #fcd34d;
+
+    --zy-info-50: rgb(59 130 246 / 0.12);
+    --zy-info-300: rgb(59 130 246 / 0.45);
+    --zy-info-700: #93c5fd;
+
+    /* Semantic aliases */
+    --zy-color-primary: var(--zy-sky-400);
+    --zy-color-primary-hover: #6fd1f4;
+    --zy-color-ink: #f1f5f9;
+    --zy-color-muted: #94a3b8;
+    --zy-color-border: rgb(148 163 184 / 0.18);
+    --zy-color-surface: #121c30;
+    --zy-color-paper: #0b1220;
+
+    --zy-header-bg: rgb(11 18 32 / 0.78);
+    --zy-backdrop: rgb(2 6 16 / 0.65);
+
+    /* Elevation reads through darkness, not grey */
+    --zy-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+    --zy-shadow-md: 0 4px 12px rgb(0 0 0 / 0.45);
+    --zy-shadow-lg: 0 12px 32px rgb(0 0 0 / 0.55);
+    --zy-shadow-glow-sky: 0 8px 24px -6px rgb(72 198 239 / 0.35);
 }

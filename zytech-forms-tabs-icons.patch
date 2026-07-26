@@ -1,0 +1,440 @@
+diff --git a/resources/css/website/components/forms.css b/resources/css/website/components/forms.css
+index ca8af94..cc771a3 100644
+--- a/resources/css/website/components/forms.css
++++ b/resources/css/website/components/forms.css
+@@ -17,20 +17,24 @@ .zy-label__required {
+     color: var(--zy-danger-500);
+ }
+ 
++/* Filled fields, not outlined-on-white — the "someone designed this"
++   signal here is the field having a quiet resting surface that resolves
++   to a crisp white + glowing ring only when it's actually in focus. */
+ .zy-input,
+ .zy-select,
+ .zy-textarea {
+     width: 100%;
+     padding: var(--zy-space-3) var(--zy-space-4);
+-    border: 1px solid var(--zy-color-border);
+-    border-radius: var(--zy-radius-md);
+-    background: var(--zy-color-surface);
++    border: 1px solid transparent;
++    border-radius: var(--zy-radius-lg);
++    background: var(--zy-slate-50);
+     color: var(--zy-color-ink);
+     font-size: var(--zy-text-sm);
+     line-height: 1.4;
++    box-shadow: inset 0 0 0 1px var(--zy-color-border);
+     transition:
+-        border-color var(--zy-duration-fast) var(--zy-ease),
+-        box-shadow var(--zy-duration-fast) var(--zy-ease);
++        background var(--zy-duration-fast) var(--zy-ease),
++        box-shadow var(--zy-duration-base) var(--zy-ease);
+ }
+ 
+ .zy-input::placeholder,
+@@ -41,14 +45,15 @@ .zy-textarea::placeholder {
+ .zy-input:hover,
+ .zy-select:hover,
+ .zy-textarea:hover {
+-    border-color: var(--zy-slate-300);
++    box-shadow: inset 0 0 0 1px var(--zy-slate-300);
+ }
+ 
+ .zy-input:focus-visible,
+ .zy-select:focus-visible,
+ .zy-textarea:focus-visible {
+-    border-color: var(--zy-color-primary);
+-    box-shadow: 0 0 0 3px rgb(42 176 223 / 0.2);
++    background: var(--zy-color-surface);
++    outline: none;
++    box-shadow: inset 0 0 0 1.5px var(--zy-color-primary), 0 0 0 4px var(--zy-sky-100), var(--zy-shadow-glow-sky);
+ }
+ 
+ .zy-textarea {
+@@ -56,6 +61,45 @@ .zy-textarea {
+     resize: vertical;
+ }
+ 
++/* Custom select chevron — the native arrow is the single biggest tell
++   that a form is unstyled. */
++.zy-select {
++    appearance: none;
++    -webkit-appearance: none;
++    padding-right: var(--zy-space-10);
++    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'><path stroke-linecap='round' stroke-linejoin='round' d='M19.5 8.25l-7.5 7.5-7.5-7.5'/></svg>");
++    background-repeat: no-repeat;
++    background-position: right var(--zy-space-4) center;
++    background-size: 1rem;
++    cursor: pointer;
++}
++
++/* Icon-anchored field — pair with a leading .zy-icon inside a
++   position:relative wrapper: <div class="zy-field__control"><svg class="zy-icon zy-field__icon">...<input class="zy-input zy-input--icon"></div> */
++.zy-field__control {
++    position: relative;
++    display: flex;
++    align-items: center;
++}
++
++.zy-field__icon {
++    position: absolute;
++    left: var(--zy-space-4);
++    width: 1.125rem;
++    height: 1.125rem;
++    color: var(--zy-slate-400);
++    pointer-events: none;
++    transition: color var(--zy-duration-fast) var(--zy-ease);
++}
++
++.zy-input--icon {
++    padding-left: var(--zy-space-10);
++}
++
++.zy-field__control:focus-within .zy-field__icon {
++    color: var(--zy-color-primary);
++}
++
+ .zy-field__message {
+     font-size: var(--zy-text-xs);
+     line-height: var(--zy-leading-body);
+@@ -72,30 +116,93 @@ .zy-field__message--success {
+ .zy-field--error .zy-input,
+ .zy-field--error .zy-select,
+ .zy-field--error .zy-textarea {
+-    border-color: var(--zy-danger-500);
++    box-shadow: inset 0 0 0 1.5px var(--zy-danger-500);
++}
++
++.zy-field--error .zy-input:focus-visible,
++.zy-field--error .zy-select:focus-visible,
++.zy-field--error .zy-textarea:focus-visible {
++    box-shadow: inset 0 0 0 1.5px var(--zy-danger-500), 0 0 0 4px var(--zy-danger-50);
+ }
+ 
+ .zy-field--success .zy-input,
+ .zy-field--success .zy-select,
+ .zy-field--success .zy-textarea {
+-    border-color: var(--zy-success-500);
++    box-shadow: inset 0 0 0 1.5px var(--zy-success-500);
++}
++
++.zy-field--success .zy-input:focus-visible,
++.zy-field--success .zy-select:focus-visible,
++.zy-field--success .zy-textarea:focus-visible {
++    box-shadow: inset 0 0 0 1.5px var(--zy-success-500), 0 0 0 4px var(--zy-success-50);
+ }
+ 
+ .zy-checkbox,
+ .zy-radio {
+     display: inline-flex;
+     align-items: center;
+-    gap: var(--zy-space-2);
++    gap: var(--zy-space-3);
+     font-size: var(--zy-text-sm);
++    font-weight: 500;
+     color: var(--zy-color-ink);
+     cursor: pointer;
+ }
+ 
+ .zy-checkbox input,
+ .zy-radio input {
+-    width: 1rem;
+-    height: 1rem;
+-    accent-color: var(--zy-color-primary);
++    appearance: none;
++    -webkit-appearance: none;
++    flex-shrink: 0;
++    width: 1.125rem;
++    height: 1.125rem;
++    border: 1.5px solid var(--zy-slate-300);
++    background: var(--zy-color-surface);
++    cursor: pointer;
++    transition:
++        background var(--zy-duration-fast) var(--zy-ease),
++        border-color var(--zy-duration-fast) var(--zy-ease),
++        box-shadow var(--zy-duration-fast) var(--zy-ease),
++        transform var(--zy-duration-fast) var(--zy-ease);
++}
++
++.zy-checkbox input:hover,
++.zy-radio input:hover {
++    border-color: var(--zy-slate-400);
++}
++
++.zy-checkbox input:focus-visible,
++.zy-radio input:focus-visible {
++    box-shadow: var(--zy-focus-ring);
++}
++
++.zy-checkbox input {
++    border-radius: 0.3125rem;
++}
++
++.zy-checkbox input:checked {
++    border-color: transparent;
++    background-image:
++        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3'><path stroke-linecap='round' stroke-linejoin='round' d='M4.5 12.75l6 6 9-13.5'/></svg>"),
++        var(--zy-gradient-brand);
++    background-repeat: no-repeat, no-repeat;
++    background-position: center, center;
++    background-size: 65%, cover;
++    box-shadow: var(--zy-shadow-glow-sky);
++}
++
++.zy-radio input {
++    border-radius: var(--zy-radius-full);
++}
++
++.zy-radio input:checked {
++    border-color: transparent;
++    background: var(--zy-gradient-brand);
++    box-shadow: inset 0 0 0 3.5px #fff, var(--zy-shadow-glow-sky);
++}
++
++.zy-checkbox input:active,
++.zy-radio input:active {
++    transform: scale(0.9);
+ }
+ 
+ .zy-switch {
+@@ -113,43 +220,49 @@ .zy-switch input {
+ 
+ .zy-switch__track {
+     position: relative;
+-    width: 2.5rem;
+-    height: 1.375rem;
++    width: 2.75rem;
++    height: 1.5rem;
+     border-radius: var(--zy-radius-full);
+     background: var(--zy-slate-300);
+-    transition: background var(--zy-duration-fast) var(--zy-ease);
++    transition: background var(--zy-duration-base) var(--zy-ease), box-shadow var(--zy-duration-base) var(--zy-ease);
+ }
+ 
+ .zy-switch__track::after {
+     content: "";
+     position: absolute;
+-    top: 0.125rem;
+-    left: 0.125rem;
++    top: 0.1875rem;
++    left: 0.1875rem;
+     width: 1.125rem;
+     height: 1.125rem;
+     border-radius: var(--zy-radius-full);
+     background: #fff;
+     box-shadow: var(--zy-shadow-sm);
+-    transition: transform var(--zy-duration-fast) var(--zy-ease);
++    transition: transform var(--zy-duration-base) var(--zy-ease);
+ }
+ 
+ .zy-switch input:checked + .zy-switch__track {
+-    background: var(--zy-color-primary);
++    background: var(--zy-gradient-brand);
++    box-shadow: var(--zy-shadow-glow-sky);
+ }
+ 
+ .zy-switch input:checked + .zy-switch__track::after {
+-    transform: translateX(1.125rem);
++    transform: translateX(1.25rem);
+ }
+ 
+ .zy-switch input:focus-visible + .zy-switch__track {
+-    outline: 2px solid var(--zy-color-primary);
+-    outline-offset: 2px;
++    box-shadow: var(--zy-focus-ring);
++}
++
++.zy-switch:active .zy-switch__track::after {
++    width: 1.3rem;
+ }
+ 
+ .zy-dropzone {
++    position: relative;
+     display: grid;
+     place-items: center;
+-    min-height: 8rem;
++    gap: var(--zy-space-3);
++    min-height: 10rem;
+     padding: var(--zy-space-8);
+     border: 2px dashed var(--zy-color-border);
+     border-radius: var(--zy-radius-lg);
+@@ -157,12 +270,33 @@ .zy-dropzone {
+     color: var(--zy-color-muted);
+     font-size: var(--zy-text-sm);
+     text-align: center;
++    cursor: pointer;
+     transition:
+-        border-color var(--zy-duration-fast) var(--zy-ease),
+-        background var(--zy-duration-fast) var(--zy-ease);
++        border-color var(--zy-duration-base) var(--zy-ease),
++        background var(--zy-duration-base) var(--zy-ease);
+ }
+ 
+-.zy-dropzone:hover {
++.zy-dropzone::before {
++    content: "";
++    width: 2.75rem;
++    height: 2.75rem;
++    border-radius: var(--zy-radius-md);
++    background: var(--zy-sky-100);
++    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231a8fbd' stroke-width='1.5'><path stroke-linecap='round' stroke-linejoin='round' d='M12 16.5V9.75m0 0l-3 3m3-3l3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z'/></svg>");
++    background-repeat: no-repeat;
++    background-position: center;
++    background-size: 1.375rem;
++    transition: transform var(--zy-duration-base) var(--zy-ease), background-color var(--zy-duration-base) var(--zy-ease);
++}
++
++.zy-dropzone:hover,
++.zy-dropzone--active {
+     border-color: var(--zy-color-primary);
+     background: var(--zy-sky-50);
+ }
++
++.zy-dropzone:hover::before,
++.zy-dropzone--active::before {
++    background-color: var(--zy-sky-200);
++    transform: translateY(-3px);
++}
+diff --git a/resources/css/website/components/icons.css b/resources/css/website/components/icons.css
+index 8eb2a5c..6229390 100644
+--- a/resources/css/website/components/icons.css
++++ b/resources/css/website/components/icons.css
+@@ -95,6 +95,40 @@ .zy-icon-tile--slate {
+    directly where a tile sits inside an <a>/<button>. */
+ .zy-icon-tile--interactive:hover {
+     transform: translateY(-2px);
++    box-shadow: var(--zy-shadow-glow-sky);
++}
++
++/* Ring variant — outlined instead of filled, for denser layouts (nav
++   items, list rows) where a solid tile would be too heavy. Gains the
++   filled gradient only on hover, so the "premium moment" is earned by
++   interaction rather than shown at rest everywhere. */
++.zy-icon-tile--ring {
++    background: transparent;
++    box-shadow: inset 0 0 0 1.5px var(--zy-color-border);
++    color: var(--zy-slate-500);
++    transition: background var(--zy-duration-base) var(--zy-ease),
++        box-shadow var(--zy-duration-base) var(--zy-ease),
++        color var(--zy-duration-base) var(--zy-ease);
++}
++
++.zy-icon-tile--ring:hover {
++    background: var(--zy-gradient-brand);
++    box-shadow: var(--zy-shadow-glow-sky);
++    color: #fff;
++}
++
++/* Restrained rotate — for refresh/settings-type icons only, never applied
++   by default. Add alongside .zy-icon on the specific icon, nested inside
++   a .zy-btn, .zy-icon-btn, or .zy-icon-tile--interactive so it only
++   triggers on a real interactive parent. */
++.zy-icon--spin-hover {
++    transition: transform var(--zy-duration-slow) var(--zy-ease);
++}
++
++.zy-btn:hover .zy-icon--spin-hover,
++.zy-icon-btn:hover .zy-icon--spin-hover,
++.zy-icon-tile--interactive:hover .zy-icon--spin-hover {
++    transform: rotate(90deg);
+ }
+ 
+ /**
+diff --git a/resources/css/website/components/tabs.css b/resources/css/website/components/tabs.css
+index f27756b..310c4c0 100644
+--- a/resources/css/website/components/tabs.css
++++ b/resources/css/website/components/tabs.css
+@@ -8,32 +8,53 @@ .zy-tabs {
+ }
+ 
+ .zy-tabs__list {
+-    display: flex;
++    display: inline-flex;
+     flex-wrap: wrap;
+-    gap: var(--zy-space-2);
+-    border-bottom: 1px solid var(--zy-color-border);
++    gap: var(--zy-space-1);
++    width: fit-content;
++    max-width: 100%;
++    padding: var(--zy-space-1);
++    border-radius: var(--zy-radius-full);
++    background: var(--zy-slate-100);
+ }
+ 
+ .zy-tabs__tab {
+-    padding: var(--zy-space-3) var(--zy-space-4);
+-    margin-bottom: -1px;
+-    border-bottom: 2px solid transparent;
++    position: relative;
++    padding: var(--zy-space-2) var(--zy-space-5);
++    border-radius: var(--zy-radius-full);
+     font-size: var(--zy-text-sm);
+     font-weight: 600;
+-    color: var(--zy-color-muted);
++    color: var(--zy-slate-500);
+     background: transparent;
++    white-space: nowrap;
++    cursor: pointer;
+     transition:
+         color var(--zy-duration-fast) var(--zy-ease),
+-        border-color var(--zy-duration-fast) var(--zy-ease);
++        background var(--zy-duration-base) var(--zy-ease),
++        box-shadow var(--zy-duration-base) var(--zy-ease),
++        transform var(--zy-duration-fast) var(--zy-ease);
+ }
+ 
+ .zy-tabs__tab:hover {
+     color: var(--zy-color-ink);
+ }
+ 
++.zy-tabs__tab:active {
++    transform: scale(0.97);
++}
++
++.zy-tabs__tab:focus-visible {
++    outline: none;
++    box-shadow: var(--zy-focus-ring);
++}
++
++/* The active tab carries the same brand gradient as the primary CTA —
++   one visual language across the whole component library, not a
++   different accent invented per-component. */
+ .zy-tabs__tab[aria-selected="true"] {
+-    color: var(--zy-color-primary);
+-    border-bottom-color: var(--zy-color-primary);
++    color: #fff;
++    background: var(--zy-gradient-brand);
++    box-shadow: var(--zy-shadow-glow-sky);
+ }
+ 
+ .zy-tabs__panel {
+diff --git a/resources/css/website/utilities/helpers.css b/resources/css/website/utilities/helpers.css
+index 27b53ad..57b2283 100644
+--- a/resources/css/website/utilities/helpers.css
++++ b/resources/css/website/utilities/helpers.css
+@@ -48,3 +48,11 @@ .zy-transition-scale-end {
+     opacity: 1;
+     transform: scale(1) translateY(0);
+ }
++
++.zy-transition-fade-start {
++    opacity: 0;
++}
++
++.zy-transition-fade-end {
++    opacity: 1;
++}
+diff --git a/resources/views/components/ui/tabs.blade.php b/resources/views/components/ui/tabs.blade.php
+index 7445a44..f02c666 100644
+--- a/resources/views/components/ui/tabs.blade.php
++++ b/resources/views/components/ui/tabs.blade.php
+@@ -38,6 +38,9 @@ class="zy-tabs__panel"
+             aria-labelledby="tab-{{ $key }}"
+             x-show="active === @js($key)"
+             x-cloak
++            x-transition:enter="zy-transition-fast"
++            x-transition:enter-start="zy-transition-fade-start"
++            x-transition:enter-end="zy-transition-fade-end"
+         >
+             {{ $panel }}
+         </div>

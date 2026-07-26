@@ -100,5 +100,5 @@
 }
 
 .zy-wizard__step--current .zy-wizard__label {
-    color: var(--zy-slate-900);
+    color: var(--zy-color-ink);
 }

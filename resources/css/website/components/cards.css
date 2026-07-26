@@ -22,7 +22,22 @@
 
 .zy-card--interactive:hover {
     border-color: var(--zy-sky-200);
-    box-shadow: var(--zy-shadow-md);
+    box-shadow: var(--zy-shadow-md), var(--zy-shadow-glow-sky);
+    transform: translateY(-3px);
+}
+
+/* Media brightens and drifts slightly on card hover — reads as depth,
+   works on both placeholder gradients and real photography. */
+.zy-card--interactive:hover .zy-card__media,
+.zy-card--interactive:hover .zy-project-card__cover {
+    filter: saturate(1.12) brightness(1.06);
+}
+
+.zy-card--interactive:hover .zy-card__media img {
+    transform: scale(1.04);
+}
+
+.zy-card--interactive:hover .zy-icon-tile {
     transform: translateY(-2px);
 }
 
@@ -47,12 +62,14 @@
     border-radius: var(--zy-radius-lg) var(--zy-radius-lg) 0 0;
     background: var(--zy-gradient-hero);
     overflow: hidden;
+    transition: filter var(--zy-duration-base) var(--zy-ease);
 }
 
 .zy-card__media img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform var(--zy-duration-slow) var(--zy-ease);
 }
 
 .zy-card__eyebrow {

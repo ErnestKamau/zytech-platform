@@ -9,6 +9,7 @@
     height: 1.5rem;
     stroke-width: 1.5;
     color: inherit;
+    transition: color var(--zy-duration-fast) var(--zy-ease), transform var(--zy-duration-fast) var(--zy-ease);
 }
 
 .zy-icon--sm {
@@ -29,4 +30,146 @@
 .zy-icon svg {
     width: 100%;
     height: 100%;
+}
+
+/**
+ * Icon tiles — a housed icon for feature lists, service cards, statistic
+ * cards. This is the piece that was missing: on their own, Heroicons at
+ * 24px sitting directly on white read as an afterthought. A tile gives
+ * every icon a consistent footprint and a single deliberate surface.
+ */
+.zy-icon-tile {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: var(--zy-radius-md);
+    background: var(--zy-sky-50);
+    color: var(--zy-color-primary);
+    transition: transform var(--zy-duration-base) var(--zy-ease), box-shadow var(--zy-duration-base) var(--zy-ease);
+}
+
+.zy-icon-tile .zy-icon {
+    width: 1.375rem;
+    height: 1.375rem;
+}
+
+.zy-icon-tile--sm {
+    width: 2.25rem;
+    height: 2.25rem;
+}
+
+.zy-icon-tile--sm .zy-icon {
+    width: 1.125rem;
+    height: 1.125rem;
+}
+
+.zy-icon-tile--lg {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: var(--zy-radius-lg);
+}
+
+.zy-icon-tile--lg .zy-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+}
+
+/* Reserve the gradient fill for one tile per view — a genuine featured
+   moment, not a default state for every icon on the page. */
+.zy-icon-tile--gradient {
+    background: var(--zy-gradient-brand);
+    color: #fff;
+    box-shadow: var(--zy-shadow-glow-sky);
+}
+
+.zy-icon-tile--slate {
+    background: var(--zy-slate-100);
+    color: var(--zy-slate-600);
+}
+
+/* Lift the tile when its containing card is hovered/interactive — pair
+   with .zy-card--interactive:hover .zy-icon-tile in cards.css, or apply
+   directly where a tile sits inside an <a>/<button>. */
+.zy-icon-tile--interactive:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--zy-shadow-glow-sky);
+}
+
+/* Ring variant — outlined instead of filled, for denser layouts (nav
+   items, list rows) where a solid tile would be too heavy. Gains the
+   filled gradient only on hover, so the "premium moment" is earned by
+   interaction rather than shown at rest everywhere. */
+.zy-icon-tile--ring {
+    background: transparent;
+    box-shadow: inset 0 0 0 1.5px var(--zy-color-border);
+    color: var(--zy-slate-500);
+    transition: background var(--zy-duration-base) var(--zy-ease),
+        box-shadow var(--zy-duration-base) var(--zy-ease),
+        color var(--zy-duration-base) var(--zy-ease);
+}
+
+.zy-icon-tile--ring:hover {
+    background: var(--zy-gradient-brand);
+    box-shadow: var(--zy-shadow-glow-sky);
+    color: #fff;
+}
+
+/* Restrained rotate — for refresh/settings-type icons only, never applied
+   by default. Add alongside .zy-icon on the specific icon, nested inside
+   a .zy-btn, .zy-icon-btn, or .zy-icon-tile--interactive so it only
+   triggers on a real interactive parent. */
+.zy-icon--spin-hover {
+    transition: transform var(--zy-duration-slow) var(--zy-ease);
+}
+
+.zy-btn:hover .zy-icon--spin-hover,
+.zy-icon-btn:hover .zy-icon--spin-hover,
+.zy-icon-tile--interactive:hover .zy-icon--spin-hover {
+    transform: rotate(90deg);
+}
+
+/**
+ * Icon-only button — ghost circular control for triggers, close buttons,
+ * and toolbar actions. Distinct from .zy-btn, which always carries text.
+ */
+.zy-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: var(--zy-radius-full);
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--zy-slate-500);
+    cursor: pointer;
+    transition: background var(--zy-duration-fast) var(--zy-ease),
+        color var(--zy-duration-fast) var(--zy-ease),
+        transform var(--zy-duration-fast) var(--zy-ease);
+}
+
+.zy-icon-btn:hover {
+    background: var(--zy-slate-100);
+    color: var(--zy-color-ink);
+}
+
+.zy-icon-btn:active {
+    transform: scale(0.94);
+}
+
+.zy-icon-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--zy-focus-ring);
+}
+
+.zy-icon-btn--frost {
+    color: rgb(255 255 255 / 0.85);
+}
+
+.zy-icon-btn--frost:hover {
+    background: var(--zy-frost-bg);
+    color: #fff;
 }

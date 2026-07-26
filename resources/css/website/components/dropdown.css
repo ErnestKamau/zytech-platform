@@ -12,40 +12,93 @@
     top: calc(100% + var(--zy-space-2));
     left: 0;
     z-index: 40;
-    min-width: 12rem;
+    min-width: 13rem;
     padding: var(--zy-space-2);
     border: 1px solid var(--zy-color-border);
-    border-radius: var(--zy-radius-md);
+    border-radius: var(--zy-radius-lg);
     background: var(--zy-color-surface);
-    box-shadow: var(--zy-shadow-md);
+    box-shadow: var(--zy-shadow-lg);
+    transform-origin: top left;
 }
 
 .zy-dropdown__item {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: var(--zy-space-3);
     width: 100%;
     padding: var(--zy-space-2) var(--zy-space-3);
     border-radius: var(--zy-radius-sm);
     font-size: var(--zy-text-sm);
+    font-weight: 500;
     text-align: left;
     color: var(--zy-color-ink);
     background: transparent;
-    transition: background var(--zy-duration-fast) var(--zy-ease);
+    cursor: pointer;
+    transition: background var(--zy-duration-fast) var(--zy-ease),
+        color var(--zy-duration-fast) var(--zy-ease),
+        transform var(--zy-duration-fast) var(--zy-ease);
+}
+
+.zy-dropdown__item .zy-icon {
+    width: 1.125rem;
+    height: 1.125rem;
+    color: var(--zy-slate-400);
 }
 
 .zy-dropdown__item:hover {
-    background: var(--zy-slate-100);
+    background: var(--zy-sky-50);
+    color: var(--zy-sky-700);
+    transform: translateX(2px);
+}
+
+.zy-dropdown__item:hover .zy-icon {
+    color: var(--zy-color-primary);
+}
+
+.zy-dropdown__item:focus-visible {
+    outline: none;
+    background: var(--zy-sky-50);
+    box-shadow: var(--zy-focus-ring);
 }
 
 .zy-dropdown__item--danger {
     color: var(--zy-danger-700);
 }
 
+.zy-dropdown__item--danger .zy-icon {
+    color: var(--zy-danger-300);
+}
+
 .zy-dropdown__item--danger:hover {
     background: var(--zy-danger-50);
+    color: var(--zy-danger-700);
+}
+
+.zy-dropdown__item--danger:hover .zy-icon {
+    color: var(--zy-danger-500);
 }
 
 .zy-dropdown__divider {
     height: 1px;
     margin: var(--zy-space-2) 0;
     background: var(--zy-color-border);
+}
+
+/* Trigger chevron — rotates open, telegraphs state without extra copy. */
+.zy-dropdown__chevron {
+    width: 1rem;
+    height: 1rem;
+    margin-left: var(--zy-space-1);
+    transition: transform var(--zy-duration-base) var(--zy-ease);
+}
+
+.zy-dropdown__trigger[aria-expanded="true"] .zy-dropdown__chevron {
+    transform: rotate(180deg);
+}
+
+/* Entrance animation classes — wired via Alpine's x-transition:enter etc.
+   Scale-from-corner + fade reads as considerably more considered than a
+   flat opacity toggle. */
+.zy-dropdown__menu[x-cloak] {
+    display: none;
 }

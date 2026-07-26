@@ -20,6 +20,7 @@
                 class="zy-tabs__tab"
                 role="tab"
                 id="tab-{{ $key }}"
+                aria-selected="{{ $key === $active ? 'true' : 'false' }}"
                 x-bind:aria-selected="active === @js($key) ? 'true' : 'false'"
                 x-on:click="active = @js($key)"
             >
@@ -37,7 +38,10 @@
             role="tabpanel"
             aria-labelledby="tab-{{ $key }}"
             x-show="active === @js($key)"
-            x-cloak
+            @if ($key !== $active) x-cloak @endif
+            x-transition:enter="zy-transition-fast"
+            x-transition:enter-start="zy-transition-fade-start"
+            x-transition:enter-end="zy-transition-fade-end"
         >
             {{ $panel }}
         </div>
