@@ -134,9 +134,19 @@
     --zy-shadow-sm: 0 1px 2px rgb(15 23 42 / 0.06);
     --zy-shadow-md: 0 4px 12px rgb(15 23 42 / 0.08);
     --zy-shadow-lg: 0 12px 32px rgb(15 23 42 / 0.12);
+    --zy-shadow-glow-sky: 0 8px 24px -6px rgb(72 198 239 / 0.45);
+    --zy-shadow-glow-lg: 0 20px 60px -12px rgb(57 70 150 / 0.55);
+
+    --zy-focus-ring: 0 0 0 3px rgb(72 198 239 / 0.35);
+
+    /* Frosted surfaces for UI sitting on top of the hero gradient */
+    --zy-frost-bg: rgb(255 255 255 / 0.08);
+    --zy-frost-bg-hover: rgb(255 255 255 / 0.16);
+    --zy-frost-border: rgb(255 255 255 / 0.28);
 
     --zy-duration-fast: 150ms;
     --zy-duration-base: 220ms;
+    --zy-duration-slow: 420ms;
     --zy-ease: cubic-bezier(0.22, 1, 0.36, 1);
 
     /* ------------------------------------------------------------------ */

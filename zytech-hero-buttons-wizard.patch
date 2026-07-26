@@ -1,0 +1,451 @@
+diff --git a/resources/css/website/base/tokens.css b/resources/css/website/base/tokens.css
+index 174998b..1799166 100644
+--- a/resources/css/website/base/tokens.css
++++ b/resources/css/website/base/tokens.css
+@@ -134,9 +134,19 @@ :root {
+     --zy-shadow-sm: 0 1px 2px rgb(15 23 42 / 0.06);
+     --zy-shadow-md: 0 4px 12px rgb(15 23 42 / 0.08);
+     --zy-shadow-lg: 0 12px 32px rgb(15 23 42 / 0.12);
++    --zy-shadow-glow-sky: 0 8px 24px -6px rgb(72 198 239 / 0.45);
++    --zy-shadow-glow-lg: 0 20px 60px -12px rgb(57 70 150 / 0.55);
++
++    --zy-focus-ring: 0 0 0 3px rgb(72 198 239 / 0.35);
++
++    /* Frosted surfaces for UI sitting on top of the hero gradient */
++    --zy-frost-bg: rgb(255 255 255 / 0.08);
++    --zy-frost-bg-hover: rgb(255 255 255 / 0.16);
++    --zy-frost-border: rgb(255 255 255 / 0.28);
+ 
+     --zy-duration-fast: 150ms;
+     --zy-duration-base: 220ms;
++    --zy-duration-slow: 420ms;
+     --zy-ease: cubic-bezier(0.22, 1, 0.36, 1);
+ 
+     /* ------------------------------------------------------------------ */
+diff --git a/resources/css/website/components/buttons.css b/resources/css/website/components/buttons.css
+index cae6b3c..f05a45d 100644
+--- a/resources/css/website/components/buttons.css
++++ b/resources/css/website/components/buttons.css
+@@ -15,18 +15,37 @@ .zy-btn {
+     line-height: 1.25;
+     text-decoration: none;
+     white-space: nowrap;
++    cursor: pointer;
++    transform: translateY(0) scale(1);
+     transition:
+         background var(--zy-duration-fast) var(--zy-ease),
+         color var(--zy-duration-fast) var(--zy-ease),
+         border-color var(--zy-duration-fast) var(--zy-ease),
+-        box-shadow var(--zy-duration-fast) var(--zy-ease),
+-        filter var(--zy-duration-fast) var(--zy-ease);
++        box-shadow var(--zy-duration-base) var(--zy-ease),
++        filter var(--zy-duration-fast) var(--zy-ease),
++        transform var(--zy-duration-fast) var(--zy-ease);
++}
++
++/* Depth on interaction, not on rest — a raised button at idle reads as
++   noisy; the lift only on hover is what makes it feel considered. */
++.zy-btn:hover {
++    transform: translateY(-1px);
++}
++
++.zy-btn:active {
++    transform: translateY(0) scale(0.98);
++}
++
++.zy-btn:focus-visible {
++    outline: none;
++    box-shadow: var(--zy-focus-ring);
+ }
+ 
+ .zy-btn:disabled,
+ .zy-btn[disabled] {
+     opacity: 0.5;
+     pointer-events: none;
++    transform: none;
+ }
+ 
+ .zy-btn--sm {
+@@ -42,19 +61,38 @@ .zy-btn--lg {
+ .zy-btn--primary {
+     color: #fff;
+     background: var(--zy-color-primary);
++    box-shadow: var(--zy-shadow-sm);
+ }
+ 
+ .zy-btn--primary:hover {
+     background: var(--zy-color-primary-hover);
++    box-shadow: var(--zy-shadow-md);
+ }
+ 
+ .zy-btn--gradient {
++    position: relative;
+     color: #fff;
+     background: var(--zy-gradient-brand);
++    box-shadow: var(--zy-shadow-glow-sky);
++    overflow: hidden;
++}
++
++.zy-btn--gradient::before {
++    content: "";
++    position: absolute;
++    inset: 0;
++    background: linear-gradient(115deg, transparent 20%, rgb(255 255 255 / 0.35) 40%, transparent 60%);
++    transform: translateX(-120%);
++    transition: transform var(--zy-duration-slow) var(--zy-ease);
+ }
+ 
+ .zy-btn--gradient:hover {
+-    filter: brightness(0.96);
++    filter: brightness(1.04);
++    box-shadow: 0 12px 28px -6px rgb(72 198 239 / 0.55);
++}
++
++.zy-btn--gradient:hover::before {
++    transform: translateX(120%);
+ }
+ 
+ .zy-btn--secondary {
+@@ -65,6 +103,7 @@ .zy-btn--secondary {
+ 
+ .zy-btn--secondary:hover {
+     background: var(--zy-slate-200);
++    border-color: var(--zy-slate-300);
+ }
+ 
+ .zy-btn--ghost {
+@@ -76,6 +115,22 @@ .zy-btn--ghost:hover {
+     background: var(--zy-sky-50);
+ }
+ 
++/* Frosted-glass button — for CTAs that sit on top of the hero gradient
++   or other photographic/dark surfaces, where a flat slate button would
++   look like a stock template. */
++.zy-btn--frost {
++    color: #fff;
++    background: var(--zy-frost-bg);
++    border-color: var(--zy-frost-border);
++    backdrop-filter: blur(8px);
++    -webkit-backdrop-filter: blur(8px);
++}
++
++.zy-btn--frost:hover {
++    background: var(--zy-frost-bg-hover);
++    border-color: rgb(255 255 255 / 0.45);
++}
++
+ .zy-btn--success {
+     color: #fff;
+     background: var(--zy-success-500);
+diff --git a/resources/css/website/components/wizard.css b/resources/css/website/components/wizard.css
+index 2f43c52..e1b4656 100644
+--- a/resources/css/website/components/wizard.css
++++ b/resources/css/website/components/wizard.css
+@@ -10,33 +10,63 @@ .zy-wizard {
+ .zy-wizard__steps {
+     display: flex;
+     flex-wrap: wrap;
+-    gap: var(--zy-space-2);
++    align-items: flex-start;
++    gap: 0;
+ }
+ 
+ .zy-wizard__step {
++    position: relative;
+     display: flex;
++    flex-direction: column;
+     align-items: center;
+     gap: var(--zy-space-2);
+-    flex: 1 1 10rem;
++    flex: 1 1 8rem;
+     min-width: 0;
+-    padding: var(--zy-space-3) var(--zy-space-4);
+-    border: 1px solid var(--zy-color-border);
+-    border-radius: var(--zy-radius-md);
+-    background: var(--zy-color-surface);
++    padding-top: var(--zy-space-2);
+     color: var(--zy-color-muted);
++    text-align: center;
++}
++
++/* Connecting line running through every step — this single detail is
++   what turns "a row of boxes" into an actual progress stepper. */
++.zy-wizard__step::before {
++    content: "";
++    position: absolute;
++    top: calc(var(--zy-space-2) + 1.125rem);
++    left: -50%;
++    width: 100%;
++    height: 2px;
++    background: var(--zy-color-border);
++    z-index: 0;
++}
++
++.zy-wizard__step:first-child::before {
++    display: none;
++}
++
++.zy-wizard__step--done::before,
++.zy-wizard__step--current::before {
++    background: var(--zy-gradient-brand);
+ }
+ 
+ .zy-wizard__index {
++    position: relative;
++    z-index: 1;
+     display: grid;
+     place-items: center;
+-    width: 1.75rem;
+-    height: 1.75rem;
++    width: 2.25rem;
++    height: 2.25rem;
+     border-radius: var(--zy-radius-full);
+-    font-size: var(--zy-text-xs);
++    font-size: var(--zy-text-sm);
+     font-weight: 700;
+-    background: var(--zy-slate-100);
+-    color: var(--zy-slate-600);
++    background: var(--zy-color-surface);
++    border: 2px solid var(--zy-color-border);
++    color: var(--zy-slate-500);
+     flex-shrink: 0;
++    transition: background var(--zy-duration-base) var(--zy-ease),
++        border-color var(--zy-duration-base) var(--zy-ease),
++        box-shadow var(--zy-duration-base) var(--zy-ease),
++        color var(--zy-duration-base) var(--zy-ease);
+ }
+ 
+ .zy-wizard__label {
+@@ -45,26 +75,30 @@ .zy-wizard__label {
+     white-space: nowrap;
+     overflow: hidden;
+     text-overflow: ellipsis;
++    max-width: 100%;
+ }
+ 
+ .zy-wizard__step--done {
+     color: var(--zy-success-700);
+-    border-color: var(--zy-success-300);
+-    background: var(--zy-success-50);
+ }
+ 
+ .zy-wizard__step--done .zy-wizard__index {
+     background: var(--zy-success-500);
++    border-color: var(--zy-success-500);
+     color: #fff;
+ }
+ 
+ .zy-wizard__step--current {
+     color: var(--zy-sky-700);
+-    border-color: var(--zy-sky-300);
+-    background: var(--zy-sky-50);
+ }
+ 
+ .zy-wizard__step--current .zy-wizard__index {
+     background: var(--zy-gradient-brand);
++    border-color: transparent;
+     color: #fff;
++    box-shadow: 0 0 0 4px var(--zy-sky-100), var(--zy-shadow-glow-sky);
++}
++
++.zy-wizard__step--current .zy-wizard__label {
++    color: var(--zy-slate-900);
+ }
+diff --git a/resources/css/website/pages/home.css b/resources/css/website/pages/home.css
+index b8505d8..10bb2ac 100644
+--- a/resources/css/website/pages/home.css
++++ b/resources/css/website/pages/home.css
+@@ -12,22 +12,53 @@ .zy-hero {
+     position: relative;
+     display: grid;
+     align-items: end;
+-    min-height: min(88vh, 52rem);
+-    padding-block: var(--zy-space-16) var(--zy-space-12);
++    min-height: min(92vh, 56rem);
++    padding-block: var(--zy-space-24) var(--zy-space-16);
+     color: #fff;
+     overflow: hidden;
++    isolation: isolate;
++    background: var(--zy-slate-900);
+ }
+ 
++/* Base gradient — deliberately darker/quieter than before so the single
++   glow moment (::before) reads as THE visual event, not one of many. */
+ .zy-hero__media {
+     position: absolute;
+     inset: 0;
+     background:
+-        linear-gradient(180deg, rgb(15 23 42 / 0.25) 0%, rgb(15 23 42 / 0.72) 100%),
++        linear-gradient(200deg, rgb(15 23 42 / 0.35) 0%, rgb(15 23 42 / 0.88) 100%),
+         var(--zy-gradient-hero);
+     background-size: cover;
+     background-position: center;
+ }
+ 
++/* The one visual moment: a soft light source drifting behind the headline,
++   PlayStation-key-art style. Everything else in the hero stays quiet. */
++.zy-hero::before {
++    content: "";
++    position: absolute;
++    top: -18%;
++    right: -12%;
++    width: min(60vw, 44rem);
++    height: min(60vw, 44rem);
++    background: radial-gradient(circle, rgb(72 198 239 / 0.55) 0%, rgb(111 134 214 / 0.25) 45%, transparent 72%);
++    filter: blur(10px);
++    z-index: 0;
++    pointer-events: none;
++}
++
++/* Fine grain over the gradient kills the "flat CSS background" look. */
++.zy-hero::after {
++    content: "";
++    position: absolute;
++    inset: 0;
++    z-index: 0;
++    opacity: 0.35;
++    mix-blend-mode: overlay;
++    pointer-events: none;
++    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
++}
++
+ .zy-hero__content {
+     position: relative;
+     z-index: 1;
+@@ -36,25 +67,52 @@ .zy-hero__content {
+     max-width: 40rem;
+ }
+ 
++.zy-hero__eyebrow {
++    display: inline-flex;
++    align-items: center;
++    gap: var(--zy-space-2);
++    width: fit-content;
++    padding: var(--zy-space-2) var(--zy-space-4);
++    border: 1px solid var(--zy-frost-border);
++    border-radius: var(--zy-radius-full);
++    background: var(--zy-frost-bg);
++    backdrop-filter: blur(8px);
++    -webkit-backdrop-filter: blur(8px);
++    color: rgb(255 255 255 / 0.9);
++    font-size: var(--zy-text-xs);
++    font-weight: 600;
++    letter-spacing: var(--zy-tracking-wide);
++    text-transform: uppercase;
++}
++
++.zy-hero__eyebrow::before {
++    content: "";
++    width: 6px;
++    height: 6px;
++    border-radius: var(--zy-radius-full);
++    background: var(--zy-sky-400);
++    box-shadow: 0 0 0 3px rgb(72 198 239 / 0.35);
++}
++
+ .zy-hero__brand {
+-    font-size: clamp(var(--zy-text-2xl), 4vw, var(--zy-text-4xl));
++    font-size: clamp(var(--zy-text-4xl), 6vw, 4rem);
+     font-weight: 700;
+     letter-spacing: var(--zy-tracking-tight);
+-    line-height: var(--zy-leading-tight);
++    line-height: 0.98;
+     max-width: none;
+ }
+ 
+ .zy-hero__headline {
+-    font-size: clamp(var(--zy-text-xl), 2.5vw, var(--zy-text-3xl));
+-    font-weight: 500;
++    font-size: clamp(var(--zy-text-lg), 2.2vw, var(--zy-text-2xl));
++    font-weight: 400;
+     line-height: var(--zy-leading-snug);
+-    color: rgb(255 255 255 / 0.92);
+-    max-width: 28ch;
++    color: rgb(255 255 255 / 0.88);
++    max-width: 34ch;
+ }
+ 
+ .zy-hero__support {
+     font-size: var(--zy-text-base);
+-    color: rgb(255 255 255 / 0.8);
++    color: rgb(255 255 255 / 0.68);
+     max-width: 42ch;
+ }
+ 
+@@ -62,7 +120,51 @@ .zy-hero__actions {
+     display: flex;
+     flex-wrap: wrap;
+     gap: var(--zy-space-3);
+-    margin-top: var(--zy-space-2);
++    margin-top: var(--zy-space-4);
++}
++
++/* Subtle scroll cue — the kind of restrained micro-detail that reads as
++   "someone designed this" rather than "someone assembled this". */
++.zy-hero__scroll-cue {
++    position: absolute;
++    left: var(--zy-space-6);
++    bottom: var(--zy-space-8);
++    z-index: 1;
++    display: flex;
++    align-items: center;
++    gap: var(--zy-space-3);
++    color: rgb(255 255 255 / 0.55);
++    font-size: var(--zy-text-xs);
++    letter-spacing: var(--zy-tracking-wide);
++    text-transform: uppercase;
++}
++
++.zy-hero__scroll-cue::after {
++    content: "";
++    width: 1px;
++    height: 2.5rem;
++    background: linear-gradient(180deg, rgb(255 255 255 / 0.6), transparent);
++}
++
++@media (max-width: 640px) {
++    .zy-hero__scroll-cue {
++        display: none;
++    }
++}
++
++@media (prefers-reduced-motion: no-preference) {
++    .zy-hero::before {
++        animation: zy-hero-drift 16s var(--zy-ease) infinite alternate;
++    }
++}
++
++@keyframes zy-hero-drift {
++    from {
++        transform: translate3d(0, 0, 0) scale(1);
++    }
++    to {
++        transform: translate3d(-2%, 3%, 0) scale(1.06);
++    }
+ }
+ 
+ .zy-section {
+diff --git a/resources/views/components/sections/hero.blade.php b/resources/views/components/sections/hero.blade.php
+index df76c8f..731c3f4 100644
+--- a/resources/views/components/sections/hero.blade.php
++++ b/resources/views/components/sections/hero.blade.php
+@@ -7,7 +7,7 @@
+ <section class="zy-hero">
+     <div class="zy-hero__media" aria-hidden="true"></div>
+     <div class="zy-container zy-hero__content">
+-        <p class="zy-eyebrow" style="color: rgba(255,255,255,0.85);">Interior · Exterior · Structural</p>
++        <p class="zy-hero__eyebrow">Interior · Exterior · Structural</p>
+         <h1 class="zy-hero__brand">{{ $brand }}</h1>
+         <p class="zy-hero__headline">{{ $headline }}</p>
+         <p class="zy-hero__support">{{ $support }}</p>
+@@ -16,8 +16,9 @@
+                 {{ $actions }}
+             @else
+                 <a href="#quote" class="zy-btn zy-btn--gradient zy-btn--lg">Request a Quote</a>
+-                <a href="{{ route('projects.index') }}" class="zy-btn zy-btn--secondary zy-btn--lg">View Projects</a>
++                <a href="{{ route('projects.index') }}" class="zy-btn zy-btn--frost zy-btn--lg">View Projects</a>
+             @endisset
+         </div>
+     </div>
++    <p class="zy-hero__scroll-cue" aria-hidden="true">Scroll</p>
+ </section>
