@@ -25,6 +25,8 @@ use App\Domains\Client\Listeners\NotifyAssignedStaff;
 use App\Domains\Client\Policies\ClientDocumentPolicy;
 use App\Domains\Client\Policies\ClientNotePolicy;
 use App\Domains\Client\Policies\ClientPolicy;
+use App\Domains\Communication\Policies\AnnouncementPolicy as PlatformAnnouncementPolicy;
+use App\Domains\Communication\Policies\NotificationTemplatePolicy;
 use App\Domains\Company\Events\BranchCreated;
 use App\Domains\Company\Events\CertificationUpdated;
 use App\Domains\Company\Events\CompanyUpdated;
@@ -92,7 +94,7 @@ use App\Domains\Portal\Listeners\BroadcastPortalUpdate;
 use App\Domains\Portal\Listeners\ClearDashboardCache;
 use App\Domains\Portal\Listeners\LogPortalActivity;
 use App\Domains\Portal\Listeners\SendEmailNotification;
-use App\Domains\Portal\Policies\AnnouncementPolicy;
+use App\Domains\Portal\Policies\AnnouncementPolicy as PortalAnnouncementPolicy;
 use App\Domains\Portal\Policies\MeetingPolicy;
 use App\Domains\Portal\Policies\MessagePolicy;
 use App\Domains\Portal\Policies\SupportPolicy;
@@ -128,7 +130,9 @@ use App\Domains\Quotation\Policies\LeadPolicy;
 use App\Domains\Quotation\Policies\QuotationPolicy;
 use App\Domains\Quotation\Policies\QuotationRequestPolicy;
 use App\Domains\Quotation\Policies\SiteVisitPolicy;
-use App\Domains\Service\Events\FeaturedServiceChanged;
+use App\Domains\Search\Livewire\SearchPage;
+use App\Domains\Seo\Listeners\ClearSitemapCache;
+use App\Domains\Seo\Policies\SeoRedirectPolicy;
 use App\Domains\Service\Events\ServiceArchived;
 use App\Domains\Service\Events\ServiceCreated;
 use App\Domains\Service\Events\ServicePublished;
@@ -158,6 +162,7 @@ use App\Domains\Website\Livewire\ServiceShowPage;
 use App\Domains\Website\Livewire\ServicesPage;
 use App\Domains\Website\Livewire\TrackQuotationPage;
 use App\Infrastructure\Cache\ApplicationCache;
+use App\Models\Announcement;
 use App\Models\Article;
 use App\Models\ArticleAuthor;
 use App\Models\ArticleCategory;
@@ -184,6 +189,7 @@ use App\Models\MediaFolder;
 use App\Models\MediaTag;
 use App\Models\MeetingRequest;
 use App\Models\NavigationMenu;
+use App\Models\NotificationTemplate;
 use App\Models\Partner;
 use App\Models\Permission;
 use App\Models\PortalAnnouncement;
@@ -205,6 +211,7 @@ use App\Models\QuotationRevision;
 use App\Models\QuotationSection;
 use App\Models\Role;
 use App\Models\SalesLead;
+use App\Models\SeoRedirect;
 use App\Models\Service;
 use App\Models\ServiceCategory;
 use App\Models\ServiceFaq;
@@ -251,6 +258,7 @@ class AppServiceProvider extends ServiceProvider
         Livewire::component('knowledge.article-faqs', KnowledgeArticleFaqs::class);
         Livewire::component('website.request-quotation-form', RequestQuotationForm::class);
         Livewire::component('website.track-quotation', TrackQuotationPage::class);
+        Livewire::component('website.search-page', SearchPage::class);
         Livewire::component('media.picker', MediaPicker::class);
 
         $websiteViews = [
@@ -260,6 +268,7 @@ class AppServiceProvider extends ServiceProvider
             'pages.home',
             'pages.about.index',
             'pages.contact.index',
+            'pages.search.index',
             'pages.services.index',
             'pages.services.show',
             'pages.projects.index',
@@ -335,7 +344,10 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(PortalConversation::class, MessagePolicy::class);
         Gate::policy(SupportTicket::class, SupportPolicy::class);
         Gate::policy(MeetingRequest::class, MeetingPolicy::class);
-        Gate::policy(PortalAnnouncement::class, AnnouncementPolicy::class);
+        Gate::policy(PortalAnnouncement::class, PortalAnnouncementPolicy::class);
+        Gate::policy(Announcement::class, PlatformAnnouncementPolicy::class);
+        Gate::policy(NotificationTemplate::class, NotificationTemplatePolicy::class);
+        Gate::policy(SeoRedirect::class, SeoRedirectPolicy::class);
 
         Gate::define('viewPulse', function (?User $user = null): bool {
             return $this->app->environment('local') || $user !== null;
@@ -408,6 +420,7 @@ class AppServiceProvider extends ServiceProvider
         foreach ($serviceEvents as $event) {
             Event::listen($event, ClearServiceCache::class);
             Event::listen($event, BroadcastServiceChanges::class);
+            Event::listen($event, ClearSitemapCache::class);
         }
 
         Event::listen(ServiceCreated::class, GenerateServiceSeo::class);
@@ -427,6 +440,7 @@ class AppServiceProvider extends ServiceProvider
         foreach ($projectEvents as $event) {
             Event::listen($event, ClearProjectCache::class);
             Event::listen($event, BroadcastProjectChanges::class);
+            Event::listen($event, ClearSitemapCache::class);
         }
 
         Event::listen(ProjectCreated::class, GenerateProjectSeo::class);
@@ -446,6 +460,7 @@ class AppServiceProvider extends ServiceProvider
         foreach ($articleEvents as $event) {
             Event::listen($event, ClearArticleCache::class);
             Event::listen($event, BroadcastArticleChanges::class);
+            Event::listen($event, ClearSitemapCache::class);
         }
 
         Event::listen(ArticleCreated::class, GenerateArticleSeo::class);

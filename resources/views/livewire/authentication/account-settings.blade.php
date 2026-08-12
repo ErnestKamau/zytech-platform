@@ -1,4 +1,5 @@
 <div class="zy-portal-card">
+    <p class="zy-section__eyebrow">Account</p>
     <h1 class="zy-portal-card__title">Account</h1>
     <p class="zy-portal-card__lead">Overview of your identity on the Zytech platform.</p>
 

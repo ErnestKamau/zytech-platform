@@ -26,7 +26,7 @@ final class Login extends BaseComponent
     public function mount(): void
     {
         if (Auth::check()) {
-            $this->redirectIntended($this->homeRoute(), navigate: true);
+            $this->redirectIntended($this->homeRoute());
         }
     }
 
@@ -56,7 +56,7 @@ final class Login extends BaseComponent
             event(new ClientLoggedIn($user));
         }
 
-        $this->redirectIntended($this->homeRoute(), navigate: true);
+        $this->redirectIntended($this->homeRoute());
     }
 
     public function render(): View

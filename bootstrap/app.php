@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Middleware\AddPublicCacheHeaders;
 use App\Http\Middleware\CheckPlatformMaintenance;
 use App\Http\Middleware\EnsurePortalAccess;
+use App\Http\Middleware\HandleSeoRedirects;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -27,6 +29,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->web(append: [
             CheckPlatformMaintenance::class,
+            HandleSeoRedirects::class,
+            AddPublicCacheHeaders::class,
         ]);
 
         $middleware->redirectGuestsTo(fn () => route('login'));

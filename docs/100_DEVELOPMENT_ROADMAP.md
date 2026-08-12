@@ -1,4 +1,4 @@
-# 100_DEVELOPMENT_ROADMAP.md
+# 1.[kamauernest@gmail.com](mailto:kamauernest@gmail.com)100_DEVELOPMENT_ROADMAP.md
 
 > **Enterprise Development Roadmap**
 >
@@ -22,6 +22,8 @@
 - [Future Expansion Roadmap](#future-expansion-roadmap)
 
 ---
+
+
 
 # Project Vision
 
@@ -48,6 +50,8 @@ The platform consists of:
 Every architectural decision should support long-term scalability and avoid unnecessary rewrites.
 
 ---
+
+
 
 # Development Philosophy
 
@@ -106,6 +110,8 @@ No feature is considered complete until it has:
 
 ---
 
+
+
 # Overall Development Strategy
 
 ```text
@@ -150,32 +156,38 @@ No phase should begin until the previous phase satisfies its Definition of Done.
 
 ---
 
+
+
 # Technology Stack
 
-| Layer | Technology |
-|----------|------------|
-| Language | PHP 8.4 |
-| Framework | Laravel 13 |
-| Admin Panel | Filament 5 (Tailwind) |
-| Frontend | Livewire 4 |
-| JavaScript | Alpine.js |
-| Public / Portal CSS | Handcrafted CSS (Vite) |
-| Admin CSS | Filament Tailwind |
-| Database | PostgreSQL 16 |
-| Cache | Redis |
-| Queue | Redis + Laravel Horizon |
-| Broadcasting | Laravel Reverb |
-| Monitoring | Telescope (local) + Laravel Pulse |
-| Permissions | Spatie Permission |
-| Media | Spatie Media Library |
-| Search | PostgreSQL Full Text Search |
-| Web Server | Apache2 |
-| Testing | Pest / PHPUnit |
-| Package Manager | Composer |
-| Version Control | Git |
-| Repository | GitHub |
+
+| Layer               | Technology                        |
+| ------------------- | --------------------------------- |
+| Language            | PHP 8.4                           |
+| Framework           | Laravel 13                        |
+| Admin Panel         | Filament 5 (Tailwind)             |
+| Frontend            | Livewire 4                        |
+| JavaScript          | Alpine.js                         |
+| Public / Portal CSS | Handcrafted CSS (Vite)            |
+| Admin CSS           | Filament Tailwind                 |
+| Database            | PostgreSQL 16                     |
+| Cache               | Redis                             |
+| Queue               | Redis + Laravel Horizon           |
+| Broadcasting        | Laravel Reverb                    |
+| Monitoring          | Telescope (local) + Laravel Pulse |
+| Permissions         | Spatie Permission                 |
+| Media               | Spatie Media Library              |
+| Search              | PostgreSQL Full Text Search       |
+| Web Server          | Apache2                           |
+| Testing             | Pest / PHPUnit                    |
+| Package Manager     | Composer                          |
+| Version Control     | Git                               |
+| Repository          | GitHub                            |
+
 
 ---
+
+
 
 # Architecture Principles
 
@@ -214,6 +226,8 @@ Each domain owns:
 - Tests
 
 ---
+
+
 
 # Project Timeline
 
@@ -319,6 +333,8 @@ Future Enhancements
 
 ---
 
+
+
 # Development Phases
 
 Each phase contains:
@@ -336,13 +352,19 @@ Each phase contains:
 
 ---
 
+
+
 # Phase 0 — Environment Setup
+
+
 
 ## Objective
 
 Create a professional local development environment.
 
 ---
+
+
 
 ## Deliverables
 
@@ -362,6 +384,8 @@ Create a professional local development environment.
 
 ---
 
+
+
 ## Packages
 
 - Laravel
@@ -378,6 +402,8 @@ Create a professional local development environment.
 - Laravel Telescope (Local)
 
 ---
+
+
 
 ## Configuration
 
@@ -398,6 +424,8 @@ Configure:
 
 ---
 
+
+
 ## Acceptance Criteria
 
 - [x] Laravel boots successfully
@@ -417,6 +445,8 @@ Configure:
 - [x] Public/portal CSS entrypoints created (`resources/css/website`, `resources/css/portal`)
 
 ---
+
+
 
 # Implementation Playbook
 
@@ -514,6 +544,8 @@ No steps should be skipped unless explicitly documented.
 
 ---
 
+
+
 # Module Dependencies
 
 ```text
@@ -562,6 +594,8 @@ Avoid circular dependencies between domains.
 
 ---
 
+
+
 # Definition of Done
 
 A feature is considered complete only if all of the following are satisfied.
@@ -588,6 +622,8 @@ A feature is considered complete only if all of the following are satisfied.
 
 ---
 
+
+
 # Production Readiness Checklist
 
 Before deployment verify:
@@ -609,6 +645,8 @@ Before deployment verify:
 - [ ] `php artisan horizon:terminate` wired into deploys
 
 ---
+
+
 
 # Future Expansion Roadmap
 
@@ -636,13 +674,26 @@ Planned expansions include:
 Each future module should follow the same architectural standards defined throughout this documentation.
 
 # =============================================================================
+
+
+
 # PHASE 1
+
+
+
 # CORE ARCHITECTURE
+
+
+
 # =============================================================================
 
 ---
 
+
+
 # Phase 1 — Core Architecture
+
+
 
 ## Objective
 
@@ -661,17 +712,23 @@ This phase defines:
 
 ---
 
+
+
 # Estimated Duration
 
 1 Week
 
 ---
 
+
+
 # Dependencies
 
 - Phase 0 Complete
 
 ---
+
+
 
 # Deliverables
 
@@ -695,6 +752,8 @@ This phase defines:
 - Global Exceptions
 
 ---
+
+
 
 # Folder Structure
 
@@ -740,7 +799,11 @@ Console/
 
 ---
 
+
+
 # Tasks
+
+
 
 ## Domain Structure
 
@@ -759,6 +822,8 @@ Create
 - System
 
 ---
+
+
 
 ## Shared Components
 
@@ -784,6 +849,8 @@ BaseResource
 
 ---
 
+
+
 ## UUID Strategy
 
 Every model uses
@@ -797,6 +864,8 @@ Never use incremental IDs.
 Every public URL should use UUIDs.
 
 ---
+
+
 
 ## Enums
 
@@ -821,6 +890,8 @@ UserType
 RoleType
 
 ---
+
+
 
 ## Traits
 
@@ -848,6 +919,8 @@ HasOwnership
 
 ---
 
+
+
 ## Support Classes
 
 Create
@@ -872,6 +945,8 @@ Search Helper
 
 ---
 
+
+
 ## Value Objects
 
 Create
@@ -894,6 +969,8 @@ Measurement
 
 ---
 
+
+
 ## Events
 
 Create base events.
@@ -906,6 +983,8 @@ SystemEvent
 
 ---
 
+
+
 ## Notifications
 
 Create base notifications.
@@ -917,6 +996,8 @@ DatabaseNotification
 BroadcastNotification
 
 ---
+
+
 
 ## Activity Logging
 
@@ -948,6 +1029,8 @@ Project Updates
 
 ---
 
+
+
 ## Redis
 
 Create cache abstraction.
@@ -957,6 +1040,8 @@ Never access Cache facade directly.
 Use dedicated services.
 
 ---
+
+
 
 ## Reverb
 
@@ -971,6 +1056,8 @@ Presence channels
 Authorization
 
 ---
+
+
 
 ## Queues
 
@@ -990,6 +1077,8 @@ Notification Queue
 
 ---
 
+
+
 # Testing
 
 Verify
@@ -1005,6 +1094,8 @@ Verify
 
 ---
 
+
+
 # Documentation
 
 Update
@@ -1018,6 +1109,8 @@ README
 Agent Rules
 
 ---
+
+
 
 # Definition of Done
 
@@ -1036,6 +1129,8 @@ Agent Rules
 
 ---
 
+
+
 # Phase 1 Notes
 
 Implemented layout follows `ARCHITECTURE.md`:
@@ -1051,10 +1146,23 @@ Named queues: `default`, `mail`, `media`, `search`, `broadcast`, `notifications`
 
 ---
 
+
+
 # =============================================================================
+
+
+
 # PHASE 2
+
+
+
 # AUTHENTICATION & IDENTITY
+
+
+
 # =============================================================================
+
+
 
 # Objective
 
@@ -1067,6 +1175,8 @@ Create a secure authentication and authorization system that supports:
 The authentication layer must be scalable enough to support future mobile applications and APIs.
 
 ---
+
+
 
 # Deliverables
 
@@ -1108,6 +1218,8 @@ Admin Login
 
 ---
 
+
+
 # Packages
 
 Laravel Starter Kit
@@ -1121,6 +1233,8 @@ Laravel Reverb
 Redis
 
 ---
+
+
 
 # Database
 
@@ -1144,6 +1258,8 @@ personal_access_tokens
 
 ---
 
+
+
 # Models
 
 User
@@ -1155,6 +1271,8 @@ Permission
 Session
 
 ---
+
+
 
 # Services
 
@@ -1171,6 +1289,8 @@ PermissionService
 RoleService
 
 ---
+
+
 
 # Actions
 
@@ -1196,6 +1316,8 @@ UnlockAccount
 
 ---
 
+
+
 # Events
 
 UserRegistered
@@ -1216,6 +1338,8 @@ AccountLocked
 
 ---
 
+
+
 # Listeners
 
 SendWelcomeEmail
@@ -1229,6 +1353,8 @@ CreateNotifications
 BroadcastAuthenticationEvent
 
 ---
+
+
 
 # Livewire Components
 
@@ -1250,6 +1376,8 @@ Account Settings
 
 ---
 
+
+
 # Filament
 
 User Resource
@@ -1263,6 +1391,8 @@ Profile Resource
 Session Resource
 
 ---
+
+
 
 # Security
 
@@ -1282,6 +1412,8 @@ Remember Tokens
 
 ---
 
+
+
 # Redis
 
 Cache
@@ -1296,6 +1428,8 @@ Navigation
 
 ---
 
+
+
 # Reverb
 
 Realtime login notifications
@@ -1303,6 +1437,8 @@ Realtime login notifications
 Realtime session revocation
 
 ---
+
+
 
 # Testing
 
@@ -1326,6 +1462,8 @@ Session Handling
 
 ---
 
+
+
 # Definition of Done
 
 - [x] Authentication complete
@@ -1337,6 +1475,8 @@ Session Handling
 - [x] Documentation updated
 
 ---
+
+
 
 # Phase 2 Notes
 
@@ -1355,9 +1495,20 @@ Packages: Spatie Permission, Laravel Sanctum (API token foundation), Reverb list
 Seeded roles: `super-admin`, `administrator`, `staff`, `client`.
 
 # =============================================================================
+
+
+
 # PHASE 3
+
+
+
 # CONFIGURATION DOMAIN
+
+
+
 # =============================================================================
+
+
 
 # Objective
 
@@ -1369,17 +1520,23 @@ where appropriate.
 
 ---
 
+
+
 # Estimated Duration
 
 3–5 Days
 
 ---
 
+
+
 # Dependencies
 
 - Phase 2 Complete
 
 ---
+
+
 
 # Deliverables
 
@@ -1399,6 +1556,8 @@ where appropriate.
 
 ---
 
+
+
 # Database
 
 Tables
@@ -1415,6 +1574,8 @@ navigation_items
 
 ---
 
+
+
 # Models
 
 Setting
@@ -1429,6 +1590,8 @@ NavigationItem
 
 ---
 
+
+
 # Enums
 
 SettingType
@@ -1440,6 +1603,8 @@ FeatureStatus
 NavigationLocation
 
 ---
+
+
 
 # DTOs
 
@@ -1453,6 +1618,8 @@ SEOData
 
 ---
 
+
+
 # Repositories
 
 SettingRepository
@@ -1462,6 +1629,8 @@ NavigationRepository
 FeatureFlagRepository
 
 ---
+
+
 
 # Services
 
@@ -1476,6 +1645,8 @@ SEOConfigurationService
 FeatureFlagService
 
 ---
+
+
 
 # Actions
 
@@ -1493,6 +1664,8 @@ ClearConfigurationCache
 
 ---
 
+
+
 # Events
 
 SettingsUpdated
@@ -1507,6 +1680,8 @@ FeatureDisabled
 
 ---
 
+
+
 # Listeners
 
 ClearRedisConfigurationCache
@@ -1517,6 +1692,8 @@ LogConfigurationChange
 
 ---
 
+
+
 # Policies
 
 SettingPolicy
@@ -1526,6 +1703,8 @@ NavigationPolicy
 FeatureFlagPolicy
 
 ---
+
+
 
 # Livewire Components
 
@@ -1545,6 +1724,8 @@ Homepage Settings
 
 ---
 
+
+
 # Filament Resources
 
 Settings Resource
@@ -1554,6 +1735,8 @@ Navigation Resource
 Feature Flags Resource
 
 ---
+
+
 
 # Redis Strategy
 
@@ -1570,6 +1753,8 @@ Never clear the entire cache.
 
 ---
 
+
+
 # Queue Strategy
 
 Queue
@@ -1579,6 +1764,8 @@ Queue
 - Cache warming
 
 ---
+
+
 
 # Reverb
 
@@ -1590,6 +1777,8 @@ Broadcast
 
 ---
 
+
+
 # Security
 
 Only Super Administrators may modify system settings.
@@ -1598,6 +1787,8 @@ Every change must be activity logged.
 
 ---
 
+
+
 # Performance
 
 Cache all configuration data.
@@ -1605,6 +1796,8 @@ Cache all configuration data.
 Avoid repeated database lookups.
 
 ---
+
+
 
 # Testing
 
@@ -1616,6 +1809,8 @@ Avoid repeated database lookups.
 
 ---
 
+
+
 # Documentation
 
 Update
@@ -1625,6 +1820,8 @@ Update
 - README
 
 ---
+
+
 
 # Definition of Done
 
@@ -1638,6 +1835,8 @@ Update
 - [x] Documentation updated
 
 ---
+
+
 
 # Phase 3 Notes
 
@@ -1653,10 +1852,23 @@ Public header, footer, and default meta tags read from cached configuration.
 
 ---
 
+
+
 # =============================================================================
+
+
+
 # PHASE 4
+
+
+
 # COMPANY DOMAIN
+
+
+
 # =============================================================================
+
+
 
 # Objective
 
@@ -1667,17 +1879,23 @@ No company information should be hardcoded in views.
 
 ---
 
+
+
 # Estimated Duration
 
 4–6 Days
 
 ---
 
+
+
 # Dependencies
 
 - Phase 3 Complete
 
 ---
+
+
 
 # Deliverables
 
@@ -1696,6 +1914,8 @@ No company information should be hardcoded in views.
 - FAQs
 
 ---
+
+
 
 # Database
 
@@ -1721,6 +1941,8 @@ company_statistics
 
 ---
 
+
+
 # Models
 
 Company
@@ -1743,6 +1965,8 @@ Statistic
 
 ---
 
+
+
 # Enums
 
 BranchType
@@ -1754,6 +1978,8 @@ AwardCategory
 CertificationStatus
 
 ---
+
+
 
 # DTOs
 
@@ -1767,6 +1993,8 @@ TestimonialData
 
 ---
 
+
+
 # Repositories
 
 CompanyRepository
@@ -1776,6 +2004,8 @@ BranchRepository
 PartnerRepository
 
 ---
+
+
 
 # Services
 
@@ -1791,6 +2021,8 @@ TestimonialService
 
 ---
 
+
+
 # Actions
 
 UpdateCompanyProfile
@@ -1804,6 +2036,8 @@ PublishTestimonial
 UpdateStatistics
 
 ---
+
+
 
 # Events
 
@@ -1819,6 +2053,8 @@ CertificationUpdated
 
 ---
 
+
+
 # Listeners
 
 UpdateHomepageStatistics
@@ -1828,6 +2064,8 @@ ClearCompanyCache
 BroadcastCompanyChanges
 
 ---
+
+
 
 # Policies
 
@@ -1840,6 +2078,8 @@ PartnerPolicy
 TestimonialPolicy
 
 ---
+
+
 
 # Livewire Components
 
@@ -1858,6 +2098,8 @@ FAQs
 Company Statistics
 
 ---
+
+
 
 # Filament Resources
 
@@ -1879,6 +2121,8 @@ FAQ Resource
 
 ---
 
+
+
 # Redis Strategy
 
 Cache
@@ -1892,6 +2136,8 @@ Cache
 
 ---
 
+
+
 # Queue Strategy
 
 Queue
@@ -1901,6 +2147,8 @@ Queue
 - Search indexing
 
 ---
+
+
 
 # Reverb
 
@@ -1912,6 +2160,8 @@ Broadcast
 
 ---
 
+
+
 # Security
 
 Only authorized staff may update company information.
@@ -1919,6 +2169,8 @@ Only authorized staff may update company information.
 Every modification must be logged.
 
 ---
+
+
 
 # Performance
 
@@ -1930,6 +2182,8 @@ Lazy-load leadership and testimonial sections where appropriate.
 
 ---
 
+
+
 # Testing
 
 - CRUD operations
@@ -1940,6 +2194,8 @@ Lazy-load leadership and testimonial sections where appropriate.
 
 ---
 
+
+
 # Documentation
 
 Update
@@ -1949,6 +2205,8 @@ Update
 - API Documentation
 
 ---
+
+
 
 # Definition of Done
 
@@ -1962,6 +2220,8 @@ Update
 - [x] Documentation updated
 
 ---
+
+
 
 # Phase 4 Notes
 
@@ -1977,10 +2237,23 @@ Public `/about`, homepage statistics, and contact details read from the cached c
 
 ---
 
+
+
 # =============================================================================
+
+
+
 # PHASE 5
+
+
+
 # MEDIA DOMAIN
+
+
+
 # =============================================================================
+
+
 
 # Objective
 
@@ -1995,17 +2268,23 @@ All uploads must go through the Media Domain.
 
 ---
 
+
+
 # Estimated Duration
 
 5–7 Days
 
 ---
 
+
+
 # Dependencies
 
 - Phase 4 Complete
 
 ---
+
+
 
 # Deliverables
 
@@ -2026,6 +2305,8 @@ All uploads must go through the Media Domain.
 
 ---
 
+
+
 # Packages
 
 Spatie Media Library
@@ -2035,6 +2316,8 @@ Intervention Image (if required)
 FFMpeg (future)
 
 ---
+
+
 
 # Database
 
@@ -2050,6 +2333,8 @@ media_usages
 
 ---
 
+
+
 # Models
 
 MediaFolder
@@ -2059,6 +2344,8 @@ MediaTag
 MediaUsage
 
 ---
+
+
 
 # Enums
 
@@ -2074,6 +2361,8 @@ ConversionType
 
 ---
 
+
+
 # DTOs
 
 MediaUploadData
@@ -2084,6 +2373,8 @@ MediaConversionData
 
 ---
 
+
+
 # Repositories
 
 MediaRepository
@@ -2091,6 +2382,8 @@ MediaRepository
 MediaFolderRepository
 
 ---
+
+
 
 # Services
 
@@ -2105,6 +2398,8 @@ MediaSearchService
 MediaUsageService
 
 ---
+
+
 
 # Actions
 
@@ -2126,6 +2421,8 @@ GenerateThumbnail
 
 ---
 
+
+
 # Events
 
 MediaUploaded
@@ -2139,6 +2436,8 @@ MediaOptimized
 MediaMoved
 
 ---
+
+
 
 # Listeners
 
@@ -2154,6 +2453,8 @@ ClearMediaCache
 
 ---
 
+
+
 # Policies
 
 MediaPolicy
@@ -2161,6 +2462,8 @@ MediaPolicy
 FolderPolicy
 
 ---
+
+
 
 # Livewire Components
 
@@ -2180,6 +2483,8 @@ Media Search
 
 ---
 
+
+
 # Filament Resources
 
 Media Resource
@@ -2189,6 +2494,8 @@ Folder Resource
 Tag Resource
 
 ---
+
+
 
 # Supported Formats
 
@@ -2218,6 +2525,8 @@ Future
 - IFC Models
 
 ---
+
+
 
 # Media Collections
 
@@ -2251,6 +2560,8 @@ SEO
 
 ---
 
+
+
 # Image Conversions
 
 Thumbnail
@@ -2273,6 +2584,8 @@ AVIF
 
 ---
 
+
+
 # Redis Strategy
 
 Cache
@@ -2288,6 +2601,8 @@ Media counts
 Folder tree
 
 ---
+
+
 
 # Queue Strategy
 
@@ -2305,6 +2620,8 @@ Video processing
 
 ---
 
+
+
 # Reverb
 
 Broadcast
@@ -2316,6 +2633,8 @@ Media Deleted
 Media Updated
 
 ---
+
+
 
 # Security
 
@@ -2333,6 +2652,8 @@ Public storage for website assets
 
 ---
 
+
+
 # Performance
 
 Lazy loading
@@ -2346,6 +2667,8 @@ CDN-ready architecture
 Optimized thumbnails
 
 ---
+
+
 
 # Testing
 
@@ -2365,6 +2688,8 @@ Optimization
 
 ---
 
+
+
 # Documentation
 
 Update
@@ -2376,6 +2701,8 @@ Architecture
 README
 
 ---
+
+
 
 # Definition of Done
 
@@ -2389,6 +2716,8 @@ README
 - [x] Documentation updated
 
 ---
+
+
 
 # Phase 5 Notes
 
@@ -2404,10 +2733,23 @@ Public site images and videos remain in `public/media/zyntech` and continue to b
 
 ---
 
+
+
 # =============================================================================
+
+
+
 # PHASE 6
+
+
+
 # SERVICES DOMAIN
+
+
+
 # =============================================================================
+
+
 
 # Objective
 
@@ -2419,17 +2761,23 @@ The Services Domain acts as both a marketing module and a business module.
 
 ---
 
+
+
 # Estimated Duration
 
 4–6 Days
 
 ---
 
+
+
 # Dependencies
 
 - Phase 5 Complete
 
 ---
+
+
 
 # Deliverables
 
@@ -2445,6 +2793,8 @@ The Services Domain acts as both a marketing module and a business module.
 - Homepage Integration
 
 ---
+
+
 
 # Database
 
@@ -2466,6 +2816,8 @@ service_related_projects
 
 ---
 
+
+
 # Models
 
 Service
@@ -2482,6 +2834,8 @@ ServiceStatistic
 
 ---
 
+
+
 # Enums
 
 ServiceStatus
@@ -2494,6 +2848,8 @@ Visibility
 
 ---
 
+
+
 # DTOs
 
 ServiceData
@@ -2504,6 +2860,8 @@ ServiceProcessData
 
 ---
 
+
+
 # Repositories
 
 ServiceRepository
@@ -2511,6 +2869,8 @@ ServiceRepository
 CategoryRepository
 
 ---
+
+
 
 # Services
 
@@ -2521,6 +2881,8 @@ ServiceSEOService
 FeaturedServiceService
 
 ---
+
+
 
 # Actions
 
@@ -2536,6 +2898,8 @@ UpdatePricing
 
 ---
 
+
+
 # Events
 
 ServiceCreated
@@ -2547,6 +2911,8 @@ ServiceUpdated
 ServiceArchived
 
 ---
+
+
 
 # Livewire Components
 
@@ -2562,6 +2928,8 @@ Featured Services
 
 ---
 
+
+
 # Filament Resources
 
 Service Resource
@@ -2571,6 +2939,8 @@ Category Resource
 FAQ Resource
 
 ---
+
+
 
 # Frontend Pages
 
@@ -2586,6 +2956,8 @@ Quotation CTA
 
 ---
 
+
+
 # Redis Strategy
 
 Cache
@@ -2600,6 +2972,8 @@ Homepage blocks
 
 ---
 
+
+
 # Queue Strategy
 
 SEO generation
@@ -2610,6 +2984,8 @@ Search indexing
 
 ---
 
+
+
 # Reverb
 
 Broadcast
@@ -2619,6 +2995,8 @@ Service Updated
 Featured Service Changed
 
 ---
+
+
 
 # Performance
 
@@ -2631,6 +3009,8 @@ Lazy-load service galleries
 Optimize images
 
 ---
+
+
 
 # Testing
 
@@ -2648,6 +3028,8 @@ Frontend rendering
 
 ---
 
+
+
 # Definition of Done
 
 - [x] Services fully manageable
@@ -2658,6 +3040,8 @@ Frontend rendering
 - [x] Documentation updated
 
 ---
+
+
 
 # Phase 6 Notes
 
@@ -2673,10 +3057,23 @@ Public site images and videos remain in `public/media/zyntech` and continue to b
 
 ---
 
+
+
 # =============================================================================
+
+
+
 # PHASE 7
+
+
+
 # PROJECTS DOMAIN
+
+
+
 # =============================================================================
+
+
 
 # Objective
 
@@ -2692,17 +3089,23 @@ confidence, strengthens SEO, and generates future business.
 
 ---
 
+
+
 # Estimated Duration
 
 2–3 Weeks
 
 ---
 
+
+
 # Dependencies
 
 - Phase 6 Complete
 
 ---
+
+
 
 # Deliverables
 
@@ -2731,6 +3134,8 @@ confidence, strengthens SEO, and generates future business.
 - AI SEO
 
 ---
+
+
 
 # Database
 
@@ -2776,6 +3181,8 @@ project_awards
 
 ---
 
+
+
 # Models
 
 Project
@@ -2812,6 +3219,8 @@ ProjectTag
 
 ---
 
+
+
 # Enums
 
 ProjectStatus
@@ -2830,6 +3239,8 @@ MediaType
 
 ---
 
+
+
 # DTOs
 
 ProjectData
@@ -2846,6 +3257,8 @@ ProgressUpdateData
 
 ---
 
+
+
 # Repositories
 
 ProjectRepository
@@ -2859,6 +3272,8 @@ LocationRepository
 StatisticsRepository
 
 ---
+
+
 
 # Services
 
@@ -2879,6 +3294,8 @@ StatisticsService
 FeaturedProjectService
 
 ---
+
+
 
 # Actions
 
@@ -2910,6 +3327,8 @@ GenerateCaseStudy
 
 ---
 
+
+
 # Events
 
 ProjectCreated
@@ -2932,6 +3351,8 @@ ProjectArchived
 
 ---
 
+
+
 # Listeners
 
 GenerateSEO
@@ -2948,6 +3369,8 @@ GenerateProjectStatistics
 
 ---
 
+
+
 # Policies
 
 ProjectPolicy
@@ -2959,6 +3382,8 @@ TimelinePolicy
 DocumentPolicy
 
 ---
+
+
 
 # Livewire Components
 
@@ -2998,6 +3423,8 @@ Downloads
 
 ---
 
+
+
 # Filament Resources
 
 Project Resource
@@ -3022,6 +3449,8 @@ Award Resource
 
 ---
 
+
+
 # Frontend Pages
 
 Projects
@@ -3039,6 +3468,8 @@ Construction Timeline
 Case Study
 
 ---
+
+
 
 # Homepage Integration
 
@@ -3058,6 +3489,8 @@ Client Testimonials
 
 ---
 
+
+
 # Rich Filtering
 
 Users should be able to filter projects by:
@@ -3075,6 +3508,8 @@ Users should be able to filter projects by:
 - Technology Used
 
 ---
+
+
 
 # Interactive Kenya Map
 
@@ -3098,6 +3533,8 @@ Future Support
 
 ---
 
+
+
 # Before & After Comparisons
 
 Support interactive image comparison sliders.
@@ -3112,6 +3549,8 @@ Each comparison should include:
 Multiple comparison sets should be supported.
 
 ---
+
+
 
 # Construction Timeline
 
@@ -3171,6 +3610,8 @@ Each milestone supports:
 
 ---
 
+
+
 # Progress Updates
 
 Project managers may publish updates.
@@ -3188,6 +3629,8 @@ Updates include:
 Updates appear chronologically.
 
 ---
+
+
 
 # Gallery
 
@@ -3207,6 +3650,8 @@ Virtual Tours (Future)
 
 ---
 
+
+
 # Documents
 
 Store
@@ -3224,6 +3669,8 @@ Downloads
 Documents may be public or private.
 
 ---
+
+
 
 # Technologies Used
 
@@ -3244,6 +3691,8 @@ Solar Integration
 Rainwater Harvesting
 
 ---
+
+
 
 # Materials
 
@@ -3267,6 +3716,8 @@ Paint
 
 ---
 
+
+
 # Related Content
 
 Each project may link to:
@@ -3280,6 +3731,8 @@ Each project may link to:
 This improves navigation and SEO.
 
 ---
+
+
 
 # Redis Strategy
 
@@ -3303,6 +3756,8 @@ Filters
 
 ---
 
+
+
 # Queue Strategy
 
 Queue
@@ -3323,6 +3778,8 @@ PDF Case Study Generation
 
 ---
 
+
+
 # Reverb
 
 Broadcast
@@ -3338,6 +3795,8 @@ Gallery Updated
 Project Featured
 
 ---
+
+
 
 # Search
 
@@ -3363,6 +3822,8 @@ Keywords
 
 ---
 
+
+
 # SEO
 
 Generate
@@ -3385,6 +3846,8 @@ JSON-LD
 
 ---
 
+
+
 # Accessibility
 
 Every gallery must support:
@@ -3396,6 +3859,8 @@ Every gallery must support:
 
 ---
 
+
+
 # Security
 
 Restrict editing to authorized staff.
@@ -3405,6 +3870,8 @@ Private documents must never be publicly accessible.
 Validate every upload.
 
 ---
+
+
 
 # Performance
 
@@ -3425,6 +3892,8 @@ Efficient eager loading
 Database indexing
 
 ---
+
+
 
 # Testing
 
@@ -3454,6 +3923,8 @@ Accessibility
 
 ---
 
+
+
 # Documentation
 
 Update
@@ -3467,6 +3938,8 @@ API
 README
 
 ---
+
+
 
 # Definition of Done
 
@@ -3487,6 +3960,8 @@ README
 
 ---
 
+
+
 # Phase 7 Notes
 
 Implemented under domain architecture:
@@ -3501,10 +3976,23 @@ Public site images and videos remain in `public/media/zyntech` and continue to b
 
 ---
 
+
+
 # =============================================================================
+
+
+
 # PHASE 8
+
+
+
 # KNOWLEDGE CENTRE DOMAIN
+
+
+
 # =============================================================================
+
+
 
 # Objective
 
@@ -3518,17 +4006,23 @@ It should become one of the largest traffic sources for the platform.
 
 ---
 
+
+
 # Estimated Duration
 
 2 Weeks
 
 ---
 
+
+
 # Dependencies
 
 - Phase 7 Complete
 
 ---
+
+
 
 # Deliverables
 
@@ -3548,6 +4042,8 @@ It should become one of the largest traffic sources for the platform.
 - Article Analytics
 
 ---
+
+
 
 # Database
 
@@ -3577,6 +4073,8 @@ article_faqs
 
 ---
 
+
+
 # Models
 
 Article
@@ -3597,6 +4095,8 @@ ArticleFAQ
 
 ---
 
+
+
 # Enums
 
 ArticleStatus
@@ -3608,6 +4108,8 @@ ReadingLevel
 ArticleType
 
 ---
+
+
 
 # DTOs
 
@@ -3621,6 +4123,8 @@ SectionData
 
 ---
 
+
+
 # Repositories
 
 ArticleRepository
@@ -3630,6 +4134,8 @@ CategoryRepository
 TagRepository
 
 ---
+
+
 
 # Services
 
@@ -3646,6 +4152,8 @@ NewsletterService
 SearchService
 
 ---
+
+
 
 # Actions
 
@@ -3669,6 +4177,8 @@ AssignRelatedServices
 
 ---
 
+
+
 # Events
 
 ArticleCreated
@@ -3682,6 +4192,8 @@ ArticleArchived
 ArticleViewed
 
 ---
+
+
 
 # Listeners
 
@@ -3697,6 +4209,8 @@ SendNewsletter
 
 ---
 
+
+
 # Policies
 
 ArticlePolicy
@@ -3706,6 +4220,8 @@ CategoryPolicy
 AuthorPolicy
 
 ---
+
+
 
 # Livewire Components
 
@@ -3735,6 +4251,8 @@ Newsletter Signup
 
 ---
 
+
+
 # Filament Resources
 
 Article Resource
@@ -3749,6 +4267,8 @@ FAQ Resource
 
 ---
 
+
+
 # Frontend Pages
 
 Knowledge Centre
@@ -3762,6 +4282,8 @@ Search Results
 Author Profile
 
 ---
+
+
 
 # Article Types
 
@@ -3793,6 +4315,8 @@ Downloads
 
 ---
 
+
+
 # Rich Content Support
 
 Articles may contain
@@ -3821,6 +4345,8 @@ Maps
 
 ---
 
+
+
 # Homepage Integration
 
 Featured Articles
@@ -3834,6 +4360,8 @@ Construction Tips
 Project Guides
 
 ---
+
+
 
 # Related Content
 
@@ -3859,6 +4387,8 @@ This creates an interconnected content ecosystem that improves navigation and SE
 
 ---
 
+
+
 # Search
 
 Support search by
@@ -3880,6 +4410,8 @@ Project
 Service
 
 ---
+
+
 
 # SEO
 
@@ -3905,6 +4437,8 @@ XML Sitemap
 
 ---
 
+
+
 # AI SEO
 
 Automatically generate
@@ -3927,6 +4461,8 @@ AI Content Assistant
 
 ---
 
+
+
 # Downloads
 
 Support downloadable
@@ -3944,6 +4480,8 @@ Material Guides
 Brochures
 
 ---
+
+
 
 # Redis Strategy
 
@@ -3963,6 +4501,8 @@ Reading Statistics
 
 ---
 
+
+
 # Queue Strategy
 
 Queue
@@ -3981,6 +4521,8 @@ Analytics
 
 ---
 
+
+
 # Reverb
 
 Broadcast
@@ -3992,6 +4534,8 @@ Featured Article Updated
 Newsletter Sent
 
 ---
+
+
 
 # Analytics
 
@@ -4015,6 +4559,8 @@ Newsletter Signups
 
 ---
 
+
+
 # Accessibility
 
 Support
@@ -4033,6 +4579,8 @@ Skip links
 
 ---
 
+
+
 # Performance
 
 Cache article pages
@@ -4049,6 +4597,8 @@ Database indexing
 
 ---
 
+
+
 # Security
 
 Only authorized authors may publish.
@@ -4060,6 +4610,8 @@ Validate uploads.
 Sanitize rich text.
 
 ---
+
+
 
 # Testing
 
@@ -4083,6 +4635,8 @@ Accessibility
 
 ---
 
+
+
 # Documentation
 
 Update
@@ -4096,6 +4650,8 @@ Architecture
 README
 
 ---
+
+
 
 # Definition of Done
 
@@ -4111,10 +4667,23 @@ README
 - [ ] Tests passing
 - [x] Documentation updated
 
+
+
 # =============================================================================
+
+
+
 # PHASE 9
+
+
+
 # SALES & QUOTATION DOMAIN
+
+
+
 # =============================================================================
+
+
 
 # Objective
 
@@ -4128,17 +4697,23 @@ It serves as the bridge between the Public Website and the Client Portal.
 
 ---
 
+
+
 # Estimated Duration
 
 2–3 Weeks
 
 ---
 
+
+
 # Dependencies
 
 - Phase 8 Complete
 
 ---
+
+
 
 # Deliverables
 
@@ -4160,6 +4735,8 @@ It serves as the bridge between the Public Website and the Client Portal.
 - Analytics
 
 ---
+
+
 
 # Database
 
@@ -4205,6 +4782,8 @@ quotation_activity_logs
 
 ---
 
+
+
 # Models
 
 SalesLead
@@ -4229,6 +4808,8 @@ LeadSource
 
 ---
 
+
+
 # Enums
 
 LeadStatus
@@ -4247,6 +4828,8 @@ QuotationType
 
 ---
 
+
+
 # DTOs
 
 LeadData
@@ -4263,6 +4846,8 @@ SiteVisitData
 
 ---
 
+
+
 # Repositories
 
 LeadRepository
@@ -4274,6 +4859,8 @@ SiteVisitRepository
 ApprovalRepository
 
 ---
+
+
 
 # Services
 
@@ -4292,6 +4879,8 @@ SiteVisitService
 SalesAnalyticsService
 
 ---
+
+
 
 # Actions
 
@@ -4321,6 +4910,8 @@ ArchiveQuotation
 
 ---
 
+
+
 # Events
 
 LeadCreated
@@ -4345,6 +4936,8 @@ ProjectCreatedFromQuotation
 
 ---
 
+
+
 # Listeners
 
 GeneratePDF
@@ -4363,6 +4956,8 @@ GenerateAnalytics
 
 ---
 
+
+
 # Policies
 
 LeadPolicy
@@ -4374,6 +4969,8 @@ SiteVisitPolicy
 ApprovalPolicy
 
 ---
+
+
 
 # Livewire Components
 
@@ -4397,6 +4994,8 @@ Sales Dashboard
 
 ---
 
+
+
 # Filament Resources
 
 Sales Lead Resource
@@ -4413,6 +5012,8 @@ Approval Resource
 
 ---
 
+
+
 # Frontend Pages
 
 Request Quotation
@@ -4426,6 +5027,8 @@ Quotation Details (Client Portal)
 Sales Contact
 
 ---
+
+
 
 # Public Quotation Form
 
@@ -4457,6 +5060,8 @@ Preferred Contact Method
 
 ---
 
+
+
 # Attachment Support
 
 Accept
@@ -4476,6 +5081,8 @@ ZIP Archives
 Maximum upload limits configurable.
 
 ---
+
+
 
 # Quotation Builder
 
@@ -4500,6 +5107,8 @@ Validity Period
 Multiple Revisions
 
 ---
+
+
 
 # Site Visits
 
@@ -4528,6 +5137,8 @@ Photos
 Recommendations
 
 ---
+
+
 
 # Approval Workflow
 
@@ -4567,6 +5178,8 @@ Project Created
 
 ---
 
+
+
 # Client Actions
 
 View quotation
@@ -4584,6 +5197,8 @@ Send questions
 Upload supporting documents
 
 ---
+
+
 
 # PDF Generation
 
@@ -4611,6 +5226,8 @@ Queue all PDF generation jobs.
 
 ---
 
+
+
 # Email Workflow
 
 Automatic emails for
@@ -4631,6 +5248,8 @@ Site Visit Scheduled
 
 ---
 
+
+
 # Homepage Integration
 
 Request Quotation CTA
@@ -4642,6 +5261,8 @@ Contact CTA
 Recent Success Stories
 
 ---
+
+
 
 # Analytics
 
@@ -4665,6 +5286,8 @@ Most requested services
 
 ---
 
+
+
 # Redis Strategy
 
 Cache
@@ -4680,6 +5303,8 @@ Dashboard widgets
 Sales reports
 
 ---
+
+
 
 # Queue Strategy
 
@@ -4699,6 +5324,8 @@ Large attachments
 
 ---
 
+
+
 # Laravel Reverb
 
 Broadcast
@@ -4714,6 +5341,8 @@ Quotation accepted
 Lead assigned
 
 ---
+
+
 
 # Search
 
@@ -4737,6 +5366,8 @@ Project Type
 
 ---
 
+
+
 # Security
 
 Validate every upload.
@@ -4748,6 +5379,8 @@ Clients may only access their own quotations.
 Every change must be activity logged.
 
 ---
+
+
 
 # Performance
 
@@ -4762,6 +5395,8 @@ Use eager loading
 Cache dashboards
 
 ---
+
+
 
 # Testing
 
@@ -4785,6 +5420,8 @@ Analytics
 
 ---
 
+
+
 # Documentation
 
 Update
@@ -4800,6 +5437,8 @@ README
 API Documentation
 
 ---
+
+
 
 # Definition of Done
 
@@ -4817,6 +5456,8 @@ API Documentation
 - [ ] Tests passing
 - [x] Documentation updated
 
+
+
 # Phase 9 Notes
 
 Implemented under domain architecture:
@@ -4830,9 +5471,20 @@ docs/QUOTATIONS.md
 Public `/quote` form creates leads and requests. Filament builds quotations with sections/items, approve/send actions, and queued PDF/email stubs.
 
 # =============================================================================
+
+
+
 # PHASE 10
+
+
+
 # CLIENT RELATIONSHIP MANAGEMENT (CRM LITE)
+
+
+
 # =============================================================================
+
+
 
 # Objective
 
@@ -4848,17 +5500,23 @@ information.
 
 ---
 
+
+
 # Estimated Duration
 
 2 Weeks
 
 ---
 
+
+
 # Dependencies
 
 - Phase 9 Complete
 
 ---
+
+
 
 # Deliverables
 
@@ -4881,6 +5539,8 @@ information.
 - Notification Preferences
 
 ---
+
+
 
 # Database
 
@@ -4916,6 +5576,8 @@ client_settings
 
 ---
 
+
+
 # Models
 
 Client
@@ -4938,6 +5600,8 @@ ClientTag
 
 ---
 
+
+
 # Enums
 
 ClientType
@@ -4954,6 +5618,8 @@ NotificationPreference
 
 ---
 
+
+
 # DTOs
 
 ClientData
@@ -4968,6 +5634,8 @@ PreferenceData
 
 ---
 
+
+
 # Repositories
 
 ClientRepository
@@ -4979,6 +5647,8 @@ DocumentRepository
 TimelineRepository
 
 ---
+
+
 
 # Services
 
@@ -4993,6 +5663,8 @@ ClientAnalyticsService
 TimelineService
 
 ---
+
+
 
 # Actions
 
@@ -5016,6 +5688,8 @@ GenerateClientSummary
 
 ---
 
+
+
 # Events
 
 ClientCreated
@@ -5034,6 +5708,8 @@ ClientMerged
 
 ---
 
+
+
 # Listeners
 
 NotifyAssignedStaff
@@ -5048,6 +5724,8 @@ LogClientActivity
 
 ---
 
+
+
 # Policies
 
 ClientPolicy
@@ -5057,6 +5735,8 @@ ClientDocumentPolicy
 ClientNotePolicy
 
 ---
+
+
 
 # Livewire Components
 
@@ -5080,6 +5760,8 @@ Notification Settings
 
 ---
 
+
+
 # Filament Resources
 
 Client Resource
@@ -5091,6 +5773,8 @@ Group Resource
 Tag Resource
 
 ---
+
+
 
 # Frontend Pages
 
@@ -5105,6 +5789,8 @@ Notifications
 Settings
 
 ---
+
+
 
 # Client Profile
 
@@ -5140,6 +5826,8 @@ Activity Timeline
 
 ---
 
+
+
 # Client Timeline
 
 Display chronological events
@@ -5165,6 +5853,8 @@ Communication Logged
 Portal Login
 
 ---
+
+
 
 # Client Documents
 
@@ -5194,6 +5884,8 @@ Private Notes
 
 ---
 
+
+
 # Communication History
 
 Log every interaction
@@ -5213,6 +5905,8 @@ Portal Messages
 Internal Notes
 
 ---
+
+
 
 # Notification Preferences
 
@@ -5234,6 +5928,8 @@ Newsletter
 
 ---
 
+
+
 # Homepage Integration
 
 Client Login
@@ -5243,6 +5939,8 @@ Client Testimonials
 Customer Stories
 
 ---
+
+
 
 # Analytics
 
@@ -5266,6 +5964,8 @@ Average Quotation Value
 
 ---
 
+
+
 # Redis Strategy
 
 Cache
@@ -5279,6 +5979,8 @@ Client Statistics
 Frequently Accessed Profiles
 
 ---
+
+
 
 # Queue Strategy
 
@@ -5296,6 +5998,8 @@ Report Generation
 
 ---
 
+
+
 # Laravel Reverb
 
 Broadcast
@@ -5311,6 +6015,8 @@ Portal Message
 Project Update
 
 ---
+
+
 
 # Search
 
@@ -5336,6 +6042,8 @@ County
 
 ---
 
+
+
 # Security
 
 Clients can only access their own records.
@@ -5347,6 +6055,8 @@ Every action must be logged.
 Role-based authorization required for all staff actions.
 
 ---
+
+
 
 # Performance
 
@@ -5361,6 +6071,8 @@ Index searchable fields
 Use eager loading
 
 ---
+
+
 
 # Testing
 
@@ -5380,6 +6092,8 @@ Portal Access
 
 ---
 
+
+
 # Documentation
 
 Update
@@ -5396,6 +6110,8 @@ API Documentation
 
 ---
 
+
+
 # Definition of Done
 
 - [x] Client profiles operational
@@ -5409,10 +6125,23 @@ API Documentation
 - [ ] Tests passing
 - [x] Documentation updated
 
+
+
 # =============================================================================
+
+
+
 # PHASE 11
+
+
+
 # CLIENT PORTAL
+
+
+
 # =============================================================================
+
+
 
 # Objective
 
@@ -5427,17 +6156,23 @@ confidence.
 
 ---
 
+
+
 # Estimated Duration
 
 3 Weeks
 
 ---
 
+
+
 # Dependencies
 
 - Phase 10 Complete
 
 ---
+
+
 
 # Deliverables
 
@@ -5457,6 +6192,8 @@ confidence.
 - Support Centre
 
 ---
+
+
 
 # Database
 
@@ -5492,6 +6229,8 @@ meeting_slots
 
 ---
 
+
+
 # Models
 
 PortalMessage
@@ -5514,6 +6253,8 @@ TrustedDevice
 
 ---
 
+
+
 # Enums
 
 PortalNotificationType
@@ -5532,6 +6273,8 @@ PortalTheme
 
 ---
 
+
+
 # DTOs
 
 DashboardData
@@ -5546,6 +6289,8 @@ NotificationData
 
 ---
 
+
+
 # Repositories
 
 PortalRepository
@@ -5557,6 +6302,8 @@ SupportRepository
 MeetingRepository
 
 ---
+
+
 
 # Services
 
@@ -5573,6 +6320,8 @@ DashboardService
 NotificationService
 
 ---
+
+
 
 # Actions
 
@@ -5602,6 +6351,8 @@ UpdatePortalPreferences
 
 ---
 
+
+
 # Events
 
 ClientLoggedIn
@@ -5626,6 +6377,8 @@ QuotationUpdated
 
 ---
 
+
+
 # Listeners
 
 SendEmailNotification
@@ -5642,6 +6395,8 @@ ClearDashboardCache
 
 ---
 
+
+
 # Policies
 
 PortalPolicy
@@ -5655,6 +6410,8 @@ MeetingPolicy
 DocumentPolicy
 
 ---
+
+
 
 # Livewire Components
 
@@ -5690,6 +6447,8 @@ Announcements
 
 ---
 
+
+
 # Filament Resources
 
 Portal Announcement Resource
@@ -5701,6 +6460,8 @@ Support Resource
 Notification Resource
 
 ---
+
+
 
 # Dashboard Widgets
 
@@ -5725,6 +6486,8 @@ Knowledge Centre Suggestions
 Recommended Services
 
 ---
+
+
 
 # Client Dashboard
 
@@ -5757,6 +6520,8 @@ Saved Services
 
 ---
 
+
+
 # Project Tracking
 
 Each project displays
@@ -5780,6 +6545,8 @@ Estimated Completion
 Recent Updates
 
 ---
+
+
 
 # Document Centre
 
@@ -5817,6 +6584,8 @@ Download History
 
 ---
 
+
+
 # Communication Centre
 
 Support
@@ -5841,6 +6610,8 @@ WhatsApp Integration
 
 ---
 
+
+
 # Appointment Scheduling
 
 Clients should be able to request
@@ -5858,6 +6629,8 @@ Project Reviews
 Completion Inspections
 
 ---
+
+
 
 # Notification Centre
 
@@ -5880,6 +6653,8 @@ Knowledge Articles
 System Notifications
 
 ---
+
+
 
 # Activity Timeline
 
@@ -5907,6 +6682,8 @@ Project Completed
 
 ---
 
+
+
 # Downloads
 
 Allow clients to download
@@ -5927,6 +6704,8 @@ Completion Packs
 
 ---
 
+
+
 # Homepage Integration
 
 Client Login
@@ -5936,6 +6715,8 @@ Portal Preview
 Customer Success Stories
 
 ---
+
+
 
 # Redis Strategy
 
@@ -5952,6 +6733,8 @@ Announcements
 Recommended Content
 
 ---
+
+
 
 # Queue Strategy
 
@@ -5971,6 +6754,8 @@ Support Escalation
 
 ---
 
+
+
 # Laravel Reverb
 
 Broadcast
@@ -5988,6 +6773,8 @@ Support Replies
 Live Notifications
 
 ---
+
+
 
 # Search
 
@@ -6009,6 +6796,8 @@ Support Tickets
 
 ---
 
+
+
 # Security
 
 Require verified email.
@@ -6025,6 +6814,8 @@ Protect downloads using signed URLs.
 
 ---
 
+
+
 # Performance
 
 Lazy-load widgets.
@@ -6038,6 +6829,8 @@ Optimize queries.
 Eager load relationships.
 
 ---
+
+
 
 # Testing
 
@@ -6061,6 +6854,8 @@ Accessibility
 
 ---
 
+
+
 # Documentation
 
 Update
@@ -6074,6 +6869,8 @@ README
 API Documentation
 
 ---
+
+
 
 # Definition of Done
 
@@ -6169,9 +6966,20 @@ Referral
 Repeat Customer
 
 # =============================================================================
+
+
+
 # PHASE 12
+
+
+
 # PUBLIC WEBSITE
+
+
+
 # =============================================================================
+
+
 
 # Objective
 
@@ -6187,17 +6995,23 @@ customer experience rather than acting as a simple brochure.
 
 ---
 
+
+
 # Estimated Duration
 
 3–4 Weeks
 
 ---
 
+
+
 # Dependencies
 
 - Phase 11 Complete
 
 ---
+
+
 
 # Deliverables
 
@@ -6220,6 +7034,8 @@ customer experience rather than acting as a simple brochure.
 
 ---
 
+
+
 # Core Principles
 
 The website should be:
@@ -6233,6 +7049,8 @@ The website should be:
 - Conversion Focused
 
 ---
+
+
 
 # Website Structure
 
@@ -6268,6 +7086,8 @@ Client Portal
 
 ---
 
+
+
 # Homepage
 
 Sections
@@ -6300,6 +7120,8 @@ Footer
 
 ---
 
+
+
 # Hero Section
 
 Display
@@ -6317,6 +7139,8 @@ Quick Statistics
 Animated Background
 
 ---
+
+
 
 # Company Section
 
@@ -6342,6 +7166,8 @@ Branches
 
 ---
 
+
+
 # Services Section
 
 Display
@@ -6364,6 +7190,8 @@ Request Quotation
 
 ---
 
+
+
 # Projects Section
 
 Display
@@ -6385,6 +7213,8 @@ Interactive Kenya Map
 Construction Timeline Preview
 
 ---
+
+
 
 # Project Details
 
@@ -6418,6 +7248,8 @@ Request Quotation CTA
 
 ---
 
+
+
 # Knowledge Centre
 
 Display
@@ -6437,6 +7269,8 @@ Related Projects
 Newsletter
 
 ---
+
+
 
 # Contact
 
@@ -6462,6 +7296,8 @@ Quotation CTA
 
 ---
 
+
+
 # Request Quotation
 
 Multi-step wizard
@@ -6482,6 +7318,8 @@ Submit
 
 ---
 
+
+
 # Client Portal
 
 Login
@@ -6495,6 +7333,8 @@ Dashboard Preview
 Benefits
 
 ---
+
+
 
 # Search
 
@@ -6512,6 +7352,8 @@ FAQs
 
 ---
 
+
+
 # Navigation
 
 Desktop Navigation
@@ -6528,6 +7370,8 @@ Request Quotation
 
 ---
 
+
+
 # Mobile Navigation
 
 Drawer Menu
@@ -6541,6 +7385,8 @@ WhatsApp
 Request Quote
 
 ---
+
+
 
 # Footer
 
@@ -6568,6 +7414,8 @@ Terms
 
 ---
 
+
+
 # Homepage Widgets
 
 Construction Statistics
@@ -6583,6 +7431,8 @@ Current Projects
 Awards
 
 ---
+
+
 
 # Interactive Components
 
@@ -6607,6 +7457,8 @@ Knowledge Search
 Newsletter Signup
 
 ---
+
+
 
 # Livewire Components
 
@@ -6637,6 +7489,8 @@ Newsletter
 Footer
 
 ---
+
+
 
 # SEO
 
@@ -6672,6 +7526,8 @@ Service Schema
 
 ---
 
+
+
 # Accessibility
 
 WCAG 2.2 AA
@@ -6691,6 +7547,8 @@ Contrast Compliance
 Skip Links
 
 ---
+
+
 
 # Performance
 
@@ -6716,6 +7574,8 @@ Database Optimization
 
 ---
 
+
+
 # Redis Strategy
 
 Cache
@@ -6736,6 +7596,8 @@ SEO Metadata
 
 ---
 
+
+
 # Queue Strategy
 
 Queue
@@ -6754,6 +7616,8 @@ Newsletter
 
 ---
 
+
+
 # Laravel Reverb
 
 Broadcast
@@ -6767,6 +7631,8 @@ Project Updates
 Homepage Notifications
 
 ---
+
+
 
 # Security
 
@@ -6787,6 +7653,8 @@ Secure Uploads
 Content Security Policy
 
 ---
+
+
 
 # Analytics
 
@@ -6814,6 +7682,8 @@ Newsletter Signups
 
 ---
 
+
+
 # Testing
 
 Responsive Design
@@ -6836,6 +7706,8 @@ Browser Compatibility
 
 ---
 
+
+
 # Documentation
 
 Update
@@ -6851,6 +7723,8 @@ README
 Deployment Guide
 
 ---
+
+
 
 # Definition of Done
 
@@ -6892,9 +7766,20 @@ Website
 └── Footer
 
 # =============================================================================
+
+
+
 # PHASE 13
+
+
+
 # COMMUNICATION & NOTIFICATION HUB
+
+
+
 # =============================================================================
+
+
 
 # Objective
 
@@ -6910,17 +7795,23 @@ This ensures loose coupling, maintainability and scalability.
 
 ---
 
+
+
 # Estimated Duration
 
 2 Weeks
 
 ---
 
+
+
 # Dependencies
 
 - Phase 12 Complete
 
 ---
+
+
 
 # Deliverables
 
@@ -6939,6 +7830,8 @@ This ensures loose coupling, maintainability and scalability.
 - Notification Analytics
 
 ---
+
+
 
 # Architecture
 
@@ -6986,6 +7879,8 @@ Future Mobile Push
 
 ---
 
+
+
 # Database
 
 Tables
@@ -7020,6 +7915,8 @@ communication_settings
 
 ---
 
+
+
 # Models
 
 Notification
@@ -7042,6 +7939,8 @@ NotificationPreference
 
 ---
 
+
+
 # Enums
 
 NotificationType
@@ -7060,6 +7959,8 @@ BroadcastScope
 
 ---
 
+
+
 # DTOs
 
 NotificationData
@@ -7074,6 +7975,8 @@ BroadcastData
 
 ---
 
+
+
 # Repositories
 
 NotificationRepository
@@ -7083,6 +7986,8 @@ MessageRepository
 AnnouncementRepository
 
 ---
+
+
 
 # Services
 
@@ -7101,6 +8006,8 @@ TemplateService
 ActivityFeedService
 
 ---
+
+
 
 # Actions
 
@@ -7128,6 +8035,8 @@ GenerateDigest
 
 ---
 
+
+
 # Events
 
 NotificationCreated
@@ -7146,6 +8055,8 @@ DigestGenerated
 
 ---
 
+
+
 # Listeners
 
 SendEmailNotification
@@ -7162,6 +8073,8 @@ LogNotificationDelivery
 
 ---
 
+
+
 # Policies
 
 NotificationPolicy
@@ -7171,6 +8084,8 @@ AnnouncementPolicy
 MessagePolicy
 
 ---
+
+
 
 # Livewire Components
 
@@ -7190,6 +8105,8 @@ Communication Preferences
 
 ---
 
+
+
 # Filament Resources
 
 Notification Resource
@@ -7201,6 +8118,8 @@ Template Resource
 Scheduled Notification Resource
 
 ---
+
+
 
 # Notification Channels
 
@@ -7230,6 +8149,8 @@ Webhook
 
 ---
 
+
+
 # Notification Types
 
 Project Update
@@ -7258,6 +8179,8 @@ Marketing
 
 ---
 
+
+
 # Announcement System
 
 Support
@@ -7277,6 +8200,8 @@ Expiry Dates
 Audience Targeting
 
 ---
+
+
 
 # Internal Messaging
 
@@ -7299,6 +8224,8 @@ Read Receipts
 Typing Indicator (Future)
 
 ---
+
+
 
 # Activity Feed
 
@@ -7324,6 +8251,8 @@ Notifications
 
 ---
 
+
+
 # Notification Preferences
 
 Users may configure
@@ -7347,6 +8276,8 @@ Support
 Announcements
 
 ---
+
+
 
 # Email Templates
 
@@ -7372,6 +8303,8 @@ System Notification
 
 ---
 
+
+
 # Redis Strategy
 
 Cache
@@ -7387,6 +8320,8 @@ Activity Feed
 Templates
 
 ---
+
+
 
 # Queue Strategy
 
@@ -7405,6 +8340,8 @@ Analytics
 Digest Emails
 
 ---
+
+
 
 # Laravel Reverb
 
@@ -7426,6 +8363,8 @@ Unread Counts
 
 ---
 
+
+
 # Search
 
 Search
@@ -7439,6 +8378,8 @@ Notifications
 Activity Feed
 
 ---
+
+
 
 # Security
 
@@ -7454,6 +8395,8 @@ Protect private broadcasts.
 
 ---
 
+
+
 # Performance
 
 Queue all outbound communication.
@@ -7467,6 +8410,8 @@ Paginate message history.
 Use Redis pub/sub for broadcasts.
 
 ---
+
+
 
 # Analytics
 
@@ -7490,6 +8435,8 @@ User Engagement
 
 ---
 
+
+
 # Testing
 
 Email Delivery
@@ -7510,6 +8457,8 @@ Analytics
 
 ---
 
+
+
 # Documentation
 
 Update
@@ -7526,19 +8475,21 @@ API Documentation
 
 ---
 
+
+
 # Definition of Done
 
-- [ ] Notification Centre operational
-- [ ] Email delivery working
-- [ ] Realtime broadcasting working
-- [ ] Announcements operational
-- [ ] Internal messaging complete
-- [ ] Activity feed working
-- [ ] Redis integrated
-- [ ] Reverb operational
-- [ ] Queues operational
+- [x] Notification Centre operational
+- [x] Email delivery working
+- [x] Realtime broadcasting working
+- [x] Announcements operational
+- [x] Internal messaging complete
+- [x] Activity feed working
+- [x] Redis integrated
+- [x] Reverb operational
+- [x] Queues operational
 - [ ] Tests passing
-- [ ] Documentation updated
+- [x] Documentation updated
 
 Enterprise Architecture Enhancement
 
@@ -7565,9 +8516,20 @@ Notification templates and delivery preferences remain centralized.
 Logging, analytics, retries, and auditing become consistent across the platform.
 
 # =============================================================================
+
+
+
 # PHASE 14
+
+
+
 # GLOBAL SEARCH & DISCOVERY
+
+
+
 # =============================================================================
+
+
 
 # Objective
 
@@ -7583,17 +8545,23 @@ recommendations.
 
 ---
 
+
+
 # Estimated Duration
 
 2 Weeks
 
 ---
 
+
+
 # Dependencies
 
 - Phase 13 Complete
 
 ---
+
+
 
 # Deliverables
 
@@ -7612,29 +8580,41 @@ recommendations.
 
 ---
 
+
+
 # Architecture
 
 Website
 
-        │
+```
+    │
+```
 
 Client Portal
 
-        │
+```
+    │
+```
 
 Filament Admin
 
-        │
+```
+    │
+```
 
 API
 
-        │
+```
+    │
+```
 
 ───────────────
 
 Unified Search Engine
 
-        │
+```
+    │
+```
 
 ───────────────
 
@@ -7660,6 +8640,8 @@ FAQs
 
 ---
 
+
+
 # Database
 
 Tables
@@ -7684,6 +8666,8 @@ search_boosts
 
 ---
 
+
+
 # Models
 
 SearchIndex
@@ -7702,6 +8686,8 @@ SearchSynonym
 
 ---
 
+
+
 # Enums
 
 SearchType
@@ -7716,6 +8702,8 @@ HighlightType
 
 ---
 
+
+
 # DTOs
 
 SearchQueryData
@@ -7728,6 +8716,8 @@ SearchAnalyticsData
 
 ---
 
+
+
 # Repositories
 
 SearchRepository
@@ -7737,6 +8727,8 @@ AnalyticsRepository
 IndexRepository
 
 ---
+
+
 
 # Services
 
@@ -7753,6 +8745,8 @@ SearchRankingService
 RecommendationService
 
 ---
+
+
 
 # Actions
 
@@ -7774,6 +8768,8 @@ GenerateRecommendations
 
 ---
 
+
+
 # Events
 
 SearchPerformed
@@ -7788,6 +8784,8 @@ RecommendationGenerated
 
 ---
 
+
+
 # Listeners
 
 UpdateSearchStatistics
@@ -7800,6 +8798,8 @@ GenerateRecommendations
 
 ---
 
+
+
 # Policies
 
 SavedSearchPolicy
@@ -7807,6 +8807,8 @@ SavedSearchPolicy
 SearchAnalyticsPolicy
 
 ---
+
+
 
 # Livewire Components
 
@@ -7830,6 +8832,8 @@ Saved Searches
 
 ---
 
+
+
 # Filament Resources
 
 Search Analytics
@@ -7841,6 +8845,8 @@ Search Synonyms
 Search Index
 
 ---
+
+
 
 # Search Sources
 
@@ -7868,6 +8874,8 @@ Support Tickets
 
 ---
 
+
+
 # Search Features
 
 Autocomplete
@@ -7889,6 +8897,8 @@ Trending Searches
 Saved Searches
 
 ---
+
+
 
 # Filters
 
@@ -7914,6 +8924,8 @@ Tags
 
 ---
 
+
+
 # Ranking
 
 Boost
@@ -7931,6 +8943,8 @@ Business Priority
 SEO Score
 
 ---
+
+
 
 # Redis Strategy
 
@@ -7950,6 +8964,8 @@ Search Filters
 
 ---
 
+
+
 # Queue Strategy
 
 Queue
@@ -7963,6 +8979,8 @@ Search Analytics
 Recommendation Generation
 
 ---
+
+
 
 # PostgreSQL Full-Text Search
 
@@ -7984,6 +9002,8 @@ Language Dictionaries
 
 ---
 
+
+
 # Future AI Search
 
 Architecture prepared for
@@ -8004,6 +9024,8 @@ Conversational Search
 
 ---
 
+
+
 # Laravel Reverb
 
 Broadcast
@@ -8015,6 +9037,8 @@ Index Updates
 Realtime Suggestions
 
 ---
+
+
 
 # Search Analytics
 
@@ -8036,6 +9060,8 @@ Click-through rate
 
 ---
 
+
+
 # Security
 
 Respect authorization rules.
@@ -8045,6 +9071,8 @@ Private resources must never appear in public search results.
 Search indexes must only include content visible to the current user.
 
 ---
+
+
 
 # Performance
 
@@ -8061,6 +9089,8 @@ Background indexing
 Optimized ranking queries
 
 ---
+
+
 
 # Testing
 
@@ -8082,6 +9112,8 @@ Caching
 
 ---
 
+
+
 # Documentation
 
 Update
@@ -8096,27 +9128,32 @@ API Documentation
 
 ---
 
+
+
 # Definition of Done
 
-- [ ] Global search operational
-- [ ] PostgreSQL full-text search implemented
-- [ ] Autocomplete working
-- [ ] Filters operational
-- [ ] Suggestions operational
-- [ ] Analytics complete
-- [ ] Redis integrated
-- [ ] Queues operational
+- [x] Global search operational
+- [x] PostgreSQL full-text search implemented
+- [x] Autocomplete working
+- [x] Filters operational
+- [x] Suggestions operational
+- [x] Analytics complete
+- [x] Redis integrated
+- [x] Queues operational
 - [ ] Tests passing
-- [ ] Documentation updated
+- [x] Documentation updated
 
 Enterprise Architecture Enhancement
 
 Instead of thinking of search as a query against tables, model it as a Search Domain.
 
-                        Search Engine
-                             │
-     ┌───────────────────────┼───────────────────────┐
-     │                       │                       │
+```
+                    Search Engine
+                         │
+ ┌───────────────────────┼───────────────────────┐
+ │                       │                       │
+```
+
  Public Website         Client Portal          Filament Admin
      │                       │                       │
      └───────────────────────┼───────────────────────┘
@@ -8135,11 +9172,21 @@ Instead of thinking of search as a query against tables, model it as a Search Do
                              │
                   Future Semantic Search
 
+# =============================================================================
+
+
+
+# PHASE 15
+
+
+
+# SEO, AI SEO & DISCOVERABILITY
+
+
 
 # =============================================================================
-# PHASE 15
-# SEO, AI SEO & DISCOVERABILITY
-# =============================================================================
+
+
 
 # Objective
 
@@ -8153,17 +9200,23 @@ It should be deeply integrated into every domain of the platform.
 
 ---
 
+
+
 # Estimated Duration
 
 2 Weeks
 
 ---
 
+
+
 # Dependencies
 
 - Phase 14 Complete
 
 ---
+
+
 
 # Deliverables
 
@@ -8184,6 +9237,8 @@ It should be deeply integrated into every domain of the platform.
 - Bing Webmaster Integration
 
 ---
+
+
 
 # Architecture
 
@@ -8223,6 +9278,8 @@ Social Platforms
 
 ---
 
+
+
 # Database
 
 Tables
@@ -8249,6 +9306,8 @@ seo_schema_cache
 
 ---
 
+
+
 # Models
 
 SeoMetadata
@@ -8267,6 +9326,8 @@ BrokenLink
 
 ---
 
+
+
 # Enums
 
 SeoStatus
@@ -8281,6 +9342,8 @@ PriorityLevel
 
 ---
 
+
+
 # DTOs
 
 SeoData
@@ -8293,6 +9356,8 @@ SchemaData
 
 ---
 
+
+
 # Repositories
 
 SeoRepository
@@ -8302,6 +9367,8 @@ AuditRepository
 MetadataRepository
 
 ---
+
+
 
 # Services
 
@@ -8320,6 +9387,8 @@ AuditService
 AiSeoService
 
 ---
+
+
 
 # Actions
 
@@ -8345,6 +9414,8 @@ CreateRedirect
 
 ---
 
+
+
 # Events
 
 MetadataGenerated
@@ -8359,6 +9430,8 @@ RedirectCreated
 
 ---
 
+
+
 # Listeners
 
 ClearSeoCache
@@ -8371,6 +9444,8 @@ StoreAuditResults
 
 ---
 
+
+
 # Policies
 
 SeoPolicy
@@ -8378,6 +9453,8 @@ SeoPolicy
 RedirectPolicy
 
 ---
+
+
 
 # Livewire Components
 
@@ -8397,6 +9474,8 @@ Internal Link Suggestions
 
 ---
 
+
+
 # Filament Resources
 
 SEO Resource
@@ -8410,6 +9489,8 @@ Audit Resource
 Sitemap Resource
 
 ---
+
+
 
 # Metadata
 
@@ -8435,6 +9516,8 @@ Locale
 
 ---
 
+
+
 # Open Graph
 
 Support
@@ -8453,6 +9536,8 @@ Locale
 
 ---
 
+
+
 # Twitter Cards
 
 Support
@@ -8466,6 +9551,8 @@ Creator
 Site
 
 ---
+
+
 
 # Structured Data
 
@@ -8497,6 +9584,8 @@ SearchAction
 
 ---
 
+
+
 # XML Sitemaps
 
 Generate
@@ -8517,6 +9606,8 @@ Downloads Sitemap
 
 ---
 
+
+
 # Robots
 
 Generate
@@ -8531,6 +9622,8 @@ Sitemap References
 
 ---
 
+
+
 # Canonical URLs
 
 Automatically detect
@@ -8544,6 +9637,8 @@ Canonical Relationships
 Alternate Languages (Future)
 
 ---
+
+
 
 # Breadcrumbs
 
@@ -8565,6 +9660,8 @@ Page
 
 ---
 
+
+
 # Internal Linking Engine
 
 Automatically recommend
@@ -8584,6 +9681,8 @@ Testimonials
 Team Members
 
 ---
+
+
 
 # AI SEO
 
@@ -8617,6 +9716,8 @@ Semantic Graph
 
 ---
 
+
+
 # Local SEO
 
 Support
@@ -8637,6 +9738,8 @@ Customer Reviews
 
 ---
 
+
+
 # Social Sharing
 
 Support
@@ -8654,6 +9757,8 @@ Email
 Pinterest (Future)
 
 ---
+
+
 
 # Redis Strategy
 
@@ -8673,6 +9778,8 @@ Internal Links
 
 ---
 
+
+
 # Queue Strategy
 
 Queue
@@ -8691,6 +9798,8 @@ Search Console Sync
 
 ---
 
+
+
 # Laravel Reverb
 
 Broadcast
@@ -8702,6 +9811,8 @@ Sitemap Updated
 Broken Link Detected
 
 ---
+
+
 
 # Analytics
 
@@ -8725,6 +9836,8 @@ Search Queries
 
 ---
 
+
+
 # Security
 
 Validate redirect targets.
@@ -8736,6 +9849,8 @@ Sanitize metadata.
 Restrict SEO editing permissions.
 
 ---
+
+
 
 # Performance
 
@@ -8750,6 +9865,8 @@ Queue audits
 Optimize structured data generation
 
 ---
+
+
 
 # Testing
 
@@ -8771,6 +9888,8 @@ Performance
 
 ---
 
+
+
 # Documentation
 
 Update
@@ -8785,15 +9904,17 @@ Deployment Guide
 
 ---
 
+
+
 # Definition of Done
 
-- [ ] Dynamic metadata operational
-- [ ] Structured data complete
-- [ ] XML sitemaps generated
-- [ ] Internal linking engine operational
-- [ ] AI SEO scoring implemented
-- [ ] Redis integrated
-- [ ] Queues operational
-- [ ] SEO dashboard complete
+- [x] Dynamic metadata operational
+- [x] Structured data complete
+- [x] XML sitemaps generated
+- [x] Internal linking engine operational
+- [x] AI SEO scoring implemented
+- [x] Redis integrated
+- [x] Queues operational
+- [x] SEO dashboard complete
 - [ ] Tests passing
-- [ ] Documentation updated
+- [x] Documentation updated

@@ -43,6 +43,7 @@
 @import './pages/quote.css';
 @import './pages/contact.css';
 @import './pages/about.css';
+@import './pages/search.css';
 
 /* utilities — always last */
 @import './utilities/helpers.css';

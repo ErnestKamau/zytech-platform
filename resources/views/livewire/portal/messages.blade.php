@@ -1,33 +1,46 @@
 <div class="zy-portal-page">
     <header class="zy-portal-page__header">
-        <h1 class="zy-portal-page__title">Messages</h1>
+        <div class="zy-portal-page__intro">
+            <p class="zy-section__eyebrow">Inbox</p>
+            <h1 class="zy-portal-page__title">Messages</h1>
+            <p class="zy-portal-page__lead">Talk directly with the Zytech team about your works.</p>
+        </div>
     </header>
 
     <div class="zy-portal-split">
         <aside class="zy-portal-panel">
-            <h2>Conversations</h2>
+            <h2 class="zy-portal-panel__title">Conversations</h2>
             @forelse ($conversations as $conversation)
                 <button type="button" class="zy-portal-list-btn @if ($active?->id === $conversation->id) is-active @endif" wire:click="select('{{ $conversation->id }}')">
                     <strong>{{ $conversation->subject }}</strong>
                     <span class="zy-muted">{{ $conversation->status->label() }}</span>
                 </button>
             @empty
-                <p class="zy-muted">No conversations yet.</p>
+                <p class="zy-portal-empty">No conversations yet.</p>
             @endforelse
 
-            <form wire:submit="openConversation" class="zy-form zy-portal-form">
+            <form wire:submit="openConversation" class="zy-portal-form">
                 <h3>Start conversation</h3>
-                <label>Subject<input type="text" wire:model="subject"></label>
-                @error('subject') <p class="zy-alert zy-alert--danger">{{ $message }}</p> @enderror
-                <label>Message<textarea wire:model="body" rows="3"></textarea></label>
-                @error('body') <p class="zy-alert zy-alert--danger">{{ $message }}</p> @enderror
+                <div class="zy-field">
+                    <label class="zy-label" for="portal-msg-subject">Subject</label>
+                    <input id="portal-msg-subject" type="text" class="zy-input" wire:model="subject">
+                    @error('subject') <p class="zy-field-error">{{ $message }}</p> @enderror
+                </div>
+                <div class="zy-field">
+                    <label class="zy-label" for="portal-msg-body">Message</label>
+                    <textarea id="portal-msg-body" class="zy-textarea" rows="3" wire:model="body"></textarea>
+                    @error('body') <p class="zy-field-error">{{ $message }}</p> @enderror
+                </div>
                 <button type="submit" class="zy-btn zy-btn--primary zy-btn--sm">Send</button>
             </form>
         </aside>
 
         <section class="zy-portal-panel">
             @if ($active)
-                <h2>{{ $active->subject }}</h2>
+                <div class="zy-portal-panel__header">
+                    <h2 class="zy-portal-panel__title">{{ $active->subject }}</h2>
+                    <span class="zy-badge zy-badge--neutral">{{ $active->status->label() }}</span>
+                </div>
                 <div class="zy-portal-thread">
                     @foreach ($active->messages as $message)
                         <article class="zy-portal-bubble">
@@ -37,13 +50,16 @@
                         </article>
                     @endforeach
                 </div>
-                <form wire:submit="sendReply" class="zy-form zy-portal-form">
-                    <label>Reply<textarea wire:model="reply" rows="3"></textarea></label>
-                    @error('reply') <p class="zy-alert zy-alert--danger">{{ $message }}</p> @enderror
+                <form wire:submit="sendReply" class="zy-portal-form">
+                    <div class="zy-field">
+                        <label class="zy-label" for="portal-msg-reply">Reply</label>
+                        <textarea id="portal-msg-reply" class="zy-textarea" rows="3" wire:model="reply"></textarea>
+                        @error('reply') <p class="zy-field-error">{{ $message }}</p> @enderror
+                    </div>
                     <button type="submit" class="zy-btn zy-btn--primary zy-btn--sm">Reply</button>
                 </form>
             @else
-                <p class="zy-muted">Select or start a conversation.</p>
+                <p class="zy-portal-empty">Select or start a conversation.</p>
             @endif
         </section>
     </div>

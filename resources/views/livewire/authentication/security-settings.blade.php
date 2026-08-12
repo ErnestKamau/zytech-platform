@@ -1,4 +1,5 @@
 <div class="zy-portal-card">
+    <p class="zy-section__eyebrow">Account</p>
     <h1 class="zy-portal-card__title">Security</h1>
     <p class="zy-portal-card__lead">Password and multi-factor preferences.</p>
 
@@ -25,15 +26,15 @@
         <button type="submit" class="zy-btn zy-btn--primary">Update password</button>
     </form>
 
-    <div class="zy-stack zy-stack--gap">
+    <div class="zy-stack">
         <h2 class="zy-portal-card__subtitle">Multi-factor authentication</h2>
-        <p>Foundation toggle only — authenticator setup arrives in a later release.</p>
+        <p class="zy-muted">Foundation toggle only — authenticator setup arrives in a later release.</p>
         <button type="button" class="zy-btn zy-btn--secondary" wire:click="toggleMfaFoundation">
             {{ $mfa_enabled ? 'Disable MFA preference' : 'Enable MFA preference' }}
         </button>
     </div>
 
-    <div class="zy-stack zy-stack--gap">
+    <div class="zy-stack">
         <h2 class="zy-portal-card__subtitle">Sign out</h2>
         <button type="button" class="zy-btn zy-btn--danger" wire:click="logout">Sign out</button>
     </div>

@@ -1,6 +1,7 @@
 <div class="zy-portal-card">
+    <p class="zy-section__eyebrow">Account</p>
     <h1 class="zy-portal-card__title">Profile</h1>
-    <p class="zy-portal-card__lead">Update your name and contact details.</p>
+    <p class="zy-portal-card__lead">Update your name and contact details used across the portal.</p>
 
     <form wire:submit="save" class="zy-stack">
         <div class="zy-field">

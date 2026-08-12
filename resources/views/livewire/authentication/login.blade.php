@@ -2,7 +2,7 @@
     <h1 class="zy-auth-form__title">Welcome back</h1>
     <p class="zy-auth-form__lead">Enter your details to access your Zytech account.</p>
 
-    <form wire:submit="login" class="zy-stack">
+    <form wire:submit="login" method="POST" class="zy-stack">
         <div class="zy-field">
             <label class="zy-label" for="email">Email</label>
             <input id="email" type="email" class="zy-input" wire:model="email" autocomplete="username" placeholder="eg. jane@company.co.ke" required>

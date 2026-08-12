@@ -9,6 +9,16 @@
     @if (! empty($platform['seo']->keywords))
         <meta name="keywords" content="{{ $platform['seo']->keywords }}">
     @endif
+    <link rel="canonical" href="@yield('canonical', url()->current())">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="@yield('og_title', $platform['seo']->title ?? 'Zytech Contractors')">
+    <meta property="og:description" content="@yield('og_description', $platform['seo']->description ?? '')">
+    <meta property="og:url" content="@yield('canonical', url()->current())">
+    @if (! empty($platform['seo']->ogImage))
+        <meta property="og:image" content="{{ $platform['seo']->ogImage }}">
+    @endif
+    <meta name="twitter:card" content="summary_large_image">
+    @stack('structured_data')
     @vite(['resources/css/website/app.css', 'resources/js/app.js'])
     @livewireStyles
     <script>

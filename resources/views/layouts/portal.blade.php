@@ -11,10 +11,20 @@
         document.documentElement.dataset.zyTheme = localStorage.getItem('zy-theme') || 'light';
     </script>
 </head>
-<body class="zy-portal-body">
+<body
+    class="zy-portal-body"
+    x-data="{ dark: localStorage.getItem('zy-theme') === 'dark' }"
+    x-bind:data-zy-theme="dark ? 'dark' : 'light'"
+    x-effect="
+        localStorage.setItem('zy-theme', dark ? 'dark' : 'light');
+        document.documentElement.dataset.zyTheme = dark ? 'dark' : 'light';
+    "
+>
     <div class="zy-portal">
         <aside class="zy-portal__nav">
-            <a href="{{ route('home') }}" class="zy-portal__brand">Zytech</a>
+            <a href="{{ route('home') }}" class="zy-portal__brand">
+                Zytech <span>Contractors</span>
+            </a>
 
             @auth
                 @php
@@ -22,8 +32,8 @@
                 @endphp
 
                 @if ($hasPortal || request()->routeIs('portal.*'))
+                    <p class="zy-portal__section">Workspace</p>
                     <nav class="zy-portal__links" aria-label="Client portal">
-                        <p class="zy-portal__section">Workspace</p>
                         <a href="{{ route('portal.dashboard') }}" @class(['is-active' => request()->routeIs('portal.dashboard')])>Dashboard</a>
                         <a href="{{ route('portal.projects') }}" @class(['is-active' => request()->routeIs('portal.projects')])>Projects</a>
                         <a href="{{ route('portal.quotations') }}" @class(['is-active' => request()->routeIs('portal.quotations')])>Quotations</a>
@@ -37,21 +47,36 @@
                 @endif
             @endauth
 
+            <p class="zy-portal__section">Account</p>
             <nav class="zy-portal__links" aria-label="Account">
-                <p class="zy-portal__section">Account</p>
                 <a href="{{ route('account.profile') }}" @class(['is-active' => request()->routeIs('account.profile')])>Profile</a>
                 <a href="{{ route('account.security') }}" @class(['is-active' => request()->routeIs('account.security')])>Security</a>
                 <a href="{{ route('account.sessions') }}" @class(['is-active' => request()->routeIs('account.sessions')])>Sessions</a>
                 <a href="{{ route('account.settings') }}" @class(['is-active' => request()->routeIs('account.settings')])>Settings</a>
             </nav>
+
+            <div class="zy-portal__nav-foot">
+                @auth
+                    <div class="zy-portal__user">
+                        <span class="zy-portal__user-name">{{ auth()->user()->name }}</span>
+                        <span class="zy-portal__user-meta">{{ auth()->user()->email }}</span>
+                    </div>
+                @endauth
+                <div class="zy-portal__toolbar">
+                    <a href="{{ route('home') }}" class="zy-btn zy-btn--ghost zy-btn--sm">Public site</a>
+                    <x-ui.theme-toggle />
+                </div>
+            </div>
         </aside>
 
         <main class="zy-portal__main">
-            @if (session('status'))
-                <div class="zy-alert zy-alert--success" role="status">{{ session('status') }}</div>
-            @endif
+            <div class="zy-portal__main-inner">
+                @if (session('status'))
+                    <div class="zy-alert zy-alert--success" role="status">{{ session('status') }}</div>
+                @endif
 
-            {{ $slot }}
+                {{ $slot }}
+            </div>
         </main>
     </div>
 

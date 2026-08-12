@@ -1,21 +1,27 @@
 <div class="zy-portal-page">
     <header class="zy-portal-page__header">
-        <h1 class="zy-portal-page__title">Meetings</h1>
+        <div class="zy-portal-page__intro">
+            <p class="zy-section__eyebrow">Schedule</p>
+            <h1 class="zy-portal-page__title">Meetings</h1>
+            <p class="zy-portal-page__lead">Request a site visit, consultation, or review. Available slots appear when the team publishes them.</p>
+        </div>
     </header>
 
     <div class="zy-portal-grid">
         <section class="zy-portal-panel">
-            <h2>Request a meeting</h2>
-            <form wire:submit="schedule" class="zy-form zy-portal-form">
-                <label>Type
-                    <select wire:model="meeting_type">
+            <h2 class="zy-portal-panel__title">Request a meeting</h2>
+            <form wire:submit="schedule" class="zy-stack">
+                <div class="zy-field">
+                    <label class="zy-label" for="meeting-type">Type</label>
+                    <select id="meeting-type" class="zy-select" wire:model="meeting_type">
                         @foreach ($types as $type)
                             <option value="{{ $type->value }}">{{ $type->label() }}</option>
                         @endforeach
                     </select>
-                </label>
-                <label>Available slot
-                    <select wire:model="slot_id">
+                </div>
+                <div class="zy-field">
+                    <label class="zy-label" for="meeting-slot">Available slot</label>
+                    <select id="meeting-slot" class="zy-select" wire:model="slot_id">
                         <option value="">Flexible / to be confirmed</option>
                         @foreach ($slots as $slot)
                             <option value="{{ $slot->id }}">
@@ -23,29 +29,40 @@
                             </option>
                         @endforeach
                     </select>
-                </label>
-                <label>Notes<textarea wire:model="notes" rows="3"></textarea></label>
+                </div>
+                <div class="zy-field">
+                    <label class="zy-label" for="meeting-notes">Notes</label>
+                    <textarea id="meeting-notes" class="zy-textarea" wire:model="notes" rows="3"></textarea>
+                </div>
                 <button type="submit" class="zy-btn zy-btn--primary zy-btn--sm">Submit request</button>
             </form>
         </section>
 
         <section class="zy-portal-panel">
-            <h2>Your meetings</h2>
+            <h2 class="zy-portal-panel__title">Your meetings</h2>
             @forelse ($meetings as $meeting)
                 <article class="zy-portal-row">
                     <div>
-                        <strong>{{ $meeting->meeting_type->label() }}</strong>
-                        <p class="zy-muted">{{ $meeting->status->label() }} @if ($meeting->scheduled_at)· {{ $meeting->scheduled_at->toDayDateTimeString() }}@endif</p>
+                        <p class="zy-portal-row__title">{{ $meeting->meeting_type->label() }}</p>
+                        <p class="zy-portal-row__meta">
+                            {{ $meeting->status->label() }}
+                            @if ($meeting->scheduled_at)
+                                · {{ $meeting->scheduled_at->toDayDateTimeString() }}
+                            @endif
+                        </p>
                         @if ($meeting->notes)
-                            <p class="zy-muted">{{ $meeting->notes }}</p>
+                            <p class="zy-portal-row__meta">{{ $meeting->notes }}</p>
                         @endif
                     </div>
-                    @if (in_array($meeting->status, [\App\Core\Enums\MeetingStatus::Requested, \App\Core\Enums\MeetingStatus::Confirmed], true))
-                        <button type="button" class="zy-btn zy-btn--ghost zy-btn--sm" wire:click="cancel('{{ $meeting->id }}')" wire:confirm="Cancel this meeting?">Cancel</button>
-                    @endif
+                    <div class="zy-portal-actions">
+                        <span class="zy-badge zy-badge--neutral">{{ $meeting->status->label() }}</span>
+                        @if (in_array($meeting->status, [\App\Core\Enums\MeetingStatus::Requested, \App\Core\Enums\MeetingStatus::Confirmed], true))
+                            <button type="button" class="zy-btn zy-btn--ghost zy-btn--sm" wire:click="cancel('{{ $meeting->id }}')" wire:confirm="Cancel this meeting?">Cancel</button>
+                        @endif
+                    </div>
                 </article>
             @empty
-                <p class="zy-muted">No meeting requests yet.</p>
+                <p class="zy-portal-empty">No meeting requests yet.</p>
             @endforelse
         </section>
     </div>

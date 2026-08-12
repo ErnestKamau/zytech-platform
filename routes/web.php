@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\RobotsController;
+use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -61,6 +63,13 @@ Route::get('/quote/track/{reference}', function (string $reference) {
 Route::get('/contact', function () {
     return view('pages.contact.index');
 })->name('contact');
+
+Route::get('/search', function () {
+    return view('pages.search.index');
+})->name('search');
+
+Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
+Route::get('/robots.txt', RobotsController::class)->name('robots');
 
 Route::get('/styleguide', function () {
     return view('styleguide');

@@ -27,7 +27,7 @@ final class Register extends BaseComponent
     public function mount(): void
     {
         if (Auth::check()) {
-            $this->redirect(route('account.profile'), navigate: true);
+            $this->redirect(route('account.profile'));
         }
     }
 
@@ -50,7 +50,7 @@ final class Register extends BaseComponent
         Auth::login($user);
         session()->regenerate();
 
-        $this->redirect(route('verification.notice'), navigate: true);
+        $this->redirect(route('verification.notice'));
     }
 
     public function render(): View

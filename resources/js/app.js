@@ -1,6 +1,26 @@
-import './echo';
+/**
+ * App frontend bootstrap.
+ *
+ * Livewire already ships Alpine. Starting a second Alpine instance from Vite
+ * breaks Livewire form bindings (wire:submit never fires → login/register
+ * appear to "do nothing" and only reload the same page).
+ */
 
-import Alpine from 'alpinejs';
+import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
 
-window.Alpine = Alpine;
-Alpine.start();
+window.Pusher = Pusher;
+
+try {
+    window.Echo = new Echo({
+        broadcaster: 'reverb',
+        key: import.meta.env.VITE_REVERB_APP_KEY,
+        wsHost: import.meta.env.VITE_REVERB_HOST,
+        wsPort: import.meta.env.VITE_REVERB_PORT ?? 80,
+        wssPort: import.meta.env.VITE_REVERB_PORT ?? 443,
+        forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? 'https') === 'https',
+        enabledTransports: ['ws', 'wss'],
+    });
+} catch (error) {
+    console.warn('Laravel Echo failed to start.', error);
+}
