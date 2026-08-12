@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
             ConfigurationSeeder::class,
             CompanySeeder::class,
             MediaSeeder::class,
+            ServiceSeeder::class,
         ]);
     }
 }

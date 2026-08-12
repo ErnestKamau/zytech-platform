@@ -2650,12 +2650,26 @@ Frontend rendering
 
 # Definition of Done
 
-- [ ] Services fully manageable
-- [ ] Categories operational
-- [ ] SEO complete
-- [ ] Homepage integration complete
+- [x] Services fully manageable
+- [x] Categories operational
+- [x] SEO complete
+- [x] Homepage integration complete
 - [ ] Tests passing
-- [ ] Documentation updated
+- [x] Documentation updated
+
+---
+
+# Phase 6 Notes
+
+Implemented under domain architecture:
+
+```text
+app/Domains/Service/          # catalogue, categories, SEO, featured
+app/Filament/Resources/{Services,ServiceCategories,ServiceFaqs}/
+docs/SERVICES.md
+```
+
+Public site images and videos remain in `public/media/zyntech` and continue to be referenced from `config/zyntech-media.php` via service `image_key` / `gallery_keys`. Related project records wait for Phase 7; related articles wait for Knowledge.
 
 ---
 

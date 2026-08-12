@@ -1398,6 +1398,8 @@ Corporate profile, branches, and testimonials live in the Company domain (Phase 
 
 Uploads go through the Media domain (Phase 5 — see `docs/MEDIA.md`). Public website photos and videos stay in `public/media/zyntech`.
 
+The public service catalogue lives in the Services domain (Phase 6 — see `docs/SERVICES.md`). Cover images still use `config/zyntech-media.php` keys.
+
 Company
 
 Logo

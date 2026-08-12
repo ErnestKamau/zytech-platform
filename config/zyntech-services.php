@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Seed source for the original eight public services. The live catalogue is
+ * the Services domain (database). This file remains so ServiceSeeder can
+ * keep titles, slugs, icons, and image keys in sync with the public site.
+ */
 return [
     [
         'title' => 'Interior Design',

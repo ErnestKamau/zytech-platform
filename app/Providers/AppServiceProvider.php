@@ -50,11 +50,29 @@ use App\Domains\Media\Listeners\OptimizeUploadedImage;
 use App\Domains\Media\Livewire\MediaPicker;
 use App\Domains\Media\Policies\FolderPolicy;
 use App\Domains\Media\Policies\MediaPolicy;
+use App\Domains\Service\Events\FeaturedServiceChanged;
+use App\Domains\Service\Events\ServiceArchived;
+use App\Domains\Service\Events\ServiceCreated;
+use App\Domains\Service\Events\ServicePublished;
+use App\Domains\Service\Events\ServiceUpdated;
+use App\Domains\Service\Listeners\BroadcastServiceChanges;
+use App\Domains\Service\Listeners\ClearServiceCache;
+use App\Domains\Service\Listeners\GenerateServiceSeo;
+use App\Domains\Service\Listeners\IndexService;
+use App\Domains\Service\Livewire\FeaturedServices;
+use App\Domains\Service\Livewire\RelatedServices;
+use App\Domains\Service\Livewire\ServiceFaqs;
+use App\Domains\Service\Policies\ServiceCategoryPolicy;
+use App\Domains\Service\Policies\ServiceContentPolicy;
+use App\Domains\Service\Policies\ServicePolicy;
+use App\Domains\Service\Support\ShareServices;
 use App\Domains\User\Policies\PermissionPolicy;
 use App\Domains\User\Policies\RolePolicy;
 use App\Domains\User\Policies\UserPolicy;
 use App\Domains\Website\Livewire\AboutPage;
 use App\Domains\Website\Livewire\ContactForm;
+use App\Domains\Website\Livewire\ServiceShowPage;
+use App\Domains\Website\Livewire\ServicesPage;
 use App\Infrastructure\Cache\ApplicationCache;
 use App\Models\Award;
 use App\Models\Branch;
@@ -71,6 +89,13 @@ use App\Models\NavigationMenu;
 use App\Models\Partner;
 use App\Models\Permission;
 use App\Models\Role;
+use App\Models\Service;
+use App\Models\ServiceCategory;
+use App\Models\ServiceFaq;
+use App\Models\ServiceFeature;
+use App\Models\ServiceProcess;
+use App\Models\ServiceRelatedProject;
+use App\Models\ServiceStatistic;
 use App\Models\Setting;
 use App\Models\Testimonial;
 use App\Models\User;
@@ -92,6 +117,11 @@ class AppServiceProvider extends ServiceProvider
     {
         Livewire::component('website.contact-form', ContactForm::class);
         Livewire::component('website.about-page', AboutPage::class);
+        Livewire::component('website.services-page', ServicesPage::class);
+        Livewire::component('website.service-show', ServiceShowPage::class);
+        Livewire::component('service.featured-services', FeaturedServices::class);
+        Livewire::component('service.related-services', RelatedServices::class);
+        Livewire::component('service.faqs', ServiceFaqs::class);
         Livewire::component('media.picker', MediaPicker::class);
 
         $websiteViews = [
@@ -101,10 +131,13 @@ class AppServiceProvider extends ServiceProvider
             'pages.home',
             'pages.about.index',
             'pages.contact.index',
+            'pages.services.index',
+            'pages.services.show',
         ];
 
         View::composer($websiteViews, ShareConfiguration::class);
         View::composer($websiteViews, ShareCompany::class);
+        View::composer(['pages.home', 'pages.services.index'], ShareServices::class);
 
         Gate::policy(User::class, UserPolicy::class);
         Gate::policy(Role::class, RolePolicy::class);
@@ -124,6 +157,13 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Media::class, MediaPolicy::class);
         Gate::policy(MediaFolder::class, FolderPolicy::class);
         Gate::policy(MediaTag::class, MediaPolicy::class);
+        Gate::policy(Service::class, ServicePolicy::class);
+        Gate::policy(ServiceCategory::class, ServiceCategoryPolicy::class);
+        Gate::policy(ServiceFaq::class, ServiceContentPolicy::class);
+        Gate::policy(ServiceFeature::class, ServiceContentPolicy::class);
+        Gate::policy(ServiceProcess::class, ServiceContentPolicy::class);
+        Gate::policy(ServiceStatistic::class, ServiceContentPolicy::class);
+        Gate::policy(ServiceRelatedProject::class, ServiceContentPolicy::class);
 
         Gate::define('viewPulse', function (?User $user = null): bool {
             return $this->app->environment('local') || $user !== null;
@@ -184,5 +224,24 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(MediaMoved::class, BroadcastMediaUploaded::class);
         Event::listen(MediaUploaded::class, OptimizeUploadedImage::class);
         Event::listen(MediaUploaded::class, IndexMedia::class);
+
+        $serviceEvents = [
+            ServiceCreated::class,
+            ServicePublished::class,
+            ServiceUpdated::class,
+            ServiceArchived::class,
+            FeaturedServiceChanged::class,
+        ];
+
+        foreach ($serviceEvents as $event) {
+            Event::listen($event, ClearServiceCache::class);
+            Event::listen($event, BroadcastServiceChanges::class);
+        }
+
+        Event::listen(ServiceCreated::class, GenerateServiceSeo::class);
+        Event::listen(ServiceUpdated::class, GenerateServiceSeo::class);
+        Event::listen(ServiceCreated::class, IndexService::class);
+        Event::listen(ServicePublished::class, IndexService::class);
+        Event::listen(ServiceUpdated::class, IndexService::class);
     }
 }

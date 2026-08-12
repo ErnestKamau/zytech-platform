@@ -12,7 +12,9 @@
     $heroSupport = $profile?->shortDescription
         ?: 'Interior, exterior, and structural work across Nairobi, Kiambu, and nationwide — from first sketch to final handover.';
 
-    $services = config('zyntech-services');
+    $services = ($publishedServices ?? collect())->isNotEmpty()
+        ? $publishedServices
+        : collect(config('zyntech-services'));
     $images = config('zyntech-media.images');
     $walkway = $images['structural_walkway'];
     $courtyard = $images['commercial_courtyard'];
@@ -70,22 +72,26 @@
 
             <div class="zy-grid zy-grid--3">
                 @foreach ($services as $service)
-                    <x-ui.card interactive>
-                        @if ($service['image'] && isset($images[$service['image']]))
-                            <x-media.cover
-                                :src="asset($images[$service['image']]['path'])"
-                                :alt="$images[$service['image']]['alt']"
-                            />
-                        @else
-                            <span class="zy-icon-tile {{ $service['featured'] ? 'zy-icon-tile--gradient' : '' }}" aria-hidden="true">
-                                <svg class="zy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="{{ $service['icon'] }}" />
-                                </svg>
-                            </span>
-                        @endif
-                        <p class="zy-card__title" style="margin-top: var(--zy-space-2);">{{ $service['title'] }}</p>
-                        <p class="zy-card__body">{{ $service['body'] }}</p>
-                    </x-ui.card>
+                    @if ($service instanceof \App\Domains\Service\Data\ServiceData)
+                        <x-services.card :service="$service" />
+                    @else
+                        <x-ui.card interactive>
+                            @if ($service['image'] && isset($images[$service['image']]))
+                                <x-media.cover
+                                    :src="asset($images[$service['image']]['path'])"
+                                    :alt="$images[$service['image']]['alt']"
+                                />
+                            @else
+                                <span class="zy-icon-tile {{ $service['featured'] ? 'zy-icon-tile--gradient' : '' }}" aria-hidden="true">
+                                    <svg class="zy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="{{ $service['icon'] }}" />
+                                    </svg>
+                                </span>
+                            @endif
+                            <p class="zy-card__title" style="margin-top: var(--zy-space-2);">{{ $service['title'] }}</p>
+                            <p class="zy-card__body">{{ $service['body'] }}</p>
+                        </x-ui.card>
+                    @endif
                 @endforeach
             </div>
         </div>

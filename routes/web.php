@@ -14,6 +14,14 @@ Route::get('/services', function () {
     return view('pages.services.index');
 })->name('services.index');
 
+Route::get('/services/category/{category}', function (string $category) {
+    return view('pages.services.index', ['category' => $category]);
+})->name('services.category');
+
+Route::get('/services/{slug}', function (string $slug) {
+    return view('pages.services.show', ['slug' => $slug]);
+})->name('services.show');
+
 Route::get('/about', function () {
     return view('pages.about.index');
 })->name('about');
