@@ -4099,17 +4099,17 @@ README
 
 # Definition of Done
 
-- [ ] Article management complete
-- [ ] Categories complete
-- [ ] Search operational
-- [ ] Related content working
-- [ ] SEO complete
+- [x] Article management complete
+- [x] Categories complete
+- [x] Search operational (listing ILIKE filter)
+- [x] Related content working
+- [x] SEO complete (meta fields + ArticleSEOService)
 - [ ] AI SEO operational
-- [ ] Downloads working
-- [ ] Redis integrated
-- [ ] Queues operational
+- [x] Downloads working
+- [x] Redis integrated
+- [x] Queues operational (listeners queued)
 - [ ] Tests passing
-- [ ] Documentation updated
+- [x] Documentation updated
 
 # =============================================================================
 # PHASE 9

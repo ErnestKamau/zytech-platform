@@ -102,7 +102,7 @@ class ConfigurationSeeder extends Seeder
             ['maintenance_mode', 'Maintenance mode', 'Show a 503 page to visitors while staff can still access admin.', FeatureStatus::Disabled],
             ['client_portal', 'Client portal', 'Enable client portal routes and navigation.', FeatureStatus::Enabled],
             ['quotations', 'Quotations', 'Enable quotation requests from the public site.', FeatureStatus::Disabled],
-            ['knowledge_centre', 'Knowledge Centre', 'Publish the Knowledge Centre section.', FeatureStatus::Disabled],
+            ['knowledge_centre', 'Knowledge Centre', 'Publish the Knowledge Centre section.', FeatureStatus::Enabled],
         ];
 
         foreach ($flags as [$key, $name, $description, $status]) {
@@ -139,8 +139,9 @@ class ConfigurationSeeder extends Seeder
             ['Home', 'home', 0],
             ['Projects', 'projects.index', 1],
             ['Services', 'services.index', 2],
-            ['About', 'about', 3],
-            ['Contact', 'contact', 4],
+            ['Knowledge', 'knowledge.index', 3],
+            ['About', 'about', 4],
+            ['Contact', 'contact', 5],
         ];
 
         foreach ([$header, $footer] as $menu) {

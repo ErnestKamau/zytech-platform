@@ -30,6 +30,18 @@ Route::get('/services/{slug}', function (string $slug) {
     return view('pages.services.show', ['slug' => $slug]);
 })->name('services.show');
 
+Route::get('/knowledge', function () {
+    return view('pages.knowledge.index');
+})->name('knowledge.index');
+
+Route::get('/knowledge/category/{category}', function (string $category) {
+    return view('pages.knowledge.index', ['category' => $category]);
+})->name('knowledge.category');
+
+Route::get('/knowledge/{slug}', function (string $slug) {
+    return view('pages.knowledge.show', ['slug' => $slug]);
+})->name('knowledge.show');
+
 Route::get('/about', function () {
     return view('pages.about.index');
 })->name('about');

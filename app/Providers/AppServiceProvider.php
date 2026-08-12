@@ -38,6 +38,23 @@ use App\Domains\Configuration\Policies\FeatureFlagPolicy;
 use App\Domains\Configuration\Policies\NavigationPolicy;
 use App\Domains\Configuration\Policies\SettingPolicy;
 use App\Domains\Configuration\Support\ShareConfiguration;
+use App\Domains\Knowledge\Events\ArticleArchived;
+use App\Domains\Knowledge\Events\ArticleCreated;
+use App\Domains\Knowledge\Events\ArticlePublished;
+use App\Domains\Knowledge\Events\ArticleUpdated;
+use App\Domains\Knowledge\Events\FeaturedArticleChanged;
+use App\Domains\Knowledge\Listeners\BroadcastArticleChanges;
+use App\Domains\Knowledge\Listeners\ClearArticleCache;
+use App\Domains\Knowledge\Listeners\GenerateArticleSeo;
+use App\Domains\Knowledge\Listeners\IndexArticle;
+use App\Domains\Knowledge\Livewire\ArticleFaqs as KnowledgeArticleFaqs;
+use App\Domains\Knowledge\Livewire\FeaturedArticles as FeaturedArticleComponents;
+use App\Domains\Knowledge\Livewire\RelatedArticles as RelatedArticleComponents;
+use App\Domains\Knowledge\Policies\ArticleAuthorPolicy;
+use App\Domains\Knowledge\Policies\ArticleCategoryPolicy;
+use App\Domains\Knowledge\Policies\ArticleContentPolicy;
+use App\Domains\Knowledge\Policies\ArticlePolicy;
+use App\Domains\Knowledge\Support\ShareKnowledge;
 use App\Domains\Media\Events\MediaConverted;
 use App\Domains\Media\Events\MediaDeleted;
 use App\Domains\Media\Events\MediaMoved;
@@ -85,12 +102,21 @@ use App\Domains\User\Policies\PermissionPolicy;
 use App\Domains\User\Policies\RolePolicy;
 use App\Domains\User\Policies\UserPolicy;
 use App\Domains\Website\Livewire\AboutPage;
+use App\Domains\Website\Livewire\ArticleShowPage;
 use App\Domains\Website\Livewire\ContactForm;
+use App\Domains\Website\Livewire\KnowledgePage;
 use App\Domains\Website\Livewire\ProjectShowPage;
 use App\Domains\Website\Livewire\ProjectsPage;
 use App\Domains\Website\Livewire\ServiceShowPage;
 use App\Domains\Website\Livewire\ServicesPage;
 use App\Infrastructure\Cache\ApplicationCache;
+use App\Models\Article;
+use App\Models\ArticleAuthor;
+use App\Models\ArticleCategory;
+use App\Models\ArticleDownload;
+use App\Models\ArticleFaq;
+use App\Models\ArticleSection;
+use App\Models\ArticleTag;
 use App\Models\Award;
 use App\Models\Branch;
 use App\Models\Certification;
@@ -150,6 +176,11 @@ class AppServiceProvider extends ServiceProvider
         Livewire::component('service.featured-services', FeaturedServices::class);
         Livewire::component('service.related-services', RelatedServices::class);
         Livewire::component('service.faqs', ServiceFaqs::class);
+        Livewire::component('website.knowledge-page', KnowledgePage::class);
+        Livewire::component('website.article-show', ArticleShowPage::class);
+        Livewire::component('knowledge.featured-articles', FeaturedArticleComponents::class);
+        Livewire::component('knowledge.related-articles', RelatedArticleComponents::class);
+        Livewire::component('knowledge.article-faqs', KnowledgeArticleFaqs::class);
         Livewire::component('media.picker', MediaPicker::class);
 
         $websiteViews = [
@@ -163,12 +194,15 @@ class AppServiceProvider extends ServiceProvider
             'pages.services.show',
             'pages.projects.index',
             'pages.projects.show',
+            'pages.knowledge.index',
+            'pages.knowledge.show',
         ];
 
         View::composer($websiteViews, ShareConfiguration::class);
         View::composer($websiteViews, ShareCompany::class);
         View::composer(['pages.home', 'pages.services.index'], ShareServices::class);
         View::composer(['pages.home', 'pages.projects.index'], ShareProjects::class);
+        View::composer(['pages.home', 'pages.knowledge.index'], ShareKnowledge::class);
 
         Gate::policy(User::class, UserPolicy::class);
         Gate::policy(Role::class, RolePolicy::class);
@@ -202,6 +236,13 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(ProjectProgressUpdate::class, ProjectContentPolicy::class);
         Gate::policy(ProjectStatistic::class, ProjectContentPolicy::class);
         Gate::policy(ProjectBeforeAfter::class, ProjectContentPolicy::class);
+        Gate::policy(Article::class, ArticlePolicy::class);
+        Gate::policy(ArticleCategory::class, ArticleCategoryPolicy::class);
+        Gate::policy(ArticleAuthor::class, ArticleAuthorPolicy::class);
+        Gate::policy(ArticleSection::class, ArticleContentPolicy::class);
+        Gate::policy(ArticleFaq::class, ArticleContentPolicy::class);
+        Gate::policy(ArticleDownload::class, ArticleContentPolicy::class);
+        Gate::policy(ArticleTag::class, ArticleContentPolicy::class);
 
         Gate::define('viewPulse', function (?User $user = null): bool {
             return $this->app->environment('local') || $user !== null;
@@ -300,5 +341,24 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(ProjectCreated::class, IndexProject::class);
         Event::listen(ProjectPublished::class, IndexProject::class);
         Event::listen(ProjectUpdated::class, IndexProject::class);
+
+        $articleEvents = [
+            ArticleCreated::class,
+            ArticlePublished::class,
+            ArticleUpdated::class,
+            ArticleArchived::class,
+            FeaturedArticleChanged::class,
+        ];
+
+        foreach ($articleEvents as $event) {
+            Event::listen($event, ClearArticleCache::class);
+            Event::listen($event, BroadcastArticleChanges::class);
+        }
+
+        Event::listen(ArticleCreated::class, GenerateArticleSeo::class);
+        Event::listen(ArticleUpdated::class, GenerateArticleSeo::class);
+        Event::listen(ArticleCreated::class, IndexArticle::class);
+        Event::listen(ArticlePublished::class, IndexArticle::class);
+        Event::listen(ArticleUpdated::class, IndexArticle::class);
     }
 }

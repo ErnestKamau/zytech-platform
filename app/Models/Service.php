@@ -113,4 +113,11 @@ class Service extends BaseModel
             ->withPivot('sort_order')
             ->orderByPivot('sort_order');
     }
+
+    public function articles(): BelongsToMany
+    {
+        return $this->belongsToMany(Article::class, 'article_service')
+            ->withPivot('sort_order')
+            ->orderByPivot('sort_order');
+    }
 }

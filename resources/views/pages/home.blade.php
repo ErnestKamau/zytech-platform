@@ -18,6 +18,9 @@
     $featuredProjects = ($featuredProjects ?? collect())->isNotEmpty()
         ? $featuredProjects
         : collect();
+    $featuredArticles = ($featuredArticles ?? collect())->isNotEmpty()
+        ? $featuredArticles
+        : collect();
     $images = config('zyntech-media.images');
     $walkway = $images['structural_walkway'];
     $courtyard = $images['commercial_courtyard'];
@@ -138,6 +141,26 @@
             </div>
         </div>
     </section>
+
+    @if ($featuredArticles->isNotEmpty())
+        <section class="zy-section">
+            <div class="zy-container">
+                <div class="zy-section__header">
+                    <p class="zy-section__eyebrow">Knowledge Centre</p>
+                    <h2>Guides from the field</h2>
+                    <p>Practical construction advice for Kenyan homeowners and developers.</p>
+                </div>
+                <div class="zy-grid zy-grid--3">
+                    @foreach ($featuredArticles->take(3) as $article)
+                        <x-knowledge.card :article="$article" />
+                    @endforeach
+                </div>
+                <p style="margin-top: var(--zy-space-6);">
+                    <a href="{{ route('knowledge.index') }}" class="zy-btn zy-btn--secondary">Browse all articles</a>
+                </p>
+            </div>
+        </section>
+    @endif
 
     <x-sections.cta id="quote">
         <a href="{{ route('contact') }}" class="zy-btn zy-btn--primary zy-btn--lg">Request a Quote</a>

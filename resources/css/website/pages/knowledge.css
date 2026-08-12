@@ -1,0 +1,129 @@
+/**
+ * Knowledge Centre listing and detail — page-specific overrides only.
+ */
+
+.zy-page-knowledge {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.zy-knowledge-intro {
+    padding-block: var(--zy-space-12) var(--zy-space-8);
+}
+
+.zy-knowledge-intro p {
+    max-width: 52ch;
+}
+
+.zy-knowledge-search {
+    padding-block: 0 var(--zy-space-4);
+}
+
+.zy-knowledge-search__form {
+    max-width: 36rem;
+}
+
+.zy-knowledge-cats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--zy-space-3);
+    padding-block: 0 var(--zy-space-4);
+}
+
+.zy-knowledge-cat {
+    padding: var(--zy-space-2) var(--zy-space-4);
+    border: 1px solid var(--zy-color-border);
+    border-radius: var(--zy-radius-full);
+    color: inherit;
+    font-size: var(--zy-text-sm);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.zy-knowledge-cat.is-active,
+.zy-knowledge-cat:hover,
+.zy-knowledge-cat:focus-visible {
+    border-color: var(--zy-sage-300);
+    background: var(--zy-color-surface);
+}
+
+.zy-knowledge-grid {
+    padding-block: var(--zy-space-8) var(--zy-space-16);
+}
+
+.zy-knowledge-card-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+}
+
+.zy-knowledge-card-link:hover,
+.zy-knowledge-card-link:focus-visible {
+    color: inherit;
+}
+
+.zy-card__meta {
+    margin: var(--zy-space-2) 0 0;
+    color: var(--zy-color-muted);
+    font-size: var(--zy-text-sm);
+}
+
+.zy-article-detail {
+    display: grid;
+    gap: var(--zy-space-8);
+    max-width: 72ch;
+}
+
+.zy-article-detail__body {
+    display: grid;
+    gap: var(--zy-space-8);
+}
+
+.zy-article-section h2 {
+    margin-bottom: var(--zy-space-3);
+}
+
+.zy-article-section p,
+.zy-article-section div {
+    max-width: 62ch;
+    line-height: 1.7;
+}
+
+.zy-article-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--zy-space-2);
+    margin: var(--zy-space-3) 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.zy-article-tags li {
+    padding: var(--zy-space-1) var(--zy-space-3);
+    border: 1px solid var(--zy-color-border);
+    border-radius: var(--zy-radius-full);
+    font-size: var(--zy-text-sm);
+}
+
+.zy-knowledge-faqs {
+    display: grid;
+    gap: var(--zy-space-3);
+}
+
+.zy-knowledge-faq {
+    padding: var(--zy-space-4);
+    border: 1px solid var(--zy-color-border);
+    border-radius: var(--zy-radius-lg);
+    background: var(--zy-color-surface);
+}
+
+.zy-knowledge-faq summary {
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.zy-knowledge-faq p {
+    margin: var(--zy-space-3) 0 0;
+    color: var(--zy-color-muted);
+}

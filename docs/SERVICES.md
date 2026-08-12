@@ -59,7 +59,7 @@ Reusable Livewire: `service.featured-services`, `service.related-services`, `ser
 
 Quotation CTA on listing and detail points at `/contact` until the Quotation domain.
 
-Related projects link to `/projects/{slug}` when connected through the `project_service` pivot. Related articles wait for the Knowledge domain.
+Related projects link to `/projects/{slug}` when connected through the `project_service` pivot. Related articles link to `/knowledge/{slug}` when connected through the `article_service` pivot.
 
 ## SEO
 
