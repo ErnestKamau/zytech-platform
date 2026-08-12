@@ -1396,6 +1396,8 @@ Use database-backed settings (Phase 3 — see `docs/CONFIGURATION.md`).
 
 Corporate profile, branches, and testimonials live in the Company domain (Phase 4 — see `docs/COMPANY.md`).
 
+Uploads go through the Media domain (Phase 5 — see `docs/MEDIA.md`). Public website photos and videos stay in `public/media/zyntech`.
+
 Company
 
 Logo

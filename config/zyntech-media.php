@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Canonical public-site assets. Files live in public/media/zyntech and must
+ * not be moved or deleted — the homepage, about, services, and projects pages
+ * read these paths directly.
+ */
 return [
     'images' => [
         'site_prep_ballast' => [

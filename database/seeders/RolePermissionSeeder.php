@@ -36,6 +36,8 @@ class RolePermissionSeeder extends Seeder
         'feature-flags.manage',
         'company.view',
         'company.update',
+        'media.view',
+        'media.manage',
     ];
 
     public function run(): void
@@ -63,6 +65,7 @@ class RolePermissionSeeder extends Seeder
                 'navigation.view',
                 'feature-flags.view',
                 'company.view',
+                'media.view',
             ]);
 
         Role::findByName(RoleType::Client->value, 'web')

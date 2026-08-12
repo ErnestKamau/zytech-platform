@@ -38,6 +38,18 @@ use App\Domains\Configuration\Policies\FeatureFlagPolicy;
 use App\Domains\Configuration\Policies\NavigationPolicy;
 use App\Domains\Configuration\Policies\SettingPolicy;
 use App\Domains\Configuration\Support\ShareConfiguration;
+use App\Domains\Media\Events\MediaConverted;
+use App\Domains\Media\Events\MediaDeleted;
+use App\Domains\Media\Events\MediaMoved;
+use App\Domains\Media\Events\MediaOptimized;
+use App\Domains\Media\Events\MediaUploaded;
+use App\Domains\Media\Listeners\BroadcastMediaUploaded;
+use App\Domains\Media\Listeners\ClearMediaCache;
+use App\Domains\Media\Listeners\IndexMedia;
+use App\Domains\Media\Listeners\OptimizeUploadedImage;
+use App\Domains\Media\Livewire\MediaPicker;
+use App\Domains\Media\Policies\FolderPolicy;
+use App\Domains\Media\Policies\MediaPolicy;
 use App\Domains\User\Policies\PermissionPolicy;
 use App\Domains\User\Policies\RolePolicy;
 use App\Domains\User\Policies\UserPolicy;
@@ -52,6 +64,9 @@ use App\Models\CompanyStatistic;
 use App\Models\Faq;
 use App\Models\FeatureFlag;
 use App\Models\LeadershipMember;
+use App\Models\Media;
+use App\Models\MediaFolder;
+use App\Models\MediaTag;
 use App\Models\NavigationMenu;
 use App\Models\Partner;
 use App\Models\Permission;
@@ -77,6 +92,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Livewire::component('website.contact-form', ContactForm::class);
         Livewire::component('website.about-page', AboutPage::class);
+        Livewire::component('media.picker', MediaPicker::class);
 
         $websiteViews = [
             'layouts.website',
@@ -105,6 +121,9 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Award::class, CompanyContentPolicy::class);
         Gate::policy(Faq::class, CompanyContentPolicy::class);
         Gate::policy(CompanyStatistic::class, CompanyContentPolicy::class);
+        Gate::policy(Media::class, MediaPolicy::class);
+        Gate::policy(MediaFolder::class, FolderPolicy::class);
+        Gate::policy(MediaTag::class, MediaPolicy::class);
 
         Gate::define('viewPulse', function (?User $user = null): bool {
             return $this->app->environment('local') || $user !== null;
@@ -147,5 +166,23 @@ class AppServiceProvider extends ServiceProvider
 
         Event::listen(CompanyUpdated::class, UpdateHomepageStatistics::class);
         Event::listen(TestimonialPublished::class, UpdateHomepageStatistics::class);
+
+        $mediaEvents = [
+            MediaUploaded::class,
+            MediaDeleted::class,
+            MediaMoved::class,
+            MediaConverted::class,
+            MediaOptimized::class,
+        ];
+
+        foreach ($mediaEvents as $event) {
+            Event::listen($event, ClearMediaCache::class);
+        }
+
+        Event::listen(MediaUploaded::class, BroadcastMediaUploaded::class);
+        Event::listen(MediaDeleted::class, BroadcastMediaUploaded::class);
+        Event::listen(MediaMoved::class, BroadcastMediaUploaded::class);
+        Event::listen(MediaUploaded::class, OptimizeUploadedImage::class);
+        Event::listen(MediaUploaded::class, IndexMedia::class);
     }
 }

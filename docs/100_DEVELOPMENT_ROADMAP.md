@@ -2379,14 +2379,28 @@ README
 
 # Definition of Done
 
-- [ ] Media Library operational
-- [ ] Responsive images generated
-- [ ] Conversions working
-- [ ] Search operational
-- [ ] Redis integrated
-- [ ] Queues operational
+- [x] Media Library operational
+- [x] Responsive images generated
+- [x] Conversions working
+- [x] Search operational
+- [x] Redis integrated
+- [x] Queues operational
 - [ ] Tests passing
-- [ ] Documentation updated
+- [x] Documentation updated
+
+---
+
+# Phase 5 Notes
+
+Implemented under domain architecture:
+
+```text
+app/Domains/Media/            # library, folders, tags, conversions, usage
+app/Filament/Resources/{Media,MediaFolders,MediaTags}/
+docs/MEDIA.md
+```
+
+Public site images and videos remain in `public/media/zyntech` and continue to be referenced from `config/zyntech-media.php`. The library stores copies; original website files are not deleted.
 
 ---
 
