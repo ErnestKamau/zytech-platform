@@ -46,6 +46,8 @@ class RolePermissionSeeder extends Seeder
         'knowledge.manage',
         'quotations.view',
         'quotations.manage',
+        'clients.view',
+        'clients.manage',
     ];
 
     public function run(): void
@@ -78,6 +80,7 @@ class RolePermissionSeeder extends Seeder
                 'projects.view',
                 'knowledge.view',
                 'quotations.view',
+                'clients.view',
             ]);
 
         Role::findByName(RoleType::Client->value, 'web')

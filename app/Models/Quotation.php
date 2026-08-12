@@ -18,6 +18,7 @@ class Quotation extends BaseModel
         'reference_number',
         'quotation_request_id',
         'sales_lead_id',
+        'client_id',
         'title',
         'type',
         'status',
@@ -63,6 +64,11 @@ class Quotation extends BaseModel
     public function salesLead(): BelongsTo
     {
         return $this->belongsTo(SalesLead::class);
+    }
+
+    public function client(): BelongsTo
+    {
+        return $this->belongsTo(Client::class);
     }
 
     public function sections(): HasMany

@@ -2,8 +2,11 @@
 
 namespace App\Domains\Quotation\Services;
 
+use App\Core\Enums\ClientTimelineEvent;
 use App\Core\Enums\QuotationStatus;
 use App\Core\Services\BaseService;
+use App\Domains\Client\Services\ClientService;
+use App\Domains\Client\Services\TimelineService;
 use App\Domains\Quotation\Data\QuotationRequestData;
 use App\Domains\Quotation\Events\QuotationRequestSubmitted;
 use App\Domains\Quotation\Repositories\QuotationRequestRepository;
@@ -18,6 +21,8 @@ final class QuotationRequestService extends BaseService
     public function __construct(
         private readonly QuotationRequestRepository $requests,
         private readonly LeadService $leads,
+        private readonly ClientService $clients,
+        private readonly TimelineService $clientTimeline,
     ) {}
 
     public function findByReference(string $reference): ?QuotationRequestData
@@ -34,7 +39,14 @@ final class QuotationRequestService extends BaseService
     public function submit(array $payload, array $serviceIds = []): QuotationRequest
     {
         return DB::transaction(function () use ($payload, $serviceIds): QuotationRequest {
+            $client = $this->clients->findOrCreateFromLead(
+                (string) $payload['full_name'],
+                (string) $payload['email'],
+                isset($payload['phone']) ? (string) $payload['phone'] : null,
+            );
+
             $lead = $this->leads->create([
+                'client_id' => $client->id,
                 'lead_source_id' => $payload['lead_source_id'] ?? null,
                 'full_name' => $payload['full_name'],
                 'email' => $payload['email'],
@@ -45,9 +57,18 @@ final class QuotationRequestService extends BaseService
                 ...$payload,
                 'reference_number' => ReferenceNumber::forRequest(),
                 'sales_lead_id' => $lead->id,
+                'client_id' => $client->id,
                 'status' => QuotationStatus::Pending,
                 'submitted_at' => now(),
             ]);
+
+            $this->clientTimeline->record(
+                $client,
+                ClientTimelineEvent::QuotationRequested,
+                'Quotation requested',
+                'Reference '.$request->reference_number,
+                ['quotation_request_id' => $request->id],
+            );
 
             if ($serviceIds !== []) {
                 $request->services()->sync($serviceIds);

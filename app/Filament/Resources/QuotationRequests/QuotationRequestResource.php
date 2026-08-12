@@ -44,6 +44,7 @@ class QuotationRequestResource extends BaseResource
             TextInput::make('full_name')->required(),
             TextInput::make('email')->email()->required(),
             TextInput::make('phone'),
+            Select::make('client_id')->relationship('client', 'name')->searchable(),
             Select::make('project_type')->options(collect(ProjectType::cases())->mapWithKeys(
                 fn (ProjectType $type): array => [$type->value => $type->label()]
             ))->required(),
@@ -71,6 +72,7 @@ class QuotationRequestResource extends BaseResource
             ->columns([
                 TextColumn::make('reference_number')->searchable()->sortable(),
                 TextColumn::make('full_name')->searchable(),
+                TextColumn::make('client.name')->label('Client')->searchable(),
                 TextColumn::make('email'),
                 TextColumn::make('project_type')->badge()->formatStateUsing(
                     fn (ProjectType $state): string => $state->label()

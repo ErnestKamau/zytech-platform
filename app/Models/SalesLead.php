@@ -15,6 +15,7 @@ class SalesLead extends BaseModel
 
     /** @var list<string> */
     protected $fillable = [
+        'client_id',
         'lead_source_id',
         'full_name',
         'email',
@@ -37,6 +38,11 @@ class SalesLead extends BaseModel
     public function source(): BelongsTo
     {
         return $this->belongsTo(LeadSource::class, 'lead_source_id');
+    }
+
+    public function client(): BelongsTo
+    {
+        return $this->belongsTo(Client::class);
     }
 
     public function assignee(): BelongsTo

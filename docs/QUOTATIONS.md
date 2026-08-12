@@ -6,7 +6,7 @@
 
 The Quotation domain converts website visitors into qualified leads and supports the sales workflow from initial request through approval, delivery, and acceptance.
 
-Public submissions create a `SalesLead`, `QuotationRequest`, and optional attachments. Staff build official `Quotation` records with sections, line items, approvals, and PDF document stubs.
+Public submissions create a `SalesLead`, `QuotationRequest`, and optional attachments. Each submission also finds or creates a linked `Client` record with a timeline event. Staff build official `Quotation` records with sections, line items, approvals, and PDF document stubs.
 
 ## Domain
 

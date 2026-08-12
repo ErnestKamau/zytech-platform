@@ -21,6 +21,7 @@ class QuotationRequest extends BaseModel
     protected $fillable = [
         'reference_number',
         'sales_lead_id',
+        'client_id',
         'lead_source_id',
         'full_name',
         'email',
@@ -52,6 +53,11 @@ class QuotationRequest extends BaseModel
     public function salesLead(): BelongsTo
     {
         return $this->belongsTo(SalesLead::class);
+    }
+
+    public function client(): BelongsTo
+    {
+        return $this->belongsTo(Client::class);
     }
 
     public function source(): BelongsTo

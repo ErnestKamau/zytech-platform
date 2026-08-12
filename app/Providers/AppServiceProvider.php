@@ -12,6 +12,19 @@ use App\Domains\Authentication\Listeners\CreateNotifications;
 use App\Domains\Authentication\Listeners\LogLogin;
 use App\Domains\Authentication\Listeners\LogLogout;
 use App\Domains\Authentication\Listeners\SendWelcomeEmail;
+use App\Domains\Client\Events\ClientArchived;
+use App\Domains\Client\Events\ClientCreated;
+use App\Domains\Client\Events\ClientUpdated;
+use App\Domains\Client\Events\CommunicationLogged;
+use App\Domains\Client\Events\DocumentUploaded;
+use App\Domains\Client\Events\PortalAccessGranted;
+use App\Domains\Client\Listeners\BroadcastClientUpdate;
+use App\Domains\Client\Listeners\ClearClientCache;
+use App\Domains\Client\Listeners\IndexClient;
+use App\Domains\Client\Listeners\NotifyAssignedStaff;
+use App\Domains\Client\Policies\ClientDocumentPolicy;
+use App\Domains\Client\Policies\ClientNotePolicy;
+use App\Domains\Client\Policies\ClientPolicy;
 use App\Domains\Company\Events\BranchCreated;
 use App\Domains\Company\Events\CertificationUpdated;
 use App\Domains\Company\Events\CompanyUpdated;
@@ -139,6 +152,11 @@ use App\Models\ArticleTag;
 use App\Models\Award;
 use App\Models\Branch;
 use App\Models\Certification;
+use App\Models\Client;
+use App\Models\ClientDocument;
+use App\Models\ClientGroup;
+use App\Models\ClientNote;
+use App\Models\ClientTag;
 use App\Models\Company;
 use App\Models\CompanyStatistic;
 use App\Models\Faq;
@@ -289,6 +307,11 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(QuotationApproval::class, QuotationPolicy::class);
         Gate::policy(QuotationDocument::class, QuotationPolicy::class);
         Gate::policy(SiteVisit::class, SiteVisitPolicy::class);
+        Gate::policy(Client::class, ClientPolicy::class);
+        Gate::policy(ClientDocument::class, ClientDocumentPolicy::class);
+        Gate::policy(ClientNote::class, ClientNotePolicy::class);
+        Gate::policy(ClientTag::class, ClientPolicy::class);
+        Gate::policy(ClientGroup::class, ClientPolicy::class);
 
         Gate::define('viewPulse', function (?User $user = null): bool {
             return $this->app->environment('local') || $user !== null;
@@ -428,5 +451,24 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(QuotationSent::class, SendQuotationEmail::class);
         Event::listen(QuotationApproved::class, GenerateQuotationPdf::class);
         Event::listen(QuotationSent::class, GenerateQuotationPdf::class);
+
+        $clientEvents = [
+            ClientCreated::class,
+            ClientUpdated::class,
+            ClientArchived::class,
+            DocumentUploaded::class,
+            CommunicationLogged::class,
+            PortalAccessGranted::class,
+        ];
+
+        foreach ($clientEvents as $event) {
+            Event::listen($event, ClearClientCache::class);
+            Event::listen($event, BroadcastClientUpdate::class);
+        }
+
+        Event::listen(ClientCreated::class, NotifyAssignedStaff::class);
+        Event::listen(ClientCreated::class, IndexClient::class);
+        Event::listen(ClientUpdated::class, IndexClient::class);
+        Event::listen(ClientArchived::class, IndexClient::class);
     }
 }
