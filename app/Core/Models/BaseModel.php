@@ -11,9 +11,9 @@ abstract class BaseModel extends Model
     use HasUuids;
     use SoftDeletes;
 
-    public bool $incrementing = false;
+    public $incrementing = false;
 
-    protected string $keyType = 'string';
+    protected $keyType = 'string';
 
     /**
      * @return array<string, string>

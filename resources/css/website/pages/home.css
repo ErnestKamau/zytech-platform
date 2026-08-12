@@ -12,8 +12,8 @@
     position: relative;
     display: grid;
     align-items: end;
-    min-height: min(92vh, 56rem);
-    padding-block: var(--zy-space-24) var(--zy-space-16);
+    min-height: 88svh;
+    padding-block: var(--zy-space-16) var(--zy-space-12);
     color: #fff;
     overflow: hidden;
     isolation: isolate;
@@ -22,16 +22,11 @@
 
 /* Base gradient — deliberately darker/quieter than before so the single
    glow moment (::before) reads as THE visual event, not one of many. */
-.zy-hero__media {
+.zy-hero__media,
+.zy-media-hero {
     position: absolute;
     inset: 0;
-    /* Negative z-index keeps the media above the hero's own background but
-       below the ::before glow and ::after grain (both z-index 0). Without
-       this the opaque gradient hides both pseudo-element layers. */
     z-index: -1;
-    background:
-        linear-gradient(200deg, rgb(15 23 42 / 0.35) 0%, rgb(15 23 42 / 0.88) 100%),
-        var(--zy-gradient-hero);
     background-size: cover;
     background-position: center;
 }
@@ -45,7 +40,7 @@
     right: -12%;
     width: min(60vw, 44rem);
     height: min(60vw, 44rem);
-    background: radial-gradient(circle, rgb(72 198 239 / 0.55) 0%, rgb(111 134 214 / 0.25) 45%, transparent 72%);
+    background: radial-gradient(circle, rgb(115 140 94 / 0.5) 0%, rgb(92 115 73 / 0.22) 45%, transparent 72%);
     filter: blur(10px);
     z-index: 0;
     pointer-events: none;
@@ -94,8 +89,8 @@
     width: 6px;
     height: 6px;
     border-radius: var(--zy-radius-full);
-    background: var(--zy-sky-400);
-    box-shadow: 0 0 0 3px rgb(72 198 239 / 0.35);
+    background: var(--zy-sage-400);
+    box-shadow: 0 0 0 3px rgb(92 115 73 / 0.35);
 }
 
 .zy-hero__brand {
@@ -157,6 +152,23 @@
     .zy-hero__scroll-cue {
         display: none;
     }
+
+    .zy-hero__actions {
+        display: grid;
+        width: 100%;
+        max-width: 22rem;
+    }
+
+    .zy-hero__actions .zy-btn {
+        width: 100%;
+    }
+}
+
+@media (min-width: 768px) {
+    .zy-hero {
+        min-height: min(92vh, 56rem);
+        padding-block: var(--zy-space-24) var(--zy-space-16);
+    }
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -175,7 +187,13 @@
 }
 
 .zy-section {
-    padding-block: var(--zy-space-20);
+    padding-block: var(--zy-space-12);
+}
+
+@media (min-width: 768px) {
+    .zy-section {
+        padding-block: var(--zy-space-20);
+    }
 }
 
 .zy-section--alt {
@@ -187,7 +205,13 @@
     display: grid;
     gap: var(--zy-space-3);
     max-width: 44rem;
-    margin-bottom: var(--zy-space-12);
+    margin-bottom: var(--zy-space-8);
+}
+
+@media (min-width: 768px) {
+    .zy-section__header {
+        margin-bottom: var(--zy-space-12);
+    }
 }
 
 .zy-section__header p {
@@ -217,6 +241,20 @@
 }
 
 /* ------------------------------------------------------------------ */
+/* Story band — Prudentia-style split gallery                          */
+/* ------------------------------------------------------------------ */
+
+.zy-story {
+    padding-block: var(--zy-space-12);
+}
+
+@media (min-width: 768px) {
+    .zy-story {
+        padding-block: var(--zy-space-20);
+    }
+}
+
+/* ------------------------------------------------------------------ */
 /* Stats band — quiet numbers, gradient values, hairline separators    */
 /* ------------------------------------------------------------------ */
 
@@ -234,7 +272,7 @@
 }
 
 .zy-stat:hover {
-    border-left-color: var(--zy-sky-400);
+    border-left-color: var(--zy-sage-400);
 }
 
 @media (min-width: 768px) {
@@ -244,8 +282,7 @@
 }
 
 /* ------------------------------------------------------------------ */
-/* CTA panel — the hero's dark surface + glow, reprised once at the    */
-/* bottom of the page. Always dark in both themes.                     */
+/* CTA panel — earth charcoal + sage glow, matching page chrome.       */
 /* ------------------------------------------------------------------ */
 
 .zy-cta {
@@ -254,17 +291,17 @@
     overflow: hidden;
     display: grid;
     gap: var(--zy-space-6);
-    padding: var(--zy-space-16) var(--zy-space-8);
-    border-radius: calc(var(--zy-radius-lg) * 2);
-    background: var(--zy-slate-800);
+    padding: var(--zy-space-10) var(--zy-space-5);
+    border-radius: var(--zy-radius-xl);
+    background: var(--zy-stone-800);
     color: #fff;
     text-align: center;
     justify-items: center;
 }
 
 [data-zy-theme="dark"] .zy-cta {
-    background: #1e293b;
-    border: 1px solid var(--zy-color-border);
+    background: var(--zy-stone-800);
+    border: 1px solid rgb(168 152 134 / 0.16);
 }
 
 .zy-cta::before {
@@ -275,10 +312,18 @@
     transform: translateX(-50%);
     width: 42rem;
     height: 42rem;
-    background: radial-gradient(circle, rgb(72 198 239 / 0.35) 0%, rgb(111 134 214 / 0.18) 45%, transparent 70%);
+    background: radial-gradient(circle, rgb(115 140 94 / 0.38) 0%, rgb(92 115 73 / 0.16) 45%, transparent 70%);
     filter: blur(12px);
     z-index: -1;
     pointer-events: none;
+}
+
+.zy-cta .zy-section__eyebrow {
+    color: var(--zy-sage-300);
+}
+
+.zy-cta .zy-section__eyebrow::before {
+    background: var(--zy-sage-400);
 }
 
 .zy-cta h2 {
@@ -292,15 +337,32 @@
 }
 
 .zy-cta__actions {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: grid;
+    width: 100%;
+    max-width: 22rem;
     gap: var(--zy-space-3);
     margin-top: var(--zy-space-2);
+}
+
+.zy-cta__actions .zy-btn {
+    width: 100%;
 }
 
 @media (min-width: 768px) {
     .zy-cta {
         padding: var(--zy-space-20) var(--zy-space-16);
+        border-radius: calc(var(--zy-radius-lg) * 2);
+    }
+
+    .zy-cta__actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        width: auto;
+        max-width: none;
+    }
+
+    .zy-cta__actions .zy-btn {
+        width: auto;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Core\Traits;
 
+use BackedEnum;
 use Illuminate\Database\Eloquent\Builder;
 
 trait HasPublishedState
@@ -21,7 +22,11 @@ trait HasPublishedState
 
     public function isPublished(): bool
     {
-        return $this->status === 'published'
+        $status = $this->status instanceof BackedEnum
+            ? (string) $this->status->value
+            : (string) $this->status;
+
+        return $status === 'published'
             && $this->published_at !== null
             && $this->published_at <= now();
     }

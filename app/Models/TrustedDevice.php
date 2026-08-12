@@ -10,9 +10,9 @@ class TrustedDevice extends Model
 {
     use HasUuids;
 
-    public bool $incrementing = false;
+    public $incrementing = false;
 
-    protected string $keyType = 'string';
+    protected $keyType = 'string';
 
     /**
      * @var list<string>

@@ -63,14 +63,35 @@
     <section class="sg-block">
         <h2>Color Palette</h2>
 
-        <h4 style="margin-bottom: var(--zy-space-3);">Sky — Primary</h4>
+        <h4 style="margin-bottom: var(--zy-space-3);">Sage — Primary</h4>
+        <div class="sg-swatch-row">
+            @foreach ([50,100,200,300,400,500,600,700,800,900] as $step)
+                <div class="sg-swatch" style="background: var(--zy-sage-{{ $step }}); color: {{ $step >= 500 ? '#fff' : 'var(--zy-color-ink)' }};">{{ $step }}</div>
+            @endforeach
+        </div>
+
+        <h4 style="margin-bottom: var(--zy-space-3);">Stone — Neutrals</h4>
+        <div class="sg-swatch-row">
+            @foreach ([50,100,200,300,400,500,600,700,800,900] as $step)
+                <div class="sg-swatch" style="background: var(--zy-stone-{{ $step }}); color: {{ $step >= 500 ? '#fff' : 'var(--zy-color-ink)' }};">{{ $step }}</div>
+            @endforeach
+        </div>
+
+        <h4 style="margin-bottom: var(--zy-space-3);">Earth — Accent</h4>
+        <div class="sg-swatch-row">
+            @foreach ([50,100,200,300,400,500,600,700,800,900] as $step)
+                <div class="sg-swatch" style="background: var(--zy-earth-{{ $step }}); color: {{ $step >= 500 ? '#fff' : 'var(--zy-color-ink)' }};">{{ $step }}</div>
+            @endforeach
+        </div>
+
+        <h4 style="margin-bottom: var(--zy-space-3);">Sky — CTA / gradient only</h4>
         <div class="sg-swatch-row">
             @foreach ([50,100,200,300,400,500,600,700,800,900] as $step)
                 <div class="sg-swatch" style="background: var(--zy-sky-{{ $step }}); color: {{ $step >= 500 ? '#fff' : 'var(--zy-color-ink)' }};">{{ $step }}</div>
             @endforeach
         </div>
 
-        <h4 style="margin-bottom: var(--zy-space-3);">Indigo — Secondary</h4>
+        <h4 style="margin-bottom: var(--zy-space-3);">Indigo — CTA / gradient only</h4>
         <div class="sg-swatch-row">
             @foreach ([50,100,200,300,400,500,600,700,800,900] as $step)
                 <div class="sg-swatch" style="background: var(--zy-indigo-{{ $step }}); color: {{ $step >= 500 ? '#fff' : 'var(--zy-color-ink)' }};">{{ $step }}</div>
@@ -118,10 +139,10 @@
     <section class="sg-block">
         <h2>Spacing (8pt scale)</h2>
         <div class="zy-stack">
-            @foreach ([1,2,3,4,6,8,10,12,16,20,24] as $step)
+            @foreach ([1,2,3,4,5,6,8,10,12,16,20,24] as $step)
                 <div class="sg-row">
                     <div style="width: var(--zy-space-{{ $step }}); height: 20px; background: var(--zy-color-primary); border-radius: 3px;"></div>
-                    <span class="zy-text-sm">--zy-space-{{ $step }} ({{ ['1'=>4,'2'=>8,'3'=>12,'4'=>16,'6'=>24,'8'=>32,'10'=>40,'12'=>48,'16'=>64,'20'=>80,'24'=>96][$step] }}px)</span>
+                    <span class="zy-text-sm">--zy-space-{{ $step }} ({{ ['1'=>4,'2'=>8,'3'=>12,'4'=>16,'5'=>20,'6'=>24,'8'=>32,'10'=>40,'12'=>48,'16'=>64,'20'=>80,'24'=>96][$step] }}px)</span>
                 </div>
             @endforeach
         </div>
@@ -136,7 +157,7 @@
             <x-ui.button variant="primary">Primary</x-ui.button>
             <x-ui.button variant="gradient">Gradient CTA</x-ui.button>
             <x-ui.button variant="secondary">Secondary</x-ui.button>
-            <x-ui.button variant="ghost">Ghost</x-ui.button>
+            <x-ui.button variant="frost">Frost / glass</x-ui.button>
             <x-ui.button variant="success">Success</x-ui.button>
             <x-ui.button variant="danger">Danger</x-ui.button>
             <x-ui.button variant="warning">Warning</x-ui.button>
@@ -169,6 +190,13 @@
             <x-ui.alert type="danger" title="Upload failed">That file exceeds the 20MB limit.</x-ui.alert>
         </div>
 
+        <p class="zy-text-sm" style="margin-bottom: var(--zy-space-3);">Toasts</p>
+        <div class="zy-stack" style="margin-bottom: var(--zy-space-8); max-width: 26rem;">
+            <x-ui.toast type="success" title="Quote received">We’ll respond within 48 hours.</x-ui.toast>
+            <x-ui.toast type="warning" title="Missing site plan">Attach a drawing before submitting.</x-ui.toast>
+            <x-ui.toast type="danger" title="Upload failed">That file exceeds the 20MB limit.</x-ui.toast>
+        </div>
+
         <div class="sg-row">
             <x-ui.badge variant="neutral">Neutral</x-ui.badge>
             <x-ui.badge variant="primary">Primary</x-ui.badge>
@@ -192,9 +220,13 @@
         <h2>Cards</h2>
         <div class="sg-grid-3">
             <x-ui.card interactive>
-                <p class="zy-card__eyebrow">Residential</p>
-                <p class="zy-card__title">Kilimani Modern Villa</p>
-                <p class="zy-card__body">Completed 2026 · Nairobi</p>
+                <x-media.cover
+                    :src="asset(config('zyntech-media.images.commercial_courtyard.path'))"
+                    :alt="config('zyntech-media.images.commercial_courtyard.alt')"
+                />
+                <p class="zy-card__eyebrow">Commercial</p>
+                <p class="zy-card__title">Commercial Courtyard</p>
+                <p class="zy-card__body">Completed · Nairobi</p>
             </x-ui.card>
 
             <x-ui.card class="zy-card--stat">
@@ -240,6 +272,22 @@
         </div>
 
         <div class="zy-dropzone" style="margin-top: var(--zy-space-6);">Drop plans, PDFs, or images here</div>
+    </section>
+
+    {{-- ============================================================ MEDIA ============================================================ --}}
+    <section class="sg-block">
+        <h2>Media recipes</h2>
+        <p class="zy-text-sm" style="margin-bottom: var(--zy-space-6);">Approved containers: hero.video, project.cover, background.image, construction.gallery.</p>
+        <x-media.gallery
+            :left-src="asset(config('zyntech-media.images.structural_walkway.path'))"
+            :left-alt="config('zyntech-media.images.structural_walkway.alt')"
+            :right-src="asset(config('zyntech-media.images.paving_gravel_leveling.path'))"
+            :right-alt="config('zyntech-media.images.paving_gravel_leveling.alt')"
+        >
+            <p class="zy-section__eyebrow">On the ground</p>
+            <h2>If you can plan it, we can build it.</h2>
+            <p>Kenyan site photography inside the gallery recipe.</p>
+        </x-media.gallery>
     </section>
 
     {{-- ============================================================ TABS ============================================================ --}}
@@ -342,7 +390,7 @@
 
         <p class="zy-text-sm" style="margin: var(--zy-space-6) 0 var(--zy-space-3);">Frost buttons — for CTAs on dark / photographic surfaces</p>
         <div class="sg-dark-strip sg-row" style="margin-bottom: 0;">
-            <button class="zy-btn zy-btn--gradient">Request a Quote</button>
+            <button class="zy-btn zy-btn--primary">Request a Quote</button>
             <button class="zy-btn zy-btn--frost">View Projects</button>
         </div>
     </section>
@@ -386,6 +434,15 @@
             <div style="width:100px;height:70px;background:var(--zy-color-surface);border:1px solid var(--zy-color-border);border-radius:var(--zy-radius-md);box-shadow:var(--zy-shadow-sm);"></div>
             <div style="width:100px;height:70px;background:var(--zy-color-surface);border:1px solid var(--zy-color-border);border-radius:var(--zy-radius-md);box-shadow:var(--zy-shadow-md);"></div>
             <div style="width:100px;height:70px;background:var(--zy-color-surface);border:1px solid var(--zy-color-border);border-radius:var(--zy-radius-md);box-shadow:var(--zy-shadow-lg);"></div>
+        </div>
+    </section>
+
+    {{-- ============================================================ FOOTER ============================================================ --}}
+    <section class="sg-block">
+        <h2>Footer (dark earth)</h2>
+        <p class="zy-text-sm" style="margin-bottom: var(--zy-space-6);">Full-width charcoal chrome with sage hairline — distinct from the gradient CTA card.</p>
+        <div style="border-radius: var(--zy-radius-lg); overflow: hidden;">
+            <x-layout.footer />
         </div>
     </section>
 

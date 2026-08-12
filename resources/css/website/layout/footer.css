@@ -1,18 +1,15 @@
 /**
- * Site footer — always-dark surface (theme-independent), so it uses
- * literal white alphas rather than remappable slate tints.
+ * Site footer — dark-earth chrome, distinct from the CTA card above it.
  */
 
 .zy-footer {
     position: relative;
     margin-top: auto;
-    background: var(--zy-slate-900);
+    background: var(--zy-stone-900);
     color: rgb(255 255 255 / 0.85);
-    padding-block: var(--zy-space-16) var(--zy-space-12);
     overflow: hidden;
 }
 
-/* Brand hairline along the top edge — quiet signature, not a banner. */
 .zy-footer::before {
     content: "";
     position: absolute;
@@ -20,26 +17,26 @@
     left: 0;
     right: 0;
     height: 2px;
-    background: var(--zy-gradient-brand);
+    background: var(--zy-sage-500);
 }
 
-/* Faint glow anchored to the corner, echoing the hero's light source. */
 .zy-footer::after {
     content: "";
     position: absolute;
     bottom: -40%;
-    right: -10%;
-    width: 32rem;
-    height: 32rem;
-    background: radial-gradient(circle, rgb(111 134 214 / 0.16) 0%, transparent 65%);
+    right: -8%;
+    width: 28rem;
+    height: 28rem;
+    background: radial-gradient(circle, rgb(92 115 73 / 0.14) 0%, transparent 65%);
     pointer-events: none;
 }
 
-.zy-footer__inner {
+.zy-footer__grid {
     position: relative;
     z-index: 1;
     display: grid;
     gap: var(--zy-space-8);
+    padding-block: var(--zy-space-12) var(--zy-space-10);
 }
 
 .zy-footer__brand {
@@ -49,46 +46,93 @@
 }
 
 .zy-footer__brand span {
-    background: var(--zy-gradient-brand);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    color: var(--zy-sage-400);
+}
+
+.zy-footer__tagline {
+    margin: var(--zy-space-2) 0 0;
+    font-size: var(--zy-text-xs);
+    font-weight: 600;
+    letter-spacing: var(--zy-tracking-wide);
+    text-transform: uppercase;
+    color: var(--zy-sage-300);
 }
 
 .zy-footer__copy {
     font-size: var(--zy-text-sm);
     color: rgb(255 255 255 / 0.55);
-    max-width: 40ch;
-    margin-top: var(--zy-space-2);
+    max-width: 36ch;
+    margin-top: var(--zy-space-3);
 }
 
-.zy-footer__links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--zy-space-4) var(--zy-space-6);
+.zy-footer__heading {
+    margin: 0 0 var(--zy-space-4);
+    font-size: var(--zy-text-xs);
+    font-weight: 700;
+    letter-spacing: var(--zy-tracking-wide);
+    text-transform: uppercase;
+    color: rgb(255 255 255 / 0.45);
 }
 
-.zy-footer__links a {
+.zy-footer__col {
+    display: grid;
+    gap: var(--zy-space-3);
+    align-content: start;
+}
+
+.zy-footer__col a,
+.zy-footer__col p {
     font-size: var(--zy-text-sm);
-    color: rgb(255 255 255 / 0.65);
+    color: rgb(255 255 255 / 0.7);
     text-decoration: none;
+    max-width: none;
+    margin: 0;
     transition: color var(--zy-duration-fast) var(--zy-ease);
 }
 
-.zy-footer__links a:hover {
-    color: var(--zy-sky-400);
+.zy-footer__col a:hover {
+    color: var(--zy-sage-400);
+}
+
+.zy-footer__cta {
+    font-weight: 600;
+    color: var(--zy-sage-300) !important;
+}
+
+.zy-footer__bar {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid rgb(255 255 255 / 0.08);
+    padding-block: var(--zy-space-4);
 }
 
 .zy-footer__meta {
+    margin: 0;
     font-size: var(--zy-text-xs);
     color: rgb(255 255 255 / 0.35);
     letter-spacing: var(--zy-tracking-wide);
     text-transform: uppercase;
 }
 
+@media (min-width: 640px) {
+    .zy-footer__grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .zy-footer__brand-col {
+        grid-column: 1 / -1;
+    }
+}
+
 @media (min-width: 768px) {
-    .zy-footer__inner {
-        grid-template-columns: 1fr auto;
-        align-items: end;
+    .zy-footer__grid {
+        grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr));
+        align-items: start;
+        gap: var(--zy-space-10);
+        padding-block: var(--zy-space-16) var(--zy-space-12);
+    }
+
+    .zy-footer__brand-col {
+        grid-column: auto;
     }
 }

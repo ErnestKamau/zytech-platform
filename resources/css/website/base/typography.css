@@ -16,7 +16,7 @@ body {
 }
 
 ::selection {
-    background: var(--zy-sky-200);
+    background: var(--zy-sage-200);
     color: var(--zy-color-ink);
 }
 

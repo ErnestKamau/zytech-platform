@@ -55,6 +55,12 @@ final class Register extends BaseComponent
 
     public function render(): View
     {
-        return view('livewire.authentication.register');
+        return view('livewire.authentication.register')
+            ->layoutData([
+                'asideImageKey' => 'structural_walkway',
+                'asideHeadline' => 'Get started with Zyntech.',
+                'asideSupport' => 'Complete these easy steps to register your account.',
+                'showRegisterSteps' => true,
+            ]);
     }
 }

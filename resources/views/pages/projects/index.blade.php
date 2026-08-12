@@ -4,51 +4,65 @@
 @section('page-class', 'zy-page-projects')
 
 @php
+    $images = config('zyntech-media.images');
+    $showreel = config('zyntech-media.videos.projects_showreel');
     $projects = [
         [
-            'category' => 'Residential',
-            'title' => 'Kilimani Modern Villa',
-            'meta' => 'Completed 2026 · Nairobi',
-            'featured' => false,
-        ],
-        [
             'category' => 'Commercial',
-            'title' => 'Two Rivers Office Park',
-            'meta' => 'In progress · Nairobi',
+            'title' => 'Commercial Courtyard — Stone & Paving',
+            'meta' => 'Completed · Nairobi',
             'featured' => true,
+            'image' => 'commercial_courtyard',
         ],
         [
-            'category' => 'Renovation',
-            'title' => 'Karen Courtyard House',
-            'meta' => 'Planning · Nairobi',
+            'category' => 'Site preparation',
+            'title' => 'Site Preparation — Ballast Delivery',
+            'meta' => 'In progress · Nairobi',
             'featured' => false,
+            'image' => 'site_prep_ballast',
         ],
         [
-            'category' => 'Interior',
-            'title' => 'Westlands Penthouse Fit-out',
-            'meta' => 'Completed 2025 · Nairobi',
+            'category' => 'Paving',
+            'title' => 'Hardscaping — Gravel Leveling',
+            'meta' => 'In progress · Nairobi',
             'featured' => false,
+            'image' => 'paving_gravel_leveling',
         ],
         [
             'category' => 'Structural',
-            'title' => 'Ruiru Light Industrial Bay',
-            'meta' => 'In progress · Kiambu',
+            'title' => 'Covered Walkway — Steel Frame',
+            'meta' => 'In progress · Nairobi',
             'featured' => false,
+            'image' => 'structural_walkway',
         ],
         [
             'category' => 'Residential',
-            'title' => 'Lavington Garden Extension',
-            'meta' => 'Completed 2025 · Nairobi',
+            'title' => 'Courtyard House — Exterior Finish',
+            'meta' => 'Completed · Nairobi',
             'featured' => false,
+            'image' => 'commercial_courtyard',
+        ],
+        [
+            'category' => 'Landscaping',
+            'title' => 'Garden Walkway — Pergola Structure',
+            'meta' => 'Planning · Nairobi',
+            'featured' => false,
+            'image' => 'structural_walkway',
         ],
     ];
 @endphp
 
 @section('content')
     <div class="zy-container zy-projects-intro">
-        <p class="zy-eyebrow">Portfolio</p>
-        <h1>Projects</h1>
-        <p>Placeholder project cards composed from design-system tokens and components. Real media and CMS content come later.</p>
+        <x-media.banner
+            :video="asset($showreel['path'])"
+            :poster="asset($showreel['poster'])"
+            :alt="$showreel['alt']"
+        >
+            <p class="zy-eyebrow" style="color: rgb(255 255 255 / 0.75);">Portfolio</p>
+            <h1 style="color: #fff;">Projects</h1>
+            <p>Work photographed on Zytech sites across Nairobi and Kiambu — from groundworks to finished courtyards.</p>
+        </x-media.banner>
     </div>
 
     <div class="zy-container zy-projects-grid">
@@ -58,7 +72,10 @@
                     interactive
                     :featured="$project['featured']"
                 >
-                    <div class="zy-project-card__cover" aria-hidden="true"></div>
+                    <x-media.cover
+                        :src="asset($images[$project['image']]['path'])"
+                        :alt="$images[$project['image']]['alt']"
+                    />
                     <p class="zy-card__eyebrow">{{ $project['category'] }}</p>
                     <p class="zy-card__title">{{ $project['title'] }}</p>
                     <p class="zy-card__body">{{ $project['meta'] }}</p>

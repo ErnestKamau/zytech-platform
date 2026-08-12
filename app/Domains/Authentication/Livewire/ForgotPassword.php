@@ -44,6 +44,11 @@ final class ForgotPassword extends BaseComponent
 
     public function render(): View
     {
-        return view('livewire.authentication.forgot-password');
+        return view('livewire.authentication.forgot-password')
+            ->layoutData([
+                'asideImageKey' => 'paving_gravel_leveling',
+                'asideHeadline' => 'Reset your access.',
+                'asideSupport' => 'We’ll email you a link to choose a new password.',
+            ]);
     }
 }

@@ -28,7 +28,14 @@ class RolePermissionSeeder extends Seeder
         'permissions.create',
         'permissions.update',
         'permissions.delete',
+        'settings.view',
         'settings.manage',
+        'navigation.view',
+        'navigation.manage',
+        'feature-flags.view',
+        'feature-flags.manage',
+        'company.view',
+        'company.update',
     ];
 
     public function run(): void
@@ -52,6 +59,10 @@ class RolePermissionSeeder extends Seeder
                 'users.view',
                 'roles.view',
                 'permissions.view',
+                'settings.view',
+                'navigation.view',
+                'feature-flags.view',
+                'company.view',
             ]);
 
         Role::findByName(RoleType::Client->value, 'web')

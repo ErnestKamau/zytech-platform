@@ -32,11 +32,15 @@
 @import './components/modal.css';
 @import './components/table.css';
 @import './components/wizard.css';
+@import './components/media.css';
 
 /* pages */
 @import './pages/home.css';
 @import './pages/projects.css';
 @import './pages/auth.css';
+@import './pages/services.css';
+@import './pages/contact.css';
+@import './pages/about.css';
 
 /* utilities — always last */
 @import './utilities/helpers.css';

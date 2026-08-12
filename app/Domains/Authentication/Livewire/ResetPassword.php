@@ -61,6 +61,11 @@ final class ResetPassword extends BaseComponent
 
     public function render(): View
     {
-        return view('livewire.authentication.reset-password');
+        return view('livewire.authentication.reset-password')
+            ->layoutData([
+                'asideImageKey' => 'paving_gravel_leveling',
+                'asideHeadline' => 'Choose a new password.',
+                'asideSupport' => 'Then sign in and pick up where you left off.',
+            ]);
     }
 }

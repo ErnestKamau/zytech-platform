@@ -1,13 +1,21 @@
 @props([
     'brand' => 'Zytech Contractors',
-    'headline' => 'Precision-built spaces, engineered to last.',
-    'support' => 'Interior, exterior, and structural work — from first sketch to final handover.',
+    'headline' => 'Built on Kenyan soil, engineered to last.',
+    'support' => 'Interior, exterior, and structural work across Nairobi, Kiambu, and nationwide — from first sketch to final handover.',
 ])
 
+@php
+    $hero = config('zyntech-media.videos.hero_site_work');
+@endphp
+
 <section class="zy-hero">
-    <div class="zy-hero__media" aria-hidden="true"></div>
+    <x-media.hero
+        :video="asset($hero['path'])"
+        :poster="asset($hero['poster'])"
+        :alt="$hero['alt']"
+    />
     <div class="zy-container zy-hero__content">
-        <p class="zy-hero__eyebrow">Interior · Exterior · Structural</p>
+        <p class="zy-hero__eyebrow">Nairobi · Kiambu · Kenya</p>
         <h1 class="zy-hero__brand">{{ $brand }}</h1>
         <p class="zy-hero__headline">{{ $headline }}</p>
         <p class="zy-hero__support">{{ $support }}</p>

@@ -46,7 +46,7 @@
     width: 2.75rem;
     height: 2.75rem;
     border-radius: var(--zy-radius-md);
-    background: var(--zy-sky-50);
+    background: var(--zy-sage-50);
     color: var(--zy-color-primary);
     transition: transform var(--zy-duration-base) var(--zy-ease), box-shadow var(--zy-duration-base) var(--zy-ease);
 }
@@ -86,8 +86,8 @@
 }
 
 .zy-icon-tile--slate {
-    background: var(--zy-slate-100);
-    color: var(--zy-slate-600);
+    background: var(--zy-stone-100);
+    color: var(--zy-stone-600);
 }
 
 /* Lift the tile when its containing card is hovered/interactive — pair
@@ -105,7 +105,7 @@
 .zy-icon-tile--ring {
     background: transparent;
     box-shadow: inset 0 0 0 1.5px var(--zy-color-border);
-    color: var(--zy-slate-500);
+    color: var(--zy-stone-500);
     transition: background var(--zy-duration-base) var(--zy-ease),
         box-shadow var(--zy-duration-base) var(--zy-ease),
         color var(--zy-duration-base) var(--zy-ease);
@@ -144,7 +144,7 @@
     border-radius: var(--zy-radius-full);
     border: 1px solid transparent;
     background: transparent;
-    color: var(--zy-slate-500);
+    color: var(--zy-stone-500);
     cursor: pointer;
     transition: background var(--zy-duration-fast) var(--zy-ease),
         color var(--zy-duration-fast) var(--zy-ease),
@@ -152,7 +152,7 @@
 }
 
 .zy-icon-btn:hover {
-    background: var(--zy-slate-100);
+    background: var(--zy-stone-100);
     color: var(--zy-color-ink);
 }
 
@@ -177,13 +177,15 @@
 /* Theme toggle — slightly stronger chrome so it reads as a control,
    not a decorative icon floating near section headings. */
 .zy-theme-toggle {
-    border-color: var(--zy-color-border);
-    background: var(--zy-color-surface);
-    color: var(--zy-slate-600);
+    border-color: var(--zy-glass-border);
+    background: var(--zy-glass-bg);
+    color: var(--zy-stone-600);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .zy-theme-toggle:hover {
-    background: var(--zy-slate-100);
+    background: var(--zy-glass-bg-strong);
     color: var(--zy-color-ink);
-    border-color: var(--zy-slate-300);
+    border-color: var(--zy-glass-border);
 }

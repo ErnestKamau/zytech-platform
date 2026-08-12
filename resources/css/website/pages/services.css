@@ -1,0 +1,23 @@
+/**
+ * Services listing — page-specific overrides only.
+ */
+
+.zy-page-services {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.zy-services-intro {
+    padding-block: var(--zy-space-12) var(--zy-space-8);
+}
+
+.zy-services-process {
+    min-height: 16rem;
+}
+
+@media (min-width: 768px) {
+    .zy-services-process {
+        min-height: 22rem;
+    }
+}

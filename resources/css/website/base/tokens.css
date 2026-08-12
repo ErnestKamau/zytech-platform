@@ -1,12 +1,55 @@
 /**
  * Design tokens — Zytech public website & client portal theme.
- * Primitives hold raw values; semantic aliases are what components consume.
- * Brand signature: linear-gradient(90deg, #48c6ef 0%, #6f86d6 100%)
+ * Earth-forward palette sampled from Kenyan site photography
+ * (sage umbrellas, stone cladding, terracotta pavers, charcoal roofs).
+ * Sky→indigo gradient is reserved for CTA panels and .zy-btn--gradient.
  */
 
 :root {
     /* ------------------------------------------------------------------ */
-    /* Primitive — Sky (primary family, anchored on #48c6ef)               */
+    /* Primitive — Sage (primary family, courtyard umbrella green)         */
+    /* ------------------------------------------------------------------ */
+    --zy-sage-50: #f4f6f1;
+    --zy-sage-100: #e6ebe0;
+    --zy-sage-200: #cdd8c2;
+    --zy-sage-300: #b0c09d;
+    --zy-sage-400: #8fa67a;
+    --zy-sage-500: #738c5e;
+    --zy-sage-600: #5c7349;
+    --zy-sage-700: #485c3a;
+    --zy-sage-800: #3b4b31;
+    --zy-sage-900: #2f3c28;
+
+    /* ------------------------------------------------------------------ */
+    /* Primitive — Stone (warm neutrals, cladding / charcoal roofs)        */
+    /* ------------------------------------------------------------------ */
+    --zy-stone-50: #f7f5f2;
+    --zy-stone-100: #eeeae4;
+    --zy-stone-200: #ddd6cc;
+    --zy-stone-300: #c4b9ab;
+    --zy-stone-400: #a89886;
+    --zy-stone-500: #8c7a68;
+    --zy-stone-600: #736354;
+    --zy-stone-700: #5c4f44;
+    --zy-stone-800: #3d342e;
+    --zy-stone-900: #1c1815;
+
+    /* ------------------------------------------------------------------ */
+    /* Primitive — Earth (terracotta pavers — accent only)                 */
+    /* ------------------------------------------------------------------ */
+    --zy-earth-50: #faf6f3;
+    --zy-earth-100: #f0e6de;
+    --zy-earth-200: #e0cbb8;
+    --zy-earth-300: #c9a88a;
+    --zy-earth-400: #b07d5c;
+    --zy-earth-500: #9a6244;
+    --zy-earth-600: #824f38;
+    --zy-earth-700: #6a4030;
+    --zy-earth-800: #4a2e24;
+    --zy-earth-900: #2e1c16;
+
+    /* ------------------------------------------------------------------ */
+    /* Primitive — Sky (CTA / gradient family, anchored on #48c6ef)        */
     /* ------------------------------------------------------------------ */
     --zy-sky-50: #eef9fe;
     --zy-sky-100: #d6f1fc;
@@ -20,7 +63,7 @@
     --zy-sky-900: #174d65;
 
     /* ------------------------------------------------------------------ */
-    /* Primitive — Indigo (secondary family, anchored on #6f86d6)          */
+    /* Primitive — Indigo (CTA / gradient family, anchored on #6f86d6)     */
     /* ------------------------------------------------------------------ */
     --zy-indigo-50: #f2f4fb;
     --zy-indigo-100: #e2e7f6;
@@ -34,7 +77,7 @@
     --zy-indigo-900: #2d3661;
 
     /* ------------------------------------------------------------------ */
-    /* Primitive — Slate (cool neutrals)                                  */
+    /* Primitive — Slate (cool neutrals, kept for true-dark CTA surfaces)  */
     /* ------------------------------------------------------------------ */
     --zy-slate-50: #f8fafc;
     --zy-slate-100: #f1f5f9;
@@ -73,18 +116,18 @@
     /* ------------------------------------------------------------------ */
     /* Semantic aliases — use these in components                         */
     /* ------------------------------------------------------------------ */
-    --zy-color-primary: var(--zy-sky-500);
-    --zy-color-primary-hover: var(--zy-sky-600);
-    --zy-color-secondary: var(--zy-indigo-400);
-    --zy-color-ink: var(--zy-slate-900);
-    --zy-color-muted: var(--zy-slate-500);
-    --zy-color-border: var(--zy-slate-200);
+    --zy-color-primary: var(--zy-sage-600);
+    --zy-color-primary-hover: var(--zy-sage-700);
+    --zy-color-secondary: var(--zy-stone-500);
+    --zy-color-ink: var(--zy-stone-900);
+    --zy-color-muted: var(--zy-stone-500);
+    --zy-color-border: var(--zy-stone-200);
     --zy-color-surface: #ffffff;
-    --zy-color-paper: #f8fafc;
+    --zy-color-paper: var(--zy-stone-50);
 
     /* Chrome surfaces that need their own dark values */
-    --zy-header-bg: rgb(248 250 252 / 0.9);
-    --zy-backdrop: rgb(15 23 42 / 0.5);
+    --zy-header-bg: rgb(247 245 242 / 0.9);
+    --zy-backdrop: rgb(28 24 21 / 0.5);
 
     --zy-gradient-brand: linear-gradient(90deg, #48c6ef 0%, #6f86d6 100%);
     --zy-gradient-hero: linear-gradient(135deg, #48c6ef 0%, #6f86d6 55%, #394696 100%);
@@ -119,6 +162,7 @@
     --zy-space-2: 0.5rem;    /* 8 */
     --zy-space-3: 0.75rem;   /* 12 */
     --zy-space-4: 1rem;      /* 16 */
+    --zy-space-5: 1.25rem;   /* 20 */
     --zy-space-6: 1.5rem;    /* 24 */
     --zy-space-8: 2rem;      /* 32 */
     --zy-space-10: 2.5rem;   /* 40 */
@@ -133,20 +177,27 @@
     --zy-radius-sm: 0.375rem;
     --zy-radius-md: 0.5rem;
     --zy-radius-lg: 0.75rem;
+    --zy-radius-xl: 1.25rem;
     --zy-radius-full: 9999px;
 
-    --zy-shadow-sm: 0 1px 2px rgb(15 23 42 / 0.06);
-    --zy-shadow-md: 0 4px 12px rgb(15 23 42 / 0.08);
-    --zy-shadow-lg: 0 12px 32px rgb(15 23 42 / 0.12);
+    --zy-shadow-sm: 0 1px 2px rgb(28 24 21 / 0.06);
+    --zy-shadow-md: 0 4px 12px rgb(28 24 21 / 0.08);
+    --zy-shadow-lg: 0 12px 32px rgb(28 24 21 / 0.12);
     --zy-shadow-glow-sky: 0 8px 24px -6px rgb(72 198 239 / 0.45);
+    --zy-shadow-glow-sage: 0 8px 24px -6px rgb(92 115 73 / 0.4);
     --zy-shadow-glow-lg: 0 20px 60px -12px rgb(57 70 150 / 0.55);
 
-    --zy-focus-ring: 0 0 0 3px rgb(72 198 239 / 0.35);
+    --zy-focus-ring: 0 0 0 3px rgb(92 115 73 / 0.35);
 
-    /* Frosted surfaces for UI sitting on top of the hero gradient */
+    /* Frosted / liquid-glass surfaces */
     --zy-frost-bg: rgb(255 255 255 / 0.08);
     --zy-frost-bg-hover: rgb(255 255 255 / 0.16);
     --zy-frost-border: rgb(255 255 255 / 0.28);
+    --zy-glass-bg: rgb(255 255 255 / 0.52);
+    --zy-glass-bg-strong: rgb(255 255 255 / 0.72);
+    --zy-glass-border: rgb(255 255 255 / 0.62);
+    --zy-glass-highlight: rgb(255 255 255 / 0.85);
+    --zy-glass-shadow: 0 8px 28px rgb(28 24 21 / 0.12), inset 0 1px 0 rgb(255 255 255 / 0.7);
 
     --zy-duration-fast: 150ms;
     --zy-duration-base: 220ms;
@@ -166,17 +217,25 @@
 /**
  * Dark theme.
  *
- * Strategy: components consume tints (slate-50…300 as fills/borders,
- * sky-50/100 as brand-hover fills, status *-50 as soft fills, *-700 as
- * readable text). Remapping those tints here means every component adapts
- * without per-component dark rules. The 800/900 anchors are NOT remapped —
- * they are used as true-dark surfaces (hero, CTA panel) in both themes.
+ * Strategy: components consume tints (stone-50…300 as fills/borders,
+ * sage-50/100 as brand-hover fills). Remapping those tints here means
+ * every component adapts without per-component dark rules. Slate 800/900
+ * stay as true-dark CTA surfaces in both themes.
  * Apply with: <html data-zy-theme="dark"> (or on <body>).
  */
 [data-zy-theme="dark"] {
     color-scheme: dark;
 
-    /* Neutral tints — inverted for dark surfaces */
+    /* Warm neutrals — inverted for dark surfaces */
+    --zy-stone-50: #161310;
+    --zy-stone-100: #1f1b17;
+    --zy-stone-200: #2e2822;
+    --zy-stone-300: #433b33;
+    --zy-stone-400: #8c7a68;
+    --zy-stone-500: #a89886;
+    --zy-stone-600: #c4b9ab;
+    --zy-stone-700: #eeeae4;
+
     --zy-slate-50: #111a2e;
     --zy-slate-100: #182339;
     --zy-slate-200: #243450;
@@ -187,6 +246,11 @@
     --zy-slate-700: #e2e8f0;
 
     /* Brand hover fills become translucent glows instead of pale tints */
+    --zy-sage-50: rgb(92 115 73 / 0.1);
+    --zy-sage-100: rgb(92 115 73 / 0.2);
+    --zy-sage-200: rgb(92 115 73 / 0.35);
+    --zy-sage-700: #b0c09d;
+
     --zy-sky-50: rgb(72 198 239 / 0.08);
     --zy-sky-100: rgb(72 198 239 / 0.16);
     --zy-sky-200: rgb(72 198 239 / 0.3);
@@ -210,20 +274,27 @@
     --zy-info-700: #93c5fd;
 
     /* Semantic aliases */
-    --zy-color-primary: var(--zy-sky-400);
-    --zy-color-primary-hover: #6fd1f4;
-    --zy-color-ink: #f1f5f9;
-    --zy-color-muted: #94a3b8;
-    --zy-color-border: rgb(148 163 184 / 0.18);
-    --zy-color-surface: #121c30;
-    --zy-color-paper: #0b1220;
+    --zy-color-primary: var(--zy-sage-400);
+    --zy-color-primary-hover: #a3b88a;
+    --zy-color-ink: #f4f1ec;
+    --zy-color-muted: #a89886;
+    --zy-color-border: rgb(168 152 134 / 0.18);
+    --zy-color-surface: #1c1815;
+    --zy-color-paper: #12100e;
 
-    --zy-header-bg: rgb(11 18 32 / 0.78);
-    --zy-backdrop: rgb(2 6 16 / 0.65);
+    --zy-header-bg: rgb(18 16 14 / 0.62);
+    --zy-backdrop: rgb(8 6 4 / 0.65);
+
+    --zy-glass-bg: rgb(255 255 255 / 0.07);
+    --zy-glass-bg-strong: rgb(255 255 255 / 0.14);
+    --zy-glass-border: rgb(255 255 255 / 0.16);
+    --zy-glass-highlight: rgb(255 255 255 / 0.28);
+    --zy-glass-shadow: 0 10px 32px rgb(0 0 0 / 0.4), inset 0 1px 0 rgb(255 255 255 / 0.14);
 
     /* Elevation reads through darkness, not grey */
     --zy-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
     --zy-shadow-md: 0 4px 12px rgb(0 0 0 / 0.45);
     --zy-shadow-lg: 0 12px 32px rgb(0 0 0 / 0.55);
     --zy-shadow-glow-sky: 0 8px 24px -6px rgb(72 198 239 / 0.35);
+    --zy-shadow-glow-sage: 0 8px 24px -6px rgb(143 166 122 / 0.35);
 }

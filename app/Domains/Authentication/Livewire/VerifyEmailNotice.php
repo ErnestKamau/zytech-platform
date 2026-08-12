@@ -42,6 +42,11 @@ final class VerifyEmailNotice extends BaseComponent
      */
     public function render(): View
     {
-        return view('livewire.authentication.verify-email');
+        return view('livewire.authentication.verify-email')
+            ->layoutData([
+                'asideImageKey' => 'commercial_courtyard',
+                'asideHeadline' => 'One more step.',
+                'asideSupport' => 'Verify your email to unlock the full client portal.',
+            ]);
     }
 }

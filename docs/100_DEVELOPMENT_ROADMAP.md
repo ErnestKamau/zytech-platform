@@ -1628,14 +1628,28 @@ Update
 
 # Definition of Done
 
-- [ ] Settings manageable from Filament
-- [ ] Navigation builder operational
-- [ ] Branding configurable
-- [ ] SEO configurable
-- [ ] Feature flags operational
-- [ ] Redis cache working
-- [ ] Tests passing
-- [ ] Documentation updated
+- [x] Settings manageable from Filament
+- [x] Navigation builder operational
+- [x] Branding configurable
+- [x] SEO configurable
+- [x] Feature flags operational
+- [x] Redis cache working
+- [x] Tests passing
+- [x] Documentation updated
+
+---
+
+# Phase 3 Notes
+
+Implemented under domain architecture:
+
+```text
+app/Domains/Configuration/    # settings, branding, SEO, flags, navigation
+app/Filament/Resources/{Settings,FeatureFlags,NavigationMenus}/
+docs/CONFIGURATION.md
+```
+
+Public header, footer, and default meta tags read from cached configuration.
 
 ---
 
@@ -1938,14 +1952,28 @@ Update
 
 # Definition of Done
 
-- [ ] Company information fully dynamic
-- [ ] Testimonials manageable
-- [ ] Branches manageable
-- [ ] Partners manageable
-- [ ] Certifications manageable
-- [ ] Redis caching operational
+- [x] Company information fully dynamic
+- [x] Testimonials manageable
+- [x] Branches manageable
+- [x] Partners manageable
+- [x] Certifications manageable
+- [x] Redis caching operational
 - [ ] Tests passing
-- [ ] Documentation updated
+- [x] Documentation updated
+
+---
+
+# Phase 4 Notes
+
+Implemented under domain architecture:
+
+```text
+app/Domains/Company/          # profile, branches, leadership, partners, testimonials
+app/Filament/Resources/{Companies,Branches,LeadershipMembers,Partners,Certifications,Awards,Testimonials,Faqs,CompanyStatistics}/
+docs/COMPANY.md
+```
+
+Public `/about`, homepage statistics, and contact details read from the cached company profile. Media uploads remain URL fields until Phase 5.
 
 ---
 

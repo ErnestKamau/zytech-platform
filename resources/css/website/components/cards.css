@@ -21,19 +21,33 @@
 }
 
 .zy-card--interactive:hover {
-    border-color: var(--zy-sky-200);
-    box-shadow: var(--zy-shadow-md), var(--zy-shadow-glow-sky);
+    border-color: var(--zy-sage-200);
+    box-shadow: var(--zy-shadow-md), var(--zy-shadow-glow-sage);
     transform: translateY(-3px);
+}
+
+@media (hover: none) {
+    .zy-card--interactive:hover {
+        transform: none;
+        box-shadow: var(--zy-shadow-sm);
+        border-color: var(--zy-color-border);
+    }
+
+    .zy-btn:hover {
+        transform: none;
+    }
 }
 
 /* Media brightens and drifts slightly on card hover — reads as depth,
    works on both placeholder gradients and real photography. */
 .zy-card--interactive:hover .zy-card__media,
-.zy-card--interactive:hover .zy-project-card__cover {
+.zy-card--interactive:hover .zy-project-card__cover,
+.zy-card--interactive:hover .zy-media-cover {
     filter: saturate(1.12) brightness(1.06);
 }
 
-.zy-card--interactive:hover .zy-card__media img {
+.zy-card--interactive:hover .zy-card__media img,
+.zy-card--interactive:hover .zy-media-cover img {
     transform: scale(1.04);
 }
 

@@ -2,6 +2,18 @@
  * Single-purpose helpers — use sparingly.
  */
 
+.zy-page,
+.zy-page-home,
+.zy-page-projects,
+.zy-page-services,
+.zy-page-contact,
+.zy-page-about {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: 100svh;
+}
+
 [x-cloak] {
     display: none !important;
 }

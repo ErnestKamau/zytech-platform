@@ -1,14 +1,15 @@
 /**
- * Buttons — variants, sizes, and interactive states.
+ * Buttons — pill shape + liquid-glass sheen (earth theme).
  */
 
 .zy-btn {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: var(--zy-space-2);
     padding: var(--zy-space-3) var(--zy-space-6);
-    border-radius: var(--zy-radius-md);
+    border-radius: var(--zy-radius-full);
     border: 1px solid transparent;
     font-size: var(--zy-text-sm);
     font-weight: 600;
@@ -16,6 +17,8 @@
     text-decoration: none;
     white-space: nowrap;
     cursor: pointer;
+    overflow: hidden;
+    isolation: isolate;
     transform: translateY(0) scale(1);
     transition:
         background var(--zy-duration-fast) var(--zy-ease),
@@ -26,8 +29,20 @@
         transform var(--zy-duration-fast) var(--zy-ease);
 }
 
-/* Depth on interaction, not on rest — a raised button at idle reads as
-   noisy; the lift only on hover is what makes it feel considered. */
+.zy-btn::after {
+    content: "";
+    position: absolute;
+    left: 12%;
+    right: 12%;
+    bottom: 2px;
+    height: 1px;
+    border-radius: var(--zy-radius-full);
+    background: var(--zy-glass-highlight);
+    opacity: 0.7;
+    pointer-events: none;
+    z-index: 1;
+}
+
 .zy-btn:hover {
     transform: translateY(-1px);
 }
@@ -61,49 +76,37 @@
 .zy-btn--primary {
     color: #fff;
     background: var(--zy-color-primary);
-    box-shadow: var(--zy-shadow-sm);
+    border-color: rgb(255 255 255 / 0.18);
+    box-shadow: var(--zy-shadow-glow-sage), inset 0 1px 0 rgb(255 255 255 / 0.22);
 }
 
 .zy-btn--primary:hover {
     background: var(--zy-color-primary-hover);
-    box-shadow: var(--zy-shadow-md);
+    box-shadow: var(--zy-shadow-md), var(--zy-shadow-glow-sage);
 }
 
 .zy-btn--gradient {
-    position: relative;
     color: #fff;
-    background: var(--zy-gradient-brand);
-    box-shadow: var(--zy-shadow-glow-sky);
-    overflow: hidden;
-}
-
-.zy-btn--gradient::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(115deg, transparent 20%, rgb(255 255 255 / 0.35) 40%, transparent 60%);
-    transform: translateX(-120%);
-    transition: transform var(--zy-duration-slow) var(--zy-ease);
+    background: linear-gradient(90deg, var(--zy-sage-500) 0%, var(--zy-sage-700) 100%);
+    border-color: rgb(255 255 255 / 0.18);
+    box-shadow: var(--zy-shadow-glow-sage);
 }
 
 .zy-btn--gradient:hover {
-    filter: brightness(1.04);
-    box-shadow: 0 12px 28px -6px rgb(72 198 239 / 0.55);
-}
-
-.zy-btn--gradient:hover::before {
-    transform: translateX(120%);
+    filter: brightness(1.06);
 }
 
 .zy-btn--secondary {
     color: var(--zy-color-ink);
-    background: var(--zy-slate-100);
-    border-color: var(--zy-color-border);
+    background: var(--zy-glass-bg);
+    border-color: var(--zy-glass-border);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: var(--zy-glass-shadow);
 }
 
 .zy-btn--secondary:hover {
-    background: var(--zy-slate-200);
-    border-color: var(--zy-slate-300);
+    background: var(--zy-glass-bg-strong);
 }
 
 .zy-btn--ghost {
@@ -112,18 +115,15 @@
 }
 
 .zy-btn--ghost:hover {
-    background: var(--zy-sky-50);
+    background: var(--zy-sage-50);
 }
 
-/* Frosted-glass button — for CTAs that sit on top of the hero gradient
-   or other photographic/dark surfaces, where a flat slate button would
-   look like a stock template. */
 .zy-btn--frost {
     color: #fff;
     background: var(--zy-frost-bg);
     border-color: var(--zy-frost-border);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 }
 
 .zy-btn--frost:hover {
@@ -133,39 +133,38 @@
 
 .zy-btn--success {
     color: #fff;
-    background: var(--zy-success-500);
+    background: var(--zy-sage-600);
 }
 
 .zy-btn--success:hover {
-    background: var(--zy-success-700);
+    background: var(--zy-sage-700);
 }
 
 .zy-btn--danger {
     color: #fff;
-    background: var(--zy-danger-500);
+    background: var(--zy-earth-600);
 }
 
 .zy-btn--danger:hover {
-    background: var(--zy-danger-700);
+    background: var(--zy-earth-700);
 }
 
 .zy-btn--warning {
-    color: var(--zy-slate-900);
-    background: var(--zy-warning-500);
+    color: var(--zy-stone-900);
+    background: var(--zy-earth-300);
 }
 
 .zy-btn--warning:hover {
-    background: var(--zy-warning-700);
+    background: var(--zy-earth-400);
     color: #fff;
 }
 
 .zy-btn--loading {
-    position: relative;
     color: transparent !important;
     pointer-events: none;
 }
 
-.zy-btn--loading::after {
+.zy-btn--loading::before {
     content: "";
     position: absolute;
     width: 1rem;
@@ -175,6 +174,7 @@
     border-radius: var(--zy-radius-full);
     animation: zy-spin 0.7s linear infinite;
     color: #fff;
+    z-index: 2;
 }
 
 @keyframes zy-spin {

@@ -1,0 +1,102 @@
+/**
+ * About page — company profile, leadership, and credentials.
+ */
+
+.zy-page-about {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.zy-about-intro {
+    padding-block: var(--zy-space-12) var(--zy-space-8);
+}
+
+.zy-about-story {
+    display: grid;
+    gap: var(--zy-space-10);
+}
+
+.zy-about-story p {
+    max-width: 62ch;
+}
+
+.zy-about-values {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--zy-space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.zy-about-values li {
+    padding: var(--zy-space-2) var(--zy-space-4);
+    border: 1px solid var(--zy-color-border);
+    border-radius: var(--zy-radius-full);
+    font-size: var(--zy-text-sm);
+    font-weight: 600;
+}
+
+.zy-about-subhead {
+    margin: 0 0 var(--zy-space-4);
+    font-size: var(--zy-text-lg);
+}
+
+.zy-about-list {
+    display: grid;
+    gap: var(--zy-space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.zy-about-list li {
+    display: grid;
+    gap: var(--zy-space-1);
+}
+
+.zy-about-list span {
+    color: var(--zy-color-muted);
+    font-size: var(--zy-text-sm);
+}
+
+.zy-about-quote {
+    font-size: var(--zy-text-lg);
+    line-height: 1.5;
+}
+
+.zy-about-faqs {
+    display: grid;
+    gap: var(--zy-space-3);
+    max-width: 48rem;
+}
+
+.zy-about-faq {
+    border: 1px solid var(--zy-color-border);
+    border-radius: var(--zy-radius-lg);
+    background: var(--zy-color-surface);
+}
+
+.zy-about-faq__q {
+    display: flex;
+    width: 100%;
+    margin: 0;
+    padding: var(--zy-space-4) var(--zy-space-5);
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+}
+
+.zy-about-faq__a {
+    padding: 0 var(--zy-space-5) var(--zy-space-5);
+}
+
+.zy-about-faq__a p {
+    margin: 0;
+    color: var(--zy-color-muted);
+}

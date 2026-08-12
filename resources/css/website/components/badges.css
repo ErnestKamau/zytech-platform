@@ -1,55 +1,95 @@
 /**
- * Badges and status chips.
+ * Badges — outlined pills with optional leading icon (earth status colors).
  */
 
 .zy-badge {
     display: inline-flex;
     align-items: center;
-    gap: var(--zy-space-1);
-    padding: var(--zy-space-1) var(--zy-space-3);
+    gap: var(--zy-space-2);
+    padding: 0.35rem 0.85rem;
     border-radius: var(--zy-radius-full);
+    border: 1px solid var(--zy-color-border);
+    background: var(--zy-glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     font-size: var(--zy-text-xs);
     font-weight: 600;
     line-height: 1.4;
     white-space: nowrap;
+    color: var(--zy-color-ink);
+}
+
+.zy-badge .zy-icon {
+    width: 0.875rem;
+    height: 0.875rem;
 }
 
 .zy-badge--neutral {
-    color: var(--zy-slate-700);
-    background: var(--zy-slate-100);
+    color: var(--zy-stone-700);
+    border-color: var(--zy-stone-300);
 }
 
 .zy-badge--primary {
-    color: var(--zy-sky-700);
-    background: var(--zy-sky-100);
+    color: var(--zy-sage-700);
+    border-color: var(--zy-sage-400);
+    background: var(--zy-sage-50);
 }
 
 .zy-badge--success {
-    color: var(--zy-success-700);
-    background: var(--zy-success-50);
+    color: var(--zy-sage-700);
+    border-color: var(--zy-sage-500);
 }
 
 .zy-badge--danger {
-    color: var(--zy-danger-700);
-    background: var(--zy-danger-50);
+    color: var(--zy-earth-700);
+    border-color: var(--zy-earth-500);
 }
 
 .zy-badge--warning {
-    color: var(--zy-warning-700);
-    background: var(--zy-warning-50);
+    color: var(--zy-earth-600);
+    border-color: var(--zy-earth-400);
+}
+
+.zy-badge--info {
+    color: var(--zy-stone-700);
+    border-color: var(--zy-stone-400);
 }
 
 .zy-badge--gradient {
     color: #fff;
-    background: var(--zy-gradient-brand);
+    border-color: transparent;
+    background: linear-gradient(90deg, var(--zy-sage-500), var(--zy-sage-700));
+}
+
+[data-zy-theme="dark"] .zy-badge {
+    color: rgb(255 255 255 / 0.9);
+    background: rgb(255 255 255 / 0.05);
+}
+
+[data-zy-theme="dark"] .zy-badge--primary,
+[data-zy-theme="dark"] .zy-badge--success {
+    color: var(--zy-sage-300);
+    border-color: var(--zy-sage-500);
+}
+
+[data-zy-theme="dark"] .zy-badge--danger {
+    color: var(--zy-earth-300);
+}
+
+[data-zy-theme="dark"] .zy-badge--warning {
+    color: var(--zy-earth-300);
 }
 
 .zy-status {
     display: inline-flex;
     align-items: center;
     gap: var(--zy-space-2);
+    padding: 0.3rem 0.75rem;
+    border-radius: var(--zy-radius-full);
+    border: 1px solid currentColor;
     font-size: var(--zy-text-xs);
     font-weight: 600;
+    background: transparent;
 }
 
 .zy-status::before {
@@ -58,24 +98,25 @@
     height: 0.5rem;
     border-radius: var(--zy-radius-full);
     background: currentColor;
+    box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 22%, transparent);
 }
 
 .zy-status--success {
-    color: var(--zy-success-700);
+    color: var(--zy-sage-600);
 }
 
 .zy-status--warning {
-    color: var(--zy-warning-700);
+    color: var(--zy-earth-500);
 }
 
 .zy-status--danger {
-    color: var(--zy-danger-700);
+    color: var(--zy-earth-600);
 }
 
 .zy-status--info {
-    color: var(--zy-info-700);
+    color: var(--zy-stone-500);
 }
 
 .zy-status--neutral {
-    color: var(--zy-slate-500);
+    color: var(--zy-stone-500);
 }

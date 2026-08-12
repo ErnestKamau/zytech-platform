@@ -6,6 +6,7 @@ use App\Core\Data\ExampleDTO;
 use App\Core\Enums\ProjectStatus;
 use App\Core\Enums\QuotationStatus;
 use App\Core\Enums\RoleType;
+use App\Core\Enums\SettingType;
 use App\Core\Enums\UserType;
 use App\Core\Helpers\SlugGenerator;
 use App\Core\ValueObjects\Address;
@@ -30,6 +31,12 @@ class CoreArchitectureTest extends TestCase
         $this->assertSame('client', UserType::Client->value);
         $this->assertTrue(RoleType::Administrator->canAccessAdminPanel());
         $this->assertFalse(RoleType::Client->canAccessAdminPanel());
+    }
+
+    public function test_setting_type_enum_has_expected_cases(): void
+    {
+        $this->assertSame('boolean', SettingType::Boolean->value);
+        $this->assertSame('Boolean', SettingType::Boolean->label());
     }
 
     public function test_quotation_status_enum_covers_lifecycle(): void

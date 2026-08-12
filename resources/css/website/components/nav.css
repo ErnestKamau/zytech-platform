@@ -1,24 +1,53 @@
 /**
- * Navigation — public site header links.
+ * Navigation — pill links inside the glass header.
  */
 
 .zy-nav {
     display: flex;
     align-items: center;
-    gap: var(--zy-space-6);
+    gap: var(--zy-space-1);
+    padding: var(--zy-space-1);
+    border-radius: var(--zy-radius-full);
+    background: rgb(28 24 21 / 0.04);
+}
+
+[data-zy-theme="dark"] .zy-nav {
+    background: rgb(255 255 255 / 0.04);
 }
 
 .zy-nav__link {
+    padding: var(--zy-space-2) var(--zy-space-4);
+    border-radius: var(--zy-radius-full);
     font-size: var(--zy-text-sm);
     font-weight: 500;
-    color: var(--zy-slate-700);
+    color: var(--zy-stone-600);
     text-decoration: none;
-    transition: color var(--zy-duration-fast) var(--zy-ease);
+    transition:
+        color var(--zy-duration-fast) var(--zy-ease),
+        background var(--zy-duration-fast) var(--zy-ease),
+        box-shadow var(--zy-duration-fast) var(--zy-ease);
 }
 
-.zy-nav__link:hover,
+.zy-nav__link:hover {
+    color: var(--zy-color-ink);
+    background: rgb(255 255 255 / 0.35);
+}
+
 .zy-nav__link[aria-current="page"] {
-    color: var(--zy-color-primary);
+    color: var(--zy-color-ink);
+    background: var(--zy-glass-bg-strong);
+    box-shadow: inset 0 1px 0 var(--zy-glass-highlight);
+    font-weight: 600;
+}
+
+[data-zy-theme="dark"] .zy-nav__link {
+    color: rgb(255 255 255 / 0.62);
+}
+
+[data-zy-theme="dark"] .zy-nav__link:hover,
+[data-zy-theme="dark"] .zy-nav__link[aria-current="page"] {
+    color: #fff;
+    background: rgb(255 255 255 / 0.1);
 }
 
 .zy-nav__brand {
@@ -27,11 +56,18 @@
     letter-spacing: var(--zy-tracking-tight);
     text-decoration: none;
     color: var(--zy-color-ink);
+    padding-inline: var(--zy-space-2);
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .zy-nav__brand span {
-    background: var(--zy-gradient-brand);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    color: var(--zy-sage-600);
+    font-weight: 500;
+}
+
+[data-zy-theme="dark"] .zy-nav__brand span {
+    color: var(--zy-sage-400);
 }

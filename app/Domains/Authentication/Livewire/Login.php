@@ -54,6 +54,11 @@ final class Login extends BaseComponent
 
     public function render(): View
     {
-        return view('livewire.authentication.login');
+        return view('livewire.authentication.login')
+            ->layoutData([
+                'asideImageKey' => 'commercial_courtyard',
+                'asideHeadline' => 'Sign in to your projects.',
+                'asideSupport' => 'Track your build across Nairobi and beyond.',
+            ]);
     }
 }

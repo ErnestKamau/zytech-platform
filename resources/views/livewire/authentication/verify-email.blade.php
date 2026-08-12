@@ -9,10 +9,10 @@
     @endif
 
     <form wire:submit="resend" class="zy-stack">
-        <button type="submit" class="zy-btn zy-btn--primary">Resend verification email</button>
+        <button type="submit" class="zy-btn zy-btn--primary zy-btn--lg">Resend verification email</button>
     </form>
 
     <p class="zy-auth-form__footer">
-        <a href="{{ route('account.profile') }}">Continue to account</a>
+        <a href="{{ route('account.profile') }}" class="zy-auth-form__link">Continue to account</a>
     </p>
 </div>

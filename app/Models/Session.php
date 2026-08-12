@@ -16,7 +16,7 @@ class Session extends Model
 
     public $timestamps = false;
 
-    protected string $keyType = 'string';
+    protected $keyType = 'string';
 
     /**
      * @var list<string>
