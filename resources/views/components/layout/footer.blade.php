@@ -30,7 +30,9 @@
                 <a href="{{ route('home') }}">Home</a>
                 <a href="{{ route('projects.index') }}">Projects</a>
                 <a href="{{ route('services.index') }}">Services</a>
+                <a href="{{ route('downloads.index') }}">Downloads</a>
                 <a href="{{ route('about') }}">About</a>
+                <a href="{{ route('careers') }}">Careers</a>
                 <a href="{{ route('contact') }}">Contact</a>
             @endif
         </nav>
@@ -52,8 +54,12 @@
     </div>
 
     <div class="zy-footer__bar">
-        <div class="zy-container">
+        <div class="zy-container zy-footer__bar-inner">
             <p class="zy-footer__meta">&copy; {{ date('Y') }} {{ $displayName }} · {{ $contact['location'] }}</p>
+            <nav class="zy-footer__legal" aria-label="Legal">
+                <a href="{{ route('privacy') }}">Privacy</a>
+                <a href="{{ route('terms') }}">Terms</a>
+            </nav>
         </div>
     </div>
 </footer>

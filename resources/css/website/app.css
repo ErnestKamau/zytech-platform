@@ -44,6 +44,7 @@
 @import './pages/contact.css';
 @import './pages/about.css';
 @import './pages/search.css';
+@import './pages/legal.css';
 
 /* utilities — always last */
 @import './utilities/helpers.css';

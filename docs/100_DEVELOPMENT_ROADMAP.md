@@ -7728,20 +7728,20 @@ Deployment Guide
 
 # Definition of Done
 
-- [ ] Homepage complete
-- [ ] Company pages complete
-- [ ] Services complete
-- [ ] Projects complete
-- [ ] Knowledge Centre complete
-- [ ] Contact page complete
-- [ ] Search operational
-- [ ] SEO complete
-- [ ] Accessibility compliant
-- [ ] Performance targets achieved
-- [ ] Redis integrated
-- [ ] Queues operational
+- [x] Homepage complete
+- [x] Company pages complete
+- [x] Services complete
+- [x] Projects complete
+- [x] Knowledge Centre complete
+- [x] Contact page complete
+- [x] Search operational
+- [x] SEO complete
+- [x] Accessibility compliant
+- [x] Performance targets achieved
+- [x] Redis integrated
+- [x] Queues operational
 - [ ] Tests passing
-- [ ] Documentation updated
+- [x] Documentation updated
 
 Enterprise Improvement: Component-Driven Website
 
@@ -9918,3 +9918,159 @@ Deployment Guide
 - [x] SEO dashboard complete
 - [ ] Tests passing
 - [x] Documentation updated
+
+# =============================================================================
+
+
+
+# PHASE 16
+
+
+
+# SMS VIA TWILIO (FUTURE)
+
+
+
+# =============================================================================
+
+
+
+# Objective
+
+Add transactional SMS delivery through Twilio without changing domain callers —
+extend the Communication Hub channel pipeline only.
+
+# Status
+
+**Not started.** Preference enums and contact methods already mention SMS-adjacent
+concepts; no Twilio SDK or SMS driver is wired.
+
+# Dependencies
+
+- Phase 13 Communication Hub complete
+- Verified Twilio account + sender ID / messaging service for Kenya (+254)
+
+# Deliverables
+
+- Twilio SDK + env (`TWILIO_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM`)
+- `CommunicationChannel::Sms` driver in `CommunicationService`
+- Opt-in / preference enforcement (existing notification preferences)
+- Delivery logging parity with email
+- Filament visibility for SMS template stubs (optional)
+- Docs update in `COMMUNICATION.md`
+
+# Out of scope
+
+- Marketing blasts / bulk campaigns
+- Two-way SMS conversational bots
+
+# Definition of Done
+
+- [ ] SMS channel sends via Twilio for opted-in users
+- [ ] Failures logged in `notification_logs`
+- [ ] Preferences respected
+- [ ] Documentation updated
+
+# =============================================================================
+
+
+
+# PHASE 17
+
+
+
+# WHATSAPP BUSINESS (FUTURE)
+
+
+
+# =============================================================================
+
+
+
+# Objective
+
+Deliver approved WhatsApp Business template messages for high-intent notices
+(quotation updates, meeting reminders, portal access) via the Communication Hub.
+
+# Status
+
+**Not started.** Contact method enums include WhatsApp; no Meta Cloud API /
+Twilio WhatsApp driver exists.
+
+# Dependencies
+
+- Phase 13 Communication Hub complete
+- Phase 16 SMS patterns recommended (shared provider lessons) but not strictly required
+- WhatsApp Business account + approved message templates
+
+# Deliverables
+
+- Provider adapter (Meta Cloud API or Twilio WhatsApp)
+- Template mapping (hub templates → WhatsApp template names/params)
+- Opt-in gate + quiet hours
+- Delivery + read status hooks where available
+- Docs + ops runbook
+
+# Out of scope
+
+- Free-form chat inbox / agent console
+- Replacing the portal messaging UI
+
+# Definition of Done
+
+- [ ] At least one transactional WhatsApp template sends end-to-end
+- [ ] Preferences and consent enforced
+- [ ] Logs + failure handling
+- [ ] Documentation updated
+
+# =============================================================================
+
+
+
+# PHASE 18
+
+
+
+# BROWSER WEB PUSH (FUTURE)
+
+
+
+# =============================================================================
+
+
+
+# Objective
+
+Add browser Web Push (service worker + VAPID) so signed-in staff and portal
+users can receive notifications when the tab is backgrounded — complementing
+Reverb in-app toasts.
+
+# Status
+
+**Not started.** Reverb `NotificationPushed` covers in-app realtime only.
+
+# Dependencies
+
+- Phase 13 Reverb / Communication Hub complete
+- HTTPS in production
+- Browser permission UX
+
+# Deliverables
+
+- Service worker + push subscription storage
+- VAPID keys in env
+- `CommunicationChannel::WebPush` driver
+- Subscribe / unsubscribe UI (portal + admin shell)
+- Prefer quiet fallback when permission denied
+- Docs (`COMMUNICATION.md` + ops)
+
+# Out of scope
+
+- Native mobile push (FCM / APNs)
+- Replacing email for critical transactional notices
+
+# Definition of Done
+
+- [ ] Subscribed users receive a push for a hub Broadcast/WebPush notify
+- [ ] Preferences respected
+- [ ] Documentation updated

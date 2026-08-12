@@ -1,6 +1,16 @@
 # Performance
 
-> Phase 16 pragmatic layer — cache headers, Redis domain caches, Horizon queues.
+> Pragmatic ops layer (alongside Phase 12 website / Phase 13–15 hubs) — cache headers, Redis domain caches, Horizon queues.
+
+## Targets (public site)
+
+| Metric | Target |
+|--------|--------|
+| Anonymous HTML `Cache-Control` | `public, max-age=60` (middleware) |
+| Search results cache | 5 minutes (Redis) |
+| Sitemap / robots | Explicit cache headers |
+| LCP (home, broadband) | Aim &lt; 2.5s after image optimization |
+| JS bootstrap | Single Vite entry; do not start a second Alpine instance (Livewire owns Alpine) |
 
 ## Already in place
 
@@ -9,7 +19,7 @@
 - Domain Redis caches (configuration, company, services, projects, knowledge, clients, portal dashboard, communication templates, search, sitemap)
 - Queued listeners on mail / notifications / broadcast / search queues
 
-## Added in this phase
+## Added
 
 - `AddPublicCacheHeaders` middleware — `Cache-Control: public, max-age=60` for anonymous successful GETs on public pages
 - Security headers: `X-Content-Type-Options`, `Referrer-Policy`

@@ -4,6 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    @auth
+        <meta name="user-id" content="{{ auth()->id() }}">
+    @endauth
     <title>@yield('title', $platform['seo']->title ?? 'Zytech Contractors')</title>
     <meta name="description" content="@yield('meta_description', $platform['seo']->description ?? '')">
     @if (! empty($platform['seo']->keywords))
@@ -34,15 +37,34 @@
         document.documentElement.dataset.zyTheme = dark ? 'dark' : 'light';
     "
 >
+    <a class="zy-skip-link" href="#main-content">Skip to content</a>
+
     <div class="@yield('page-class', 'zy-page')">
         <x-layout.header :platform="$platform ?? []" :company="$companyProfile ?? null" />
 
-        <main>
+        <main id="main-content">
             @yield('content')
         </main>
 
         <x-layout.footer :platform="$platform ?? []" :company="$companyProfile ?? null" />
     </div>
+
+    <div
+        id="zy-toast-host"
+        class="zy-toast-host"
+        x-data="zyToasts()"
+        x-on:zy-toast.window="push($event.detail)"
+        aria-live="polite"
+        aria-atomic="true"
+    >
+        <template x-for="toast in items" :key="toast.id">
+            <div class="zy-toast zy-toast--info" role="status">
+                <p class="zy-toast__title" x-text="toast.title"></p>
+                <p class="zy-toast__body" x-text="toast.body"></p>
+            </div>
+        </template>
+    </div>
+
     @livewireScripts
 </body>
 </html>

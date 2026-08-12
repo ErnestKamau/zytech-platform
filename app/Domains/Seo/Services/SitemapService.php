@@ -36,6 +36,10 @@ final class SitemapService extends BaseService
                     $this->entry(route('quote.index'), null, 'monthly', '0.6'),
                     $this->entry(route('contact'), null, 'monthly', '0.6'),
                     $this->entry(route('search'), null, 'weekly', '0.5'),
+                    $this->entry(route('downloads.index'), null, 'weekly', '0.5'),
+                    $this->entry(route('privacy'), null, 'yearly', '0.3'),
+                    $this->entry(route('terms'), null, 'yearly', '0.3'),
+                    $this->entry(route('careers'), null, 'monthly', '0.4'),
                 ];
 
                 foreach (Service::query()->where('status', ServiceStatus::Published)->get(['slug', 'updated_at']) as $service) {

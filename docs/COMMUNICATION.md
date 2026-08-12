@@ -1,10 +1,10 @@
 # Communication Hub
 
-> Phase 13 reference — centralized notifications with Resend email delivery.
+> Phase 13 reference — centralized notifications with Resend email + Reverb realtime.
 
 ## Purpose
 
-Business domains dispatch events. The Communication Hub owns delivery across email (Resend), database notifications, broadcast stubs, activity feed entries, and delivery logs.
+Business domains dispatch events. The Communication Hub owns delivery across email (Resend), database notifications, Reverb broadcast, activity feed entries, and delivery logs.
 
 ## Resend setup
 
@@ -29,6 +29,23 @@ Package: `resend/resend-php` (Laravel `resend` mail transport).
 - `TemplateService` — Redis-cached templates with `{{placeholders}}`
 - `AnnouncementService` — platform announcements (website + portal flags)
 - `ActivityFeedService` — chronological feed rows
+- `Events\NotificationPushed` — Reverb payload for UI toasts
+
+## Reverb realtime
+
+When the Broadcast channel runs, `CommunicationService` dispatches `NotificationPushed`:
+
+- Private channel `App.Models.User.{id}` when a user is targeted
+- Public channel `platform.announcements` for platform-wide pushes
+
+Frontend (`resources/js/app.js`):
+
+- Echo listens for `.NotificationPushed`
+- Dispatches `zy-toast` window events
+- Alpine `zyToasts()` renders into `#zy-toast-host` (website + portal layouts)
+- Requires `<meta name="user-id">` for private channel auth (`/broadcasting/auth` with `web` + `auth`)
+
+Run Reverb locally via `composer run dev` (or `php artisan reverb:start`) with `BROADCAST_CONNECTION=reverb` and matching `VITE_REVERB_*` vars.
 
 ## Admin
 
@@ -46,3 +63,7 @@ Every channel attempt writes `notification_logs` (`sent`, `failed`, or `skipped`
 - Welcome email (registration)
 - Quotation submitted / sent
 - Portal message / support / meeting notices
+
+## Future channels (not started)
+
+Roadmap Phase 16–18: Twilio SMS, WhatsApp Business, browser Web Push — same `notify()` pipeline, new channel drivers.

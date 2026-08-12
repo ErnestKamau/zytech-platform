@@ -154,6 +154,7 @@ use App\Domains\User\Policies\UserPolicy;
 use App\Domains\Website\Livewire\AboutPage;
 use App\Domains\Website\Livewire\ArticleShowPage;
 use App\Domains\Website\Livewire\ContactForm;
+use App\Domains\Website\Livewire\DownloadsPage;
 use App\Domains\Website\Livewire\KnowledgePage;
 use App\Domains\Website\Livewire\ProjectShowPage;
 use App\Domains\Website\Livewire\ProjectsPage;
@@ -242,6 +243,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Livewire::component('website.contact-form', ContactForm::class);
         Livewire::component('website.about-page', AboutPage::class);
+        Livewire::component('website.downloads-page', DownloadsPage::class);
         Livewire::component('website.projects-page', ProjectsPage::class);
         Livewire::component('website.project-show', ProjectShowPage::class);
         Livewire::component('project.featured-projects', FeaturedProjectComponents::class);
@@ -269,6 +271,11 @@ class AppServiceProvider extends ServiceProvider
             'pages.about.index',
             'pages.contact.index',
             'pages.search.index',
+            'pages.downloads.index',
+            'pages.legal.privacy',
+            'pages.legal.terms',
+            'pages.legal.careers',
+            'errors.404',
             'pages.services.index',
             'pages.services.show',
             'pages.projects.index',

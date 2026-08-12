@@ -4,6 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    @auth
+        <meta name="user-id" content="{{ auth()->id() }}">
+    @endauth
     <title>{{ $title ?? 'Portal' }} — Zytech</title>
     @vite(['resources/css/portal/app.css', 'resources/js/app.js'])
     @livewireStyles
@@ -78,6 +81,22 @@
                 {{ $slot }}
             </div>
         </main>
+    </div>
+
+    <div
+        id="zy-toast-host"
+        class="zy-toast-host"
+        x-data="zyToasts()"
+        x-on:zy-toast.window="push($event.detail)"
+        aria-live="polite"
+        aria-atomic="true"
+    >
+        <template x-for="toast in items" :key="toast.id">
+            <div class="zy-toast zy-toast--info" role="status">
+                <p class="zy-toast__title" x-text="toast.title"></p>
+                <p class="zy-toast__body" x-text="toast.body"></p>
+            </div>
+        </template>
     </div>
 
     @livewireScripts

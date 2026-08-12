@@ -4,6 +4,7 @@ namespace App\Domains\Company\Support;
 
 use App\Domains\Company\Data\CompanyData;
 use App\Domains\Company\Services\CompanyService;
+use App\Domains\Company\Services\TestimonialService;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\View\View;
 
@@ -18,6 +19,8 @@ final class ShareCompany
         if (! $this->tablesReady()) {
             $view->with('companyProfile', null);
             $view->with('companyStatistics', collect());
+            $view->with('homeTestimonials', collect());
+            $view->with('homeFaqs', collect());
 
             return;
         }
@@ -25,9 +28,13 @@ final class ShareCompany
         try {
             $view->with('companyProfile', $this->companies->profile());
             $view->with('companyStatistics', $this->companies->statistics());
+            $view->with('homeTestimonials', app(TestimonialService::class)->published());
+            $view->with('homeFaqs', $this->companies->faqs());
         } catch (\Throwable) {
             $view->with('companyProfile', null);
             $view->with('companyStatistics', collect());
+            $view->with('homeTestimonials', collect());
+            $view->with('homeFaqs', collect());
         }
     }
 

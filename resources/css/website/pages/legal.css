@@ -1,0 +1,82 @@
+/**
+ * Legal / utility pages and downloads catalogue.
+ */
+
+.zy-legal {
+    max-width: 48rem;
+    display: grid;
+    gap: var(--zy-space-4);
+}
+
+.zy-legal h1 {
+    margin: 0;
+    font-size: var(--zy-text-3xl);
+}
+
+.zy-legal h2 {
+    margin: var(--zy-space-6) 0 0;
+    font-size: var(--zy-text-xl);
+}
+
+.zy-legal ul {
+    padding-left: 1.2rem;
+}
+
+.zy-legal__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--zy-space-3);
+    margin-top: var(--zy-space-4);
+}
+
+.zy-stack {
+    display: grid;
+    gap: var(--zy-space-4);
+}
+
+.zy-download-row {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--zy-space-4);
+    align-items: start;
+    padding: var(--zy-space-4);
+    border: 1px solid var(--zy-color-border);
+    border-radius: var(--zy-radius-lg);
+    background: var(--zy-color-surface);
+}
+
+.zy-download-row h2 {
+    margin: 0;
+    font-size: var(--zy-text-lg);
+}
+
+.zy-skip-link {
+    position: absolute;
+    left: var(--zy-space-4);
+    top: -100px;
+    z-index: 1000;
+    padding: var(--zy-space-2) var(--zy-space-4);
+    background: var(--zy-color-ink);
+    color: var(--zy-color-surface);
+    border-radius: var(--zy-radius-md);
+    text-decoration: none;
+}
+
+.zy-skip-link:focus {
+    top: var(--zy-space-4);
+}
+
+.zy-toast-host {
+    position: fixed;
+    right: var(--zy-space-4);
+    bottom: var(--zy-space-4);
+    z-index: 1200;
+    display: grid;
+    gap: var(--zy-space-2);
+    width: min(22rem, calc(100vw - 2rem));
+    pointer-events: none;
+}
+
+.zy-toast-host .zy-toast {
+    pointer-events: auto;
+}

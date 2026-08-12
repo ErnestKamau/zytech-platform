@@ -6,6 +6,7 @@ use App\Core\Enums\DeliveryStatus;
 use App\Core\Enums\NotificationChannel;
 use App\Core\Services\BaseService;
 use App\Domains\Communication\Events\NotificationDispatched;
+use App\Domains\Communication\Events\NotificationPushed;
 use App\Domains\Communication\Mail\TemplatedMail;
 use App\Domains\Communication\Notifications\HubDatabaseNotification;
 use App\Models\NotificationLog;
@@ -58,7 +59,7 @@ final class CommunicationService extends BaseService
                 match ($channel) {
                     NotificationChannel::Mail => $this->sendMail($recipientEmail, $resolvedSubject, $resolvedBody),
                     NotificationChannel::Database => $this->sendDatabase($user, $type, $resolvedSubject, $resolvedBody, $meta),
-                    NotificationChannel::Broadcast => $this->sendBroadcast($type, $resolvedSubject, $meta),
+                    NotificationChannel::Broadcast => $this->sendBroadcast($type, $resolvedSubject, $resolvedBody, $user, $meta),
                     NotificationChannel::Portal => null,
                 };
 
@@ -136,12 +137,25 @@ final class CommunicationService extends BaseService
     /**
      * @param  array<string, mixed>|null  $meta
      */
-    private function sendBroadcast(string $type, string $subject, ?array $meta): void
-    {
+    private function sendBroadcast(
+        string $type,
+        string $subject,
+        string $body,
+        ?User $user,
+        ?array $meta,
+    ): void {
+        event(new NotificationPushed(
+            type: $type,
+            title: $subject,
+            body: $body,
+            userId: $user?->id,
+            meta: $meta,
+        ));
+
         Log::info('communication.broadcast', [
             'type' => $type,
             'subject' => $subject,
-            'meta' => $meta,
+            'user_id' => $user?->id,
         ]);
     }
 

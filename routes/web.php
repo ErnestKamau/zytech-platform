@@ -68,6 +68,22 @@ Route::get('/search', function () {
     return view('pages.search.index');
 })->name('search');
 
+Route::get('/downloads', function () {
+    return view('pages.downloads.index');
+})->name('downloads.index');
+
+Route::get('/privacy', function () {
+    return view('pages.legal.privacy');
+})->name('privacy');
+
+Route::get('/terms', function () {
+    return view('pages.legal.terms');
+})->name('terms');
+
+Route::get('/careers', function () {
+    return view('pages.legal.careers');
+})->name('careers');
+
 Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
 Route::get('/robots.txt', RobotsController::class)->name('robots');
 

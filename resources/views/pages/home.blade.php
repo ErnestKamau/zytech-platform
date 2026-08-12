@@ -162,6 +162,63 @@
         </section>
     @endif
 
+    @php
+        $homeTestimonials = ($homeTestimonials ?? collect());
+        $homeFaqs = ($homeFaqs ?? collect());
+    @endphp
+
+    @if ($homeTestimonials->isNotEmpty())
+        <section class="zy-section zy-section--alt">
+            <div class="zy-container">
+                <div class="zy-section__header">
+                    <p class="zy-section__eyebrow">Clients</p>
+                    <h2>What principals say</h2>
+                    <p>Feedback from recent residential and commercial clients.</p>
+                </div>
+                <div class="zy-grid zy-grid--2">
+                    @foreach ($homeTestimonials->take(4) as $testimonial)
+                        <x-ui.card :featured="$testimonial->is_featured">
+                            <p class="zy-card__body zy-about-quote">“{{ $testimonial->quote }}”</p>
+                            <p class="zy-card__title">{{ $testimonial->author_name }}</p>
+                            <p class="zy-card__eyebrow">{{ collect([$testimonial->author_role, $testimonial->company_name])->filter()->implode(' · ') }}</p>
+                        </x-ui.card>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
+    @if ($homeFaqs->isNotEmpty())
+        <section class="zy-section">
+            <div class="zy-container">
+                <div class="zy-section__header">
+                    <p class="zy-section__eyebrow">FAQs</p>
+                    <h2>Questions we hear on site</h2>
+                </div>
+                <div class="zy-about-faqs" x-data="{ open: 0 }">
+                    @foreach ($homeFaqs->take(6) as $index => $faq)
+                        <div class="zy-about-faq">
+                            <button
+                                type="button"
+                                class="zy-about-faq__q"
+                                @click="open = open === {{ $index }} ? null : {{ $index }}"
+                                :aria-expanded="(open === {{ $index }}).toString()"
+                            >
+                                {{ $faq->question }}
+                            </button>
+                            <div class="zy-about-faq__a" x-show="open === {{ $index }}" x-cloak>
+                                <p>{{ $faq->answer }}</p>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+                <p style="margin-top: var(--zy-space-6);">
+                    <a href="{{ route('about') }}" class="zy-btn zy-btn--secondary">More about Zytech</a>
+                </p>
+            </div>
+        </section>
+    @endif
+
     <x-sections.cta id="quote">
         <a href="{{ route('contact') }}" class="zy-btn zy-btn--primary zy-btn--lg">Request a Quote</a>
         <a href="{{ route('projects.index') }}" class="zy-btn zy-btn--frost zy-btn--lg">Browse Projects</a>

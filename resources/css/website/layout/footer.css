@@ -106,6 +106,31 @@
     padding-block: var(--zy-space-4);
 }
 
+.zy-footer__bar-inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--zy-space-3);
+    align-items: center;
+}
+
+.zy-footer__legal {
+    display: flex;
+    gap: var(--zy-space-4);
+}
+
+.zy-footer__legal a {
+    font-size: var(--zy-text-xs);
+    color: rgb(255 255 255 / 0.55);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: var(--zy-tracking-wide);
+}
+
+.zy-footer__legal a:hover {
+    color: rgb(255 255 255 / 0.9);
+}
+
 .zy-footer__meta {
     margin: 0;
     font-size: var(--zy-text-xs);

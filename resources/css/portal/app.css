@@ -608,3 +608,37 @@
         padding: var(--zy-space-6) var(--zy-space-4) var(--zy-space-12);
     }
 }
+
+.zy-toast-host {
+    position: fixed;
+    right: var(--zy-space-4);
+    bottom: var(--zy-space-4);
+    z-index: 1200;
+    display: grid;
+    gap: var(--zy-space-2);
+    width: min(22rem, calc(100vw - 2rem));
+    pointer-events: none;
+}
+
+.zy-toast {
+    pointer-events: auto;
+    display: grid;
+    gap: 0.25rem;
+    padding: var(--zy-space-3) var(--zy-space-4);
+    border-radius: var(--zy-radius-lg);
+    border: 1px solid var(--zy-color-border);
+    background: var(--zy-color-surface);
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0.08);
+}
+
+.zy-toast__title {
+    margin: 0;
+    font-size: var(--zy-text-sm);
+    font-weight: 600;
+}
+
+.zy-toast__body {
+    margin: 0;
+    font-size: var(--zy-text-sm);
+    color: var(--zy-color-muted);
+}
