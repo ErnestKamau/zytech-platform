@@ -57,7 +57,7 @@
             @else
                 <a href="{{ route('login') }}" class="zy-btn zy-btn--secondary zy-btn--sm zy-header__cta">Sign in</a>
             @endauth
-            <a href="{{ route('contact') }}" class="zy-btn zy-btn--primary zy-btn--sm zy-header__cta">Request a Quote</a>
+            <a href="{{ route('quote.index') }}" class="zy-btn zy-btn--primary zy-btn--sm zy-header__cta">Request a Quote</a>
             <button
                 type="button"
                 class="zy-icon-btn zy-header__menu"
@@ -95,7 +95,7 @@
                 @else
                     <a href="{{ route('login') }}" class="zy-btn zy-btn--secondary" @click="menuOpen = false">Sign in</a>
                 @endauth
-                <a href="{{ route('contact') }}" class="zy-btn zy-btn--primary" @click="menuOpen = false">Request a Quote</a>
+                <a href="{{ route('quote.index') }}" class="zy-btn zy-btn--primary" @click="menuOpen = false">Request a Quote</a>
             </div>
         </div>
     </div>

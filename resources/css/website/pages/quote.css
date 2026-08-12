@@ -1,0 +1,107 @@
+/**
+ * Quotation request and tracking — page-specific overrides only.
+ */
+
+.zy-page-quote {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.zy-quote-intro {
+    padding-block: var(--zy-space-12) var(--zy-space-8);
+}
+
+.zy-quote-form-wrap {
+    padding-block: 0 var(--zy-space-16);
+    max-width: 48rem;
+}
+
+.zy-quote-form {
+    display: grid;
+    gap: var(--zy-space-6);
+}
+
+.zy-quote-form__grid {
+    display: grid;
+    gap: var(--zy-space-4);
+}
+
+@media (min-width: 48rem) {
+    .zy-quote-form__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.zy-quote-services {
+    border: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.zy-quote-services__grid {
+    display: grid;
+    gap: var(--zy-space-2);
+    margin-top: var(--zy-space-2);
+}
+
+@media (min-width: 40rem) {
+    .zy-quote-services__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.zy-quote-service {
+    display: flex;
+    gap: var(--zy-space-2);
+    align-items: flex-start;
+    font-size: var(--zy-text-sm);
+}
+
+.zy-form-hint {
+    margin: var(--zy-space-1) 0 0;
+    color: var(--zy-color-muted);
+    font-size: var(--zy-text-sm);
+}
+
+.zy-form-error {
+    margin: var(--zy-space-1) 0 0;
+    color: var(--zy-color-danger, #b91c1c);
+    font-size: var(--zy-text-sm);
+}
+
+.zy-quote-success,
+.zy-quote-track {
+    padding-block: var(--zy-space-16);
+    max-width: 40rem;
+}
+
+.zy-quote-status {
+    margin: var(--zy-space-6) 0;
+    padding: var(--zy-space-4);
+    border: 1px solid var(--zy-color-border);
+    border-radius: var(--zy-radius-lg);
+    background: var(--zy-color-surface);
+}
+
+.zy-quote-status__badge {
+    margin: var(--zy-space-2) 0 0;
+    font-size: var(--zy-text-xl);
+    font-weight: 700;
+}
+
+.zy-quote-details {
+    display: grid;
+    gap: var(--zy-space-3);
+    margin: var(--zy-space-6) 0;
+}
+
+.zy-quote-details dt {
+    font-size: var(--zy-text-sm);
+    color: var(--zy-color-muted);
+}
+
+.zy-quote-details dd {
+    margin: 0;
+    font-weight: 600;
+}

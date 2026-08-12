@@ -4,6 +4,7 @@ namespace App\Core\Enums;
 
 enum QuotationStatus: string
 {
+    case Draft = 'draft';
     case Pending = 'pending';
     case Reviewing = 'reviewing';
     case Preparing = 'preparing';
@@ -16,6 +17,7 @@ enum QuotationStatus: string
     public function label(): string
     {
         return match ($this) {
+            self::Draft => 'Draft',
             self::Pending => 'Pending',
             self::Reviewing => 'Reviewing',
             self::Preparing => 'Preparing',

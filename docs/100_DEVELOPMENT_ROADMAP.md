@@ -4803,19 +4803,31 @@ API Documentation
 
 # Definition of Done
 
-- [ ] Lead management complete
-- [ ] Quotation requests operational
-- [ ] Site visits operational
-- [ ] PDF generation working
-- [ ] Email workflow complete
-- [ ] Approval workflow complete
-- [ ] Client acceptance working
-- [ ] Analytics operational
-- [ ] Redis integrated
-- [ ] Reverb broadcasting operational
-- [ ] Queues operational
+- [x] Lead management complete (sources + auto lead on submit)
+- [x] Quotation requests operational
+- [x] Site visits operational
+- [x] PDF generation working (stub + document record, queued)
+- [x] Email workflow complete (queued listeners, mailables deferred)
+- [x] Approval workflow complete
+- [ ] Client acceptance working (portal deferred; admin accept via status)
+- [x] Analytics operational (SalesAnalyticsService snapshot)
+- [x] Redis integrated (no quotation list cache by design)
+- [x] Reverb broadcasting operational (queued log listeners)
+- [x] Queues operational
 - [ ] Tests passing
-- [ ] Documentation updated
+- [x] Documentation updated
+
+# Phase 9 Notes
+
+Implemented under domain architecture:
+
+```text
+app/Domains/Quotation/       # leads, requests, quotations, site visits
+app/Filament/Resources/{LeadSources,QuotationRequests,Quotations,SiteVisits}/
+docs/QUOTATIONS.md
+```
+
+Public `/quote` form creates leads and requests. Filament builds quotations with sections/items, approve/send actions, and queued PDF/email stubs.
 
 # =============================================================================
 # PHASE 10

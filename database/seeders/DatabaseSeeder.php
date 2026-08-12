@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             ServiceSeeder::class,
             ProjectSeeder::class,
             KnowledgeSeeder::class,
+            QuotationSeeder::class,
         ]);
     }
 }

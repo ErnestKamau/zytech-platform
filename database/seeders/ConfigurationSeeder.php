@@ -101,7 +101,7 @@ class ConfigurationSeeder extends Seeder
         $flags = [
             ['maintenance_mode', 'Maintenance mode', 'Show a 503 page to visitors while staff can still access admin.', FeatureStatus::Disabled],
             ['client_portal', 'Client portal', 'Enable client portal routes and navigation.', FeatureStatus::Enabled],
-            ['quotations', 'Quotations', 'Enable quotation requests from the public site.', FeatureStatus::Disabled],
+            ['quotations', 'Quotations', 'Enable quotation requests from the public site.', FeatureStatus::Enabled],
             ['knowledge_centre', 'Knowledge Centre', 'Publish the Knowledge Centre section.', FeatureStatus::Enabled],
         ];
 

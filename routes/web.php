@@ -46,6 +46,18 @@ Route::get('/about', function () {
     return view('pages.about.index');
 })->name('about');
 
+Route::get('/quote', function () {
+    return view('pages.quote.index');
+})->name('quote.index');
+
+Route::get('/quote/success/{reference}', function (string $reference) {
+    return view('pages.quote.success', ['reference' => $reference]);
+})->name('quote.success');
+
+Route::get('/quote/track/{reference}', function (string $reference) {
+    return view('pages.quote.track', ['reference' => $reference]);
+})->name('quote.track');
+
 Route::get('/contact', function () {
     return view('pages.contact.index');
 })->name('contact');

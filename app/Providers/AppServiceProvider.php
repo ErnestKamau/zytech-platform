@@ -82,6 +82,23 @@ use App\Domains\Project\Policies\ProjectCategoryPolicy;
 use App\Domains\Project\Policies\ProjectContentPolicy;
 use App\Domains\Project\Policies\ProjectPolicy;
 use App\Domains\Project\Support\ShareProjects;
+use App\Domains\Quotation\Events\LeadCreated;
+use App\Domains\Quotation\Events\LeadQualified;
+use App\Domains\Quotation\Events\QuotationAccepted;
+use App\Domains\Quotation\Events\QuotationApproved;
+use App\Domains\Quotation\Events\QuotationCreated;
+use App\Domains\Quotation\Events\QuotationRejected;
+use App\Domains\Quotation\Events\QuotationRequestSubmitted;
+use App\Domains\Quotation\Events\QuotationSent;
+use App\Domains\Quotation\Events\SiteVisitScheduled;
+use App\Domains\Quotation\Listeners\BroadcastQuotationStatus;
+use App\Domains\Quotation\Listeners\GenerateQuotationPdf;
+use App\Domains\Quotation\Listeners\NotifySalesTeam;
+use App\Domains\Quotation\Listeners\SendQuotationEmail;
+use App\Domains\Quotation\Policies\LeadPolicy;
+use App\Domains\Quotation\Policies\QuotationPolicy;
+use App\Domains\Quotation\Policies\QuotationRequestPolicy;
+use App\Domains\Quotation\Policies\SiteVisitPolicy;
 use App\Domains\Service\Events\FeaturedServiceChanged;
 use App\Domains\Service\Events\ServiceArchived;
 use App\Domains\Service\Events\ServiceCreated;
@@ -107,8 +124,10 @@ use App\Domains\Website\Livewire\ContactForm;
 use App\Domains\Website\Livewire\KnowledgePage;
 use App\Domains\Website\Livewire\ProjectShowPage;
 use App\Domains\Website\Livewire\ProjectsPage;
+use App\Domains\Website\Livewire\RequestQuotationForm;
 use App\Domains\Website\Livewire\ServiceShowPage;
 use App\Domains\Website\Livewire\ServicesPage;
+use App\Domains\Website\Livewire\TrackQuotationPage;
 use App\Infrastructure\Cache\ApplicationCache;
 use App\Models\Article;
 use App\Models\ArticleAuthor;
@@ -125,6 +144,7 @@ use App\Models\CompanyStatistic;
 use App\Models\Faq;
 use App\Models\FeatureFlag;
 use App\Models\LeadershipMember;
+use App\Models\LeadSource;
 use App\Models\Media;
 use App\Models\MediaFolder;
 use App\Models\MediaTag;
@@ -138,7 +158,16 @@ use App\Models\ProjectGalleryItem;
 use App\Models\ProjectMilestone;
 use App\Models\ProjectProgressUpdate;
 use App\Models\ProjectStatistic;
+use App\Models\Quotation;
+use App\Models\QuotationApproval;
+use App\Models\QuotationDocument;
+use App\Models\QuotationItem;
+use App\Models\QuotationRequest;
+use App\Models\QuotationRequestAttachment;
+use App\Models\QuotationRevision;
+use App\Models\QuotationSection;
 use App\Models\Role;
+use App\Models\SalesLead;
 use App\Models\Service;
 use App\Models\ServiceCategory;
 use App\Models\ServiceFaq;
@@ -147,6 +176,7 @@ use App\Models\ServiceProcess;
 use App\Models\ServiceRelatedProject;
 use App\Models\ServiceStatistic;
 use App\Models\Setting;
+use App\Models\SiteVisit;
 use App\Models\Testimonial;
 use App\Models\User;
 use Illuminate\Support\Facades\Event;
@@ -181,6 +211,8 @@ class AppServiceProvider extends ServiceProvider
         Livewire::component('knowledge.featured-articles', FeaturedArticleComponents::class);
         Livewire::component('knowledge.related-articles', RelatedArticleComponents::class);
         Livewire::component('knowledge.article-faqs', KnowledgeArticleFaqs::class);
+        Livewire::component('website.request-quotation-form', RequestQuotationForm::class);
+        Livewire::component('website.track-quotation', TrackQuotationPage::class);
         Livewire::component('media.picker', MediaPicker::class);
 
         $websiteViews = [
@@ -196,6 +228,9 @@ class AppServiceProvider extends ServiceProvider
             'pages.projects.show',
             'pages.knowledge.index',
             'pages.knowledge.show',
+            'pages.quote.index',
+            'pages.quote.success',
+            'pages.quote.track',
         ];
 
         View::composer($websiteViews, ShareConfiguration::class);
@@ -243,6 +278,17 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(ArticleFaq::class, ArticleContentPolicy::class);
         Gate::policy(ArticleDownload::class, ArticleContentPolicy::class);
         Gate::policy(ArticleTag::class, ArticleContentPolicy::class);
+        Gate::policy(LeadSource::class, LeadPolicy::class);
+        Gate::policy(SalesLead::class, LeadPolicy::class);
+        Gate::policy(QuotationRequest::class, QuotationRequestPolicy::class);
+        Gate::policy(QuotationRequestAttachment::class, QuotationRequestPolicy::class);
+        Gate::policy(Quotation::class, QuotationPolicy::class);
+        Gate::policy(QuotationSection::class, QuotationPolicy::class);
+        Gate::policy(QuotationItem::class, QuotationPolicy::class);
+        Gate::policy(QuotationRevision::class, QuotationPolicy::class);
+        Gate::policy(QuotationApproval::class, QuotationPolicy::class);
+        Gate::policy(QuotationDocument::class, QuotationPolicy::class);
+        Gate::policy(SiteVisit::class, SiteVisitPolicy::class);
 
         Gate::define('viewPulse', function (?User $user = null): bool {
             return $this->app->environment('local') || $user !== null;
@@ -360,5 +406,27 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(ArticleCreated::class, IndexArticle::class);
         Event::listen(ArticlePublished::class, IndexArticle::class);
         Event::listen(ArticleUpdated::class, IndexArticle::class);
+
+        $quotationEvents = [
+            QuotationRequestSubmitted::class,
+            LeadCreated::class,
+            LeadQualified::class,
+            QuotationCreated::class,
+            QuotationApproved::class,
+            QuotationSent::class,
+            QuotationAccepted::class,
+            QuotationRejected::class,
+            SiteVisitScheduled::class,
+        ];
+
+        foreach ($quotationEvents as $event) {
+            Event::listen($event, NotifySalesTeam::class);
+            Event::listen($event, BroadcastQuotationStatus::class);
+        }
+
+        Event::listen(QuotationRequestSubmitted::class, SendQuotationEmail::class);
+        Event::listen(QuotationSent::class, SendQuotationEmail::class);
+        Event::listen(QuotationApproved::class, GenerateQuotationPdf::class);
+        Event::listen(QuotationSent::class, GenerateQuotationPdf::class);
     }
 }
