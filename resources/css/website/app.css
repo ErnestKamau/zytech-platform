@@ -33,6 +33,8 @@
 @import './components/table.css';
 @import './components/wizard.css';
 @import './components/media.css';
+@import './components/empty-state.css';
+@import './components/skeleton.css';
 
 /* pages */
 @import './pages/home.css';

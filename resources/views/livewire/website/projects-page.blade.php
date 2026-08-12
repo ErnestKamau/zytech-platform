@@ -34,7 +34,16 @@
 
     <div class="zy-container zy-projects-grid">
         @if ($projects->isEmpty())
-            <p>No published projects in this category yet.</p>
+            <x-ui.empty-state
+                title="No projects in this category"
+                description="We have not published work in this category yet. Explore the full portfolio or request a quote for a similar brief."
+                :lottie="asset('media/lottie/no-connection.lottie')"
+            >
+                <x-slot:actions>
+                    <a href="{{ route('projects.index') }}" class="zy-btn zy-btn--primary">All projects</a>
+                    <a href="{{ route('quote.index') }}" class="zy-btn zy-btn--secondary">Request a quote</a>
+                </x-slot:actions>
+            </x-ui.empty-state>
         @else
             <div class="zy-grid zy-grid--3">
                 @foreach ($projects as $project)

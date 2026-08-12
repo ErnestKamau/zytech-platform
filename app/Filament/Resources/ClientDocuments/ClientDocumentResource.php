@@ -11,6 +11,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
@@ -36,12 +37,17 @@ class ClientDocumentResource extends BaseResource
             Select::make('client_id')->relationship('client', 'name')->searchable()->required(),
             TextInput::make('title')->required()->maxLength(255),
             TextInput::make('kind')->default('general'),
-            TextInput::make('stored_path')->label('Storage path'),
-            TextInput::make('mime_type'),
-            TextInput::make('size_bytes')->numeric()->default(0),
+            FileUpload::make('stored_path')
+                ->label('File')
+                ->disk('local')
+                ->directory('client-documents')
+                ->visibility('private')
+                ->maxSize(20480),
+            TextInput::make('mime_type')->disabled()->dehydrated(),
+            TextInput::make('size_bytes')->numeric()->default(0)->disabled()->dehydrated(),
             Select::make('visibility')->options(collect(DocumentVisibility::cases())->mapWithKeys(
                 fn (DocumentVisibility $visibility): array => [$visibility->value => $visibility->label()]
-            ))->required(),
+            ))->required()->default(DocumentVisibility::Client->value),
         ]);
     }
 

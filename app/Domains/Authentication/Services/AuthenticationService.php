@@ -5,8 +5,11 @@ namespace App\Domains\Authentication\Services;
 use App\Core\Contracts\CacheStore;
 use App\Core\Services\BaseService;
 use App\Domains\Authentication\Data\LoginData;
+use App\Domains\Authentication\Data\LoginResult;
 use App\Domains\Authentication\Data\RegisterUserData;
 use App\Domains\Authentication\Data\ResetPasswordData;
+use App\Domains\Authentication\Enums\LoginStatus;
+use App\Domains\Authentication\Enums\TwoFactorChannel;
 use App\Domains\Authentication\Events\AccountLocked;
 use App\Domains\Authentication\Events\EmailVerified;
 use App\Domains\Authentication\Events\PasswordReset;
@@ -31,6 +34,7 @@ final class AuthenticationService extends BaseService
     public function __construct(
         private readonly CacheStore $cache,
         private readonly RegistrationService $registration,
+        private readonly TwoFactorChallengeService $twoFactor,
     ) {}
 
     public function register(RegisterUserData $data): User
@@ -38,7 +42,7 @@ final class AuthenticationService extends BaseService
         return $this->registration->register($data);
     }
 
-    public function authenticate(LoginData $data): User
+    public function authenticate(LoginData $data): LoginResult
     {
         $this->ensureIsNotRateLimited($data);
 
@@ -71,6 +75,21 @@ final class AuthenticationService extends BaseService
         ])->save();
 
         RateLimiter::clear($this->throttleKey($data));
+
+        if (! $authenticated->hasVerifiedEmail()) {
+            session()->regenerate();
+
+            return new LoginResult(LoginStatus::RequiresEmailVerification, $authenticated);
+        }
+
+        if ($authenticated->mfa_enabled && $this->twoFactor->availableChannels($authenticated) !== []) {
+            Auth::logout();
+            session()->regenerate();
+            $this->twoFactor->startPending($authenticated, $data->remember);
+
+            return new LoginResult(LoginStatus::RequiresTwoFactor, $authenticated);
+        }
+
         session()->regenerate();
 
         event(new UserLoggedIn(
@@ -79,7 +98,26 @@ final class AuthenticationService extends BaseService
             userAgent: $data->userAgent,
         ));
 
-        return $authenticated;
+        return new LoginResult(LoginStatus::Authenticated, $authenticated);
+    }
+
+    public function completeTwoFactorLogin(
+        User $user,
+        bool $remember,
+        ?string $ipAddress = null,
+        ?string $userAgent = null,
+    ): User {
+        Auth::login($user, $remember);
+        $this->twoFactor->clearPending();
+        session()->regenerate();
+
+        event(new UserLoggedIn(
+            user: $user,
+            ipAddress: $ipAddress,
+            userAgent: $userAgent,
+        ));
+
+        return $user;
     }
 
     public function logout(?User $user = null): void
@@ -126,14 +164,20 @@ final class AuthenticationService extends BaseService
         return $status;
     }
 
-    public function verifyEmail(User $user): User
+    public function verifyEmail(User $user, ?TwoFactorChannel $enrollChannel = null): User
     {
-        if ($user->hasVerifiedEmail()) {
-            return $user;
+        if (! $user->hasVerifiedEmail()) {
+            $user->markEmailAsVerified();
+            event(new EmailVerified($user));
         }
 
-        $user->markEmailAsVerified();
-        event(new EmailVerified($user));
+        if ($enrollChannel !== null) {
+            $user->setMfaPreferences([
+                'mfa_email_enabled' => $enrollChannel === TwoFactorChannel::Email,
+                'mfa_sms_enabled' => $enrollChannel === TwoFactorChannel::Sms,
+            ]);
+            $user->forceFill(['mfa_enabled' => true])->save();
+        }
 
         return $user->refresh();
     }

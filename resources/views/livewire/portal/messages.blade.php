@@ -1,22 +1,24 @@
 <div class="zy-portal-page">
-    <header class="zy-portal-page__header">
-        <div class="zy-portal-page__intro">
-            <p class="zy-section__eyebrow">Inbox</p>
-            <h1 class="zy-portal-page__title">Messages</h1>
-            <p class="zy-portal-page__lead">Talk directly with the Zytech team about your works.</p>
-        </div>
-    </header>
+    <x-portal.page-header
+        eyebrow="Inbox"
+        title="Messages"
+        lead="Talk directly with the Zytech team about your works."
+        icon="chat"
+    />
 
-    <div class="zy-portal-split">
+    <div class="zy-portal-split zy-portal-split--elevated">
         <aside class="zy-portal-panel">
-            <h2 class="zy-portal-panel__title">Conversations</h2>
+            <div class="zy-portal-panel__title-wrap">
+                <span class="zy-portal-panel__icon" aria-hidden="true"><x-portal.icon name="chat" /></span>
+                <h2 class="zy-portal-panel__title">Conversations</h2>
+            </div>
             @forelse ($conversations as $conversation)
                 <button type="button" class="zy-portal-list-btn @if ($active?->id === $conversation->id) is-active @endif" wire:click="select('{{ $conversation->id }}')">
                     <strong>{{ $conversation->subject }}</strong>
                     <span class="zy-muted">{{ $conversation->status->label() }}</span>
                 </button>
             @empty
-                <p class="zy-portal-empty">No conversations yet.</p>
+                <x-portal.empty-state icon="chat" description="No conversations yet." />
             @endforelse
 
             <form wire:submit="openConversation" class="zy-portal-form">
@@ -59,7 +61,7 @@
                     <button type="submit" class="zy-btn zy-btn--primary zy-btn--sm">Reply</button>
                 </form>
             @else
-                <p class="zy-portal-empty">Select or start a conversation.</p>
+                <x-portal.empty-state icon="chat" description="Select or start a conversation." />
             @endif
         </section>
     </div>

@@ -15,6 +15,13 @@
             @error('email') <p class="zy-field-error">{{ $message }}</p> @enderror
         </div>
 
+        <div class="zy-field">
+            <label class="zy-label" for="phone">Phone <span class="zy-muted">(optional)</span></label>
+            <input id="phone" type="tel" class="zy-input" wire:model="phone" autocomplete="tel" placeholder="+254712345678">
+            <p class="zy-field__message">International format if provided, e.g. +254712345678. Required later if you use SMS sign-in codes.</p>
+            @error('phone') <p class="zy-field-error">{{ $message }}</p> @enderror
+        </div>
+
         <div class="zy-field" x-data="{ show: false }">
             <label class="zy-label" for="password">Password</label>
             <div class="zy-field__control">

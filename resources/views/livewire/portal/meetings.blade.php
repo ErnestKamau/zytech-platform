@@ -1,15 +1,17 @@
 <div class="zy-portal-page">
-    <header class="zy-portal-page__header">
-        <div class="zy-portal-page__intro">
-            <p class="zy-section__eyebrow">Schedule</p>
-            <h1 class="zy-portal-page__title">Meetings</h1>
-            <p class="zy-portal-page__lead">Request a site visit, consultation, or review. Available slots appear when the team publishes them.</p>
-        </div>
-    </header>
+    <x-portal.page-header
+        eyebrow="Schedule"
+        title="Meetings"
+        lead="Request a site visit, consultation, or review. Available slots appear when the team publishes them."
+        icon="calendar"
+    />
 
     <div class="zy-portal-grid">
         <section class="zy-portal-panel">
-            <h2 class="zy-portal-panel__title">Request a meeting</h2>
+            <div class="zy-portal-panel__title-wrap">
+                <span class="zy-portal-panel__icon" aria-hidden="true"><x-portal.icon name="plus" /></span>
+                <h2 class="zy-portal-panel__title">Request a meeting</h2>
+            </div>
             <form wire:submit="schedule" class="zy-stack">
                 <div class="zy-field">
                     <label class="zy-label" for="meeting-type">Type</label>
@@ -39,7 +41,10 @@
         </section>
 
         <section class="zy-portal-panel">
-            <h2 class="zy-portal-panel__title">Your meetings</h2>
+            <div class="zy-portal-panel__title-wrap">
+                <span class="zy-portal-panel__icon" aria-hidden="true"><x-portal.icon name="calendar" /></span>
+                <h2 class="zy-portal-panel__title">Your meetings</h2>
+            </div>
             @forelse ($meetings as $meeting)
                 <article class="zy-portal-row">
                     <div>
@@ -62,7 +67,7 @@
                     </div>
                 </article>
             @empty
-                <p class="zy-portal-empty">No meeting requests yet.</p>
+                <x-portal.empty-state icon="calendar" description="No meeting requests yet." />
             @endforelse
         </section>
     </div>

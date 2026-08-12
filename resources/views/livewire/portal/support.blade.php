@@ -1,22 +1,24 @@
 <div class="zy-portal-page">
-    <header class="zy-portal-page__header">
-        <div class="zy-portal-page__intro">
-            <p class="zy-section__eyebrow">Help</p>
-            <h1 class="zy-portal-page__title">Support</h1>
-            <p class="zy-portal-page__lead">Open a ticket when you need account or project assistance.</p>
-        </div>
-    </header>
+    <x-portal.page-header
+        eyebrow="Help"
+        title="Support"
+        lead="Open a ticket when you need account or project assistance."
+        icon="ticket"
+    />
 
-    <div class="zy-portal-split">
+    <div class="zy-portal-split zy-portal-split--elevated">
         <aside class="zy-portal-panel">
-            <h2 class="zy-portal-panel__title">Tickets</h2>
+            <div class="zy-portal-panel__title-wrap">
+                <span class="zy-portal-panel__icon" aria-hidden="true"><x-portal.icon name="ticket" /></span>
+                <h2 class="zy-portal-panel__title">Tickets</h2>
+            </div>
             @forelse ($tickets as $ticket)
                 <button type="button" class="zy-portal-list-btn @if ($active?->id === $ticket->id) is-active @endif" wire:click="select('{{ $ticket->id }}')">
                     <strong>{{ $ticket->reference_number }}</strong>
                     <span class="zy-muted">{{ $ticket->subject }} · {{ $ticket->status->label() }}</span>
                 </button>
             @empty
-                <p class="zy-portal-empty">No tickets yet.</p>
+                <x-portal.empty-state icon="ticket" description="No tickets yet." />
             @endforelse
 
             <form wire:submit="createTicket" class="zy-portal-form">
@@ -64,7 +66,7 @@
                     <button type="submit" class="zy-btn zy-btn--primary zy-btn--sm">Reply</button>
                 </form>
             @else
-                <p class="zy-portal-empty">Select or open a support ticket.</p>
+                <x-portal.empty-state icon="ticket" description="Select or open a support ticket." />
             @endif
         </section>
     </div>

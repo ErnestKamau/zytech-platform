@@ -37,18 +37,33 @@
             @endif
 
             <section class="zy-search-results">
-                <h2>{{ $results->count() }} result{{ $results->count() === 1 ? '' : 's' }}</h2>
-                @forelse ($results as $result)
-                    <article class="zy-search-result">
-                        <span class="zy-badge">{{ ucfirst($result->type) }}</span>
-                        <h3><a href="{{ $result->url }}">{{ $result->title }}</a></h3>
-                        @if ($result->excerpt)
-                            <p class="zy-muted">{{ \Illuminate\Support\Str::limit($result->excerpt, 160) }}</p>
-                        @endif
-                    </article>
-                @empty
-                    <p class="zy-muted">No matches for “{{ $q }}”.</p>
-                @endforelse
+                <div wire:loading.delay.short wire:target="q">
+                    <x-ui.skeleton-grid :count="3" />
+                </div>
+
+                <div wire:loading.remove.delay.short wire:target="q">
+                    <h2>{{ $results->count() }} result{{ $results->count() === 1 ? '' : 's' }}</h2>
+                    @forelse ($results as $result)
+                        <article class="zy-search-result">
+                            <span class="zy-badge">{{ ucfirst($result->type) }}</span>
+                            <h3><a href="{{ $result->url }}">{{ $result->title }}</a></h3>
+                            @if ($result->excerpt)
+                                <p class="zy-muted">{{ \Illuminate\Support\Str::limit($result->excerpt, 160) }}</p>
+                            @endif
+                        </article>
+                    @empty
+                        <x-ui.empty-state
+                            title="No matches for “{{ $q }}”"
+                            description="Try a different keyword, or browse services and projects directly."
+                            :lottie="asset('media/lottie/no-connection.lottie')"
+                        >
+                            <x-slot:actions>
+                                <a href="{{ route('services.index') }}" class="zy-btn zy-btn--primary">Services</a>
+                                <a href="{{ route('projects.index') }}" class="zy-btn zy-btn--secondary">Projects</a>
+                            </x-slot:actions>
+                        </x-ui.empty-state>
+                    @endforelse
+                </div>
             </section>
         @endif
     </div>

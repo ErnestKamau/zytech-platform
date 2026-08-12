@@ -56,11 +56,13 @@ Reference numbers: `ZQR-*` for requests, `ZQ-*` for quotations.
 
 The `quotations` feature flag is enabled via `ConfigurationSeeder`.
 
+## PDF
+
+`QuotationPDFService` renders Blade `resources/views/pdf/quotation.blade.php` with DomPDF, stores under `storage/app/quotations/{id}/`, and updates `QuotationDocument`. Portal clients can stream (inline), download, or print from `/portal/quotations`.
+
 ## Deferred
 
-- Real PDF rendering (dompdf/snappy)
 - Outbound mailable classes
-- Client portal acceptance UI
 - Project conversion action from accepted quotes
 - Sales analytics dashboard widgets in Filament
 - Digital signatures

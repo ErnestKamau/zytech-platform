@@ -20,6 +20,8 @@ final class Register extends BaseComponent
 
     public string $email = '';
 
+    public string $phone = '';
+
     public string $password = '';
 
     public string $password_confirmation = '';
@@ -36,7 +38,10 @@ final class Register extends BaseComponent
         $this->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'phone' => ['nullable', 'string', 'max:32', 'regex:/^\+[1-9]\d{7,14}$/'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ], [
+            'phone.regex' => 'Use international format, e.g. +254712345678.',
         ]);
 
         $user = $action->handle(RegisterUserData::fromArray([
@@ -44,6 +49,7 @@ final class Register extends BaseComponent
             'email' => $this->email,
             'password' => $this->password,
             'type' => UserType::Client,
+            'phone' => $this->phone !== '' ? $this->phone : null,
         ]));
 
         event(new Registered($user));

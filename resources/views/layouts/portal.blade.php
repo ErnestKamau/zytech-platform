@@ -11,76 +11,192 @@
     @vite(['resources/css/portal/app.css', 'resources/js/app.js'])
     @livewireStyles
     <script>
-        document.documentElement.dataset.zyTheme = localStorage.getItem('zy-theme') || 'light';
+        (function () {
+            var root = document.documentElement;
+            root.dataset.zyTheme = localStorage.getItem('zy-theme') || 'light';
+            var collapsed = (localStorage.getItem('zy-portal-nav-collapsed') ?? '1') === '1';
+            root.dataset.zyPortalNav = collapsed ? 'collapsed' : 'expanded';
+        })();
     </script>
 </head>
 <body
     class="zy-portal-body"
-    x-data="{ dark: localStorage.getItem('zy-theme') === 'dark' }"
+    x-data="{
+        dark: localStorage.getItem('zy-theme') === 'dark',
+        navOpen: false,
+        navCollapsed: (localStorage.getItem('zy-portal-nav-collapsed') ?? '1') === '1',
+        isMobileNav() {
+            return window.matchMedia('(max-width: 960px)').matches;
+        },
+        toggleNav() {
+            if (this.isMobileNav()) {
+                this.navOpen = !this.navOpen;
+                return;
+            }
+            this.navCollapsed = !this.navCollapsed;
+        },
+        navIsExpanded() {
+            return this.isMobileNav() ? this.navOpen : !this.navCollapsed;
+        },
+        menuIconOpen() {
+            return this.isMobileNav() && this.navOpen;
+        },
+    }"
     x-bind:data-zy-theme="dark ? 'dark' : 'light'"
     x-effect="
         localStorage.setItem('zy-theme', dark ? 'dark' : 'light');
         document.documentElement.dataset.zyTheme = dark ? 'dark' : 'light';
+        localStorage.setItem('zy-portal-nav-collapsed', navCollapsed ? '1' : '0');
+        document.documentElement.dataset.zyPortalNav = navCollapsed ? 'collapsed' : 'expanded';
+        document.documentElement.classList.toggle('zy-portal-nav-open', navOpen);
     "
+    @keydown.escape.window="navOpen = false"
 >
-    <div class="zy-portal">
-        <aside class="zy-portal__nav">
-            <a href="{{ route('home') }}" class="zy-portal__brand">
-                Zytech <span>Contractors</span>
-            </a>
+    @php
+        $user = auth()->user();
+        $hasPortal = $user?->clientProfile?->portal_access_granted_at !== null;
+        $initials = collect(explode(' ', (string) ($user?->name ?? 'Z')))
+            ->filter()
+            ->take(2)
+            ->map(fn ($part) => mb_strtoupper(mb_substr($part, 0, 1)))
+            ->implode('');
+        $helloName = explode(' ', (string) ($user?->name ?? 'there'))[0] ?: 'there';
+        $pageTitle = $title ?? 'Portal';
+    @endphp
 
-            @auth
-                @php
-                    $hasPortal = auth()->user()->clientProfile?->portal_access_granted_at !== null;
-                @endphp
+    <div class="zy-portal-shell">
+        <div class="zy-portal-shell__glow zy-portal-shell__glow--a" aria-hidden="true"></div>
+        <div class="zy-portal-shell__glow zy-portal-shell__glow--b" aria-hidden="true"></div>
 
-                @if ($hasPortal || request()->routeIs('portal.*'))
-                    <p class="zy-portal__section">Workspace</p>
-                    <nav class="zy-portal__links" aria-label="Client portal">
-                        <a href="{{ route('portal.dashboard') }}" @class(['is-active' => request()->routeIs('portal.dashboard')])>Dashboard</a>
-                        <a href="{{ route('portal.projects') }}" @class(['is-active' => request()->routeIs('portal.projects')])>Projects</a>
-                        <a href="{{ route('portal.quotations') }}" @class(['is-active' => request()->routeIs('portal.quotations')])>Quotations</a>
-                        <a href="{{ route('portal.documents') }}" @class(['is-active' => request()->routeIs('portal.documents')])>Documents</a>
-                        <a href="{{ route('portal.messages') }}" @class(['is-active' => request()->routeIs('portal.messages')])>Messages</a>
-                        <a href="{{ route('portal.meetings') }}" @class(['is-active' => request()->routeIs('portal.meetings')])>Meetings</a>
-                        <a href="{{ route('portal.support') }}" @class(['is-active' => request()->routeIs('portal.support')])>Support</a>
-                        <a href="{{ route('portal.notifications') }}" @class(['is-active' => request()->routeIs('portal.notifications')])>Notifications</a>
-                        <a href="{{ route('portal.timeline') }}" @class(['is-active' => request()->routeIs('portal.timeline')])>Timeline</a>
-                    </nav>
-                @endif
-            @endauth
+        <div
+            class="zy-portal"
+            x-init="$nextTick(() => { $el.classList.add('zy-portal--ready') })"
+            :class="{
+                'is-nav-open': navOpen,
+                'is-nav-collapsed': navCollapsed,
+                'is-nav-expanded': !navCollapsed,
+            }"
+        >
+            <div class="zy-portal__backdrop" @click="navOpen = false" aria-hidden="true"></div>
 
-            <p class="zy-portal__section">Account</p>
-            <nav class="zy-portal__links" aria-label="Account">
-                <a href="{{ route('account.profile') }}" @class(['is-active' => request()->routeIs('account.profile')])>Profile</a>
-                <a href="{{ route('account.security') }}" @class(['is-active' => request()->routeIs('account.security')])>Security</a>
-                <a href="{{ route('account.sessions') }}" @class(['is-active' => request()->routeIs('account.sessions')])>Sessions</a>
-                <a href="{{ route('account.settings') }}" @class(['is-active' => request()->routeIs('account.settings')])>Settings</a>
-            </nav>
-
-            <div class="zy-portal__nav-foot">
-                @auth
-                    <div class="zy-portal__user">
-                        <span class="zy-portal__user-name">{{ auth()->user()->name }}</span>
-                        <span class="zy-portal__user-meta">{{ auth()->user()->email }}</span>
-                    </div>
-                @endauth
-                <div class="zy-portal__toolbar">
-                    <a href="{{ route('home') }}" class="zy-btn zy-btn--ghost zy-btn--sm">Public site</a>
-                    <x-ui.theme-toggle />
+            <aside class="zy-portal__nav" id="zy-portal-nav">
+                <div class="zy-portal__brand-row">
+                    <a href="{{ route('home') }}" class="zy-portal__brand">
+                        <span class="zy-portal__brand-mark" aria-hidden="true">Z</span>
+                        <span class="zy-portal__brand-text">
+                            Zytech
+                            <span>Portal</span>
+                        </span>
+                    </a>
                 </div>
-            </div>
-        </aside>
 
-        <main class="zy-portal__main">
-            <div class="zy-portal__main-inner">
-                @if (session('status'))
-                    <div class="zy-alert zy-alert--success" role="status">{{ session('status') }}</div>
-                @endif
+                @auth
+                    @if ($hasPortal || request()->routeIs('portal.*'))
+                        <p class="zy-portal__section">Workspace</p>
+                        <nav class="zy-portal__links" aria-label="Client portal">
+                            <x-portal.nav-link href="{{ route('portal.dashboard') }}" label="Dashboard" icon="home" :active="request()->routeIs('portal.dashboard')" @click="navOpen = false" />
+                            <x-portal.nav-link href="{{ route('portal.projects') }}" label="Projects" icon="folder" :active="request()->routeIs('portal.projects')" @click="navOpen = false" />
+                            <x-portal.nav-link href="{{ route('portal.quotations') }}" label="Quotations" icon="document" :active="request()->routeIs('portal.quotations')" @click="navOpen = false" />
+                            <x-portal.nav-link href="{{ route('portal.documents') }}" label="Documents" icon="inbox" :active="request()->routeIs('portal.documents')" @click="navOpen = false" />
+                            <x-portal.nav-link href="{{ route('portal.messages') }}" label="Messages" icon="chat" :active="request()->routeIs('portal.messages')" @click="navOpen = false" />
+                            <x-portal.nav-link href="{{ route('portal.meetings') }}" label="Meetings" icon="calendar" :active="request()->routeIs('portal.meetings')" @click="navOpen = false" />
+                            <x-portal.nav-link href="{{ route('portal.support') }}" label="Support" icon="ticket" :active="request()->routeIs('portal.support')" @click="navOpen = false" />
+                            <x-portal.nav-link href="{{ route('portal.notifications') }}" label="Notifications" icon="bell" :active="request()->routeIs('portal.notifications')" @click="navOpen = false" />
+                            <x-portal.nav-link href="{{ route('portal.timeline') }}" label="Timeline" icon="clock" :active="request()->routeIs('portal.timeline')" @click="navOpen = false" />
+                        </nav>
+                    @endif
+                @endauth
 
-                {{ $slot }}
+                <p class="zy-portal__section">Account</p>
+                <nav class="zy-portal__links" aria-label="Account">
+                    <x-portal.nav-link href="{{ route('account.profile') }}" label="Profile" icon="user" :active="request()->routeIs('account.profile')" @click="navOpen = false" />
+                    <x-portal.nav-link href="{{ route('account.security') }}" label="Security" icon="shield" :active="request()->routeIs('account.security')" @click="navOpen = false" />
+                    <x-portal.nav-link href="{{ route('account.sessions') }}" label="Sessions" icon="sessions" :active="request()->routeIs('account.sessions')" @click="navOpen = false" />
+                    <x-portal.nav-link href="{{ route('account.settings') }}" label="Settings" icon="cog" :active="request()->routeIs('account.settings')" @click="navOpen = false" />
+                </nav>
+
+                <div class="zy-portal__nav-foot">
+                    @auth
+                        <div class="zy-portal__user" :title="'{{ $user->name }}'">
+                            <span class="zy-portal__avatar" aria-hidden="true">{{ $initials }}</span>
+                            <div class="zy-portal__user-copy">
+                                <span class="zy-portal__user-name">{{ $user->name }}</span>
+                                <span class="zy-portal__user-meta">{{ $user->email }}</span>
+                            </div>
+                        </div>
+                    @endauth
+                    <div class="zy-portal__toolbar">
+                        <a href="{{ route('home') }}" class="zy-btn zy-btn--ghost zy-btn--sm zy-portal__foot-link" title="Public site" aria-label="Public site">
+                            <x-portal.icon name="globe" />
+                            <span class="zy-portal__foot-label">Public site</span>
+                        </a>
+                        <x-ui.theme-toggle />
+                    </div>
+                    @auth
+                        <form method="POST" action="{{ route('logout') }}" class="zy-portal__logout">
+                            @csrf
+                            <button type="submit" class="zy-btn zy-btn--ghost zy-btn--sm zy-portal__logout-btn" title="Sign out" aria-label="Sign out">
+                                <x-portal.icon name="arrow-right" />
+                                <span class="zy-portal__foot-label">Sign out</span>
+                            </button>
+                        </form>
+                    @endauth
+                </div>
+            </aside>
+
+            <div class="zy-portal__stage">
+                <header class="zy-portal__topbar">
+                    <div class="zy-portal__topbar-start">
+                        <button
+                            type="button"
+                            class="zy-icon-btn zy-portal__menu"
+                            @click="toggleNav()"
+                            :aria-expanded="navIsExpanded().toString()"
+                            aria-controls="zy-portal-nav"
+                            :aria-label="navIsExpanded() ? (isMobileNav() ? 'Close menu' : 'Collapse navigation') : (isMobileNav() ? 'Open menu' : 'Expand navigation')"
+                            title="Toggle navigation"
+                        >
+                            <span class="zy-portal__menu-icon" aria-hidden="true" :class="{ 'is-open': menuIconOpen() }">
+                                <span></span>
+                                <span></span>
+                            </span>
+                        </button>
+                        <div class="zy-portal__greeting">
+                            <p class="zy-portal__hello">Hello, {{ $helloName }}</p>
+                            <p class="zy-portal__hello-meta">{{ $pageTitle }}</p>
+                        </div>
+                    </div>
+                    <div class="zy-portal__topbar-actions">
+                        @if ($hasPortal || request()->routeIs('portal.*'))
+                            <a
+                                href="{{ route('portal.notifications') }}"
+                                class="zy-icon-btn zy-portal__top-action"
+                                aria-label="Notifications"
+                            >
+                                <x-portal.icon name="bell" />
+                            </a>
+                            <a href="{{ route('portal.meetings') }}" class="zy-btn zy-btn--primary zy-btn--sm zy-portal__create">
+                                <x-portal.icon name="plus" />
+                                Request meeting
+                            </a>
+                        @endif
+                        @auth
+                            <span class="zy-portal__avatar zy-portal__avatar--top" aria-hidden="true">{{ $initials }}</span>
+                        @endauth
+                    </div>
+                </header>
+
+                <main class="zy-portal__main">
+                    <div class="zy-portal__main-inner">
+                        @if (session('status'))
+                            <div class="zy-alert zy-alert--success" role="status">{{ session('status') }}</div>
+                        @endif
+
+                        {{ $slot }}
+                    </div>
+                </main>
             </div>
-        </main>
+        </div>
     </div>
 
     <div

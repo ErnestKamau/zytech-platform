@@ -421,6 +421,28 @@
         </div>
     </section>
 
+    <section class="sg-block">
+        <h2>Empty state + skeleton</h2>
+        <div class="sg-grid-3" style="margin-bottom: var(--zy-space-8);">
+            <x-ui.skeleton variant="card" :lines="3" />
+            <x-ui.skeleton variant="card" :lines="2" />
+            <div>
+                <x-ui.skeleton variant="avatar" style="margin-bottom: var(--zy-space-3);" />
+                <x-ui.skeleton :lines="4" />
+            </div>
+        </div>
+        <x-ui.skeleton-grid :count="3" style="margin-bottom: var(--zy-space-8);" />
+        <x-ui.empty-state
+            title="No connection"
+            description="Example empty state with the Ronald Parrales Lottie."
+            :lottie="asset('media/lottie/no-connection.lottie')"
+        >
+            <x-slot:actions>
+                <button type="button" class="zy-btn zy-btn--primary">Primary action</button>
+            </x-slot:actions>
+        </x-ui.empty-state>
+    </section>
+
     {{-- ============================================================ RADIUS + SHADOW ============================================================ --}}
     <section class="sg-block">
         <h2>Radius &amp; Shadow</h2>

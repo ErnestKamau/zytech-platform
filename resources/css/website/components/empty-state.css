@@ -1,0 +1,66 @@
+/**
+ * Empty states + Lottie host.
+ */
+
+.zy-empty {
+    display: grid;
+    justify-items: center;
+    gap: var(--zy-space-5);
+    text-align: center;
+    max-width: 36rem;
+    margin-inline: auto;
+    padding-block: var(--zy-space-8);
+}
+
+.zy-empty__media {
+    display: grid;
+    place-items: center;
+    width: min(18rem, 100%);
+}
+
+.zy-empty__lottie,
+.zy-lottie {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 18rem;
+    aspect-ratio: 1;
+}
+
+.zy-empty--hero .zy-empty__media,
+.zy-empty--hero .zy-empty__lottie,
+.zy-empty--hero .zy-lottie {
+    max-width: 22rem;
+    width: min(22rem, 100%);
+}
+
+.zy-empty__copy {
+    display: grid;
+    gap: var(--zy-space-2);
+}
+
+.zy-empty__title {
+    margin: 0;
+    font-size: var(--zy-text-2xl);
+    line-height: var(--zy-leading-snug);
+}
+
+.zy-empty__description {
+    margin: 0;
+    color: var(--zy-color-muted);
+    font-size: var(--zy-text-base);
+    line-height: var(--zy-leading-body);
+}
+
+.zy-empty__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--zy-space-3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .zy-lottie {
+        opacity: 0.92;
+    }
+}

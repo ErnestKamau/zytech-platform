@@ -170,7 +170,7 @@ Colors should support content—not compete with it.
 
 # Primary Color
 
-Construction Blue
+Sage green (earth-forward — implemented in `tokens.css` as `--zy-color-primary`)
 
 Used for:
 
@@ -178,6 +178,8 @@ Used for:
 - Links
 - Active states
 - Focus indicators
+
+> Historical note: older drafts said “Construction Blue.” Live UI uses sage/stone; sky/indigo is reserved for controlled accents / gradient CTAs.
 
 ---
 
@@ -2316,16 +2318,22 @@ Portal Layout
 
 ↓
 
-Sidebar
+Sidebar (icon rail)
 
 ↓
 
-Content
+Glass content stage + topbar
 
 ↓
 
-Notifications
+Page recipes (hero / cards / split / timeline)
+
+↓
+
+Notifications (toasts)
 ```
+
+Visual language: earth/sage/stone tokens (see `resources/css/website/base/tokens.css`). Soft sky accents only on portal metric tiles / hero glow — not purple marketing gradients. Portal desktop nav defaults to a collapsible icon rail with a full-height hamburger strip; dashboard uses an asymmetric list + activity layout.
 
 Filament
 

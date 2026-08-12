@@ -81,6 +81,27 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         return $this->locked_at !== null;
     }
 
+    public function mfaEmailEnabled(): bool
+    {
+        return (bool) data_get($this->preferences, 'mfa_email_enabled', true);
+    }
+
+    public function mfaSmsEnabled(): bool
+    {
+        return (bool) data_get($this->preferences, 'mfa_sms_enabled', false);
+    }
+
+    /**
+     * @param  array{mfa_email_enabled?: bool, mfa_sms_enabled?: bool}  $flags
+     */
+    public function setMfaPreferences(array $flags): void
+    {
+        $preferences = $this->preferences ?? [];
+        $preferences['mfa_email_enabled'] = (bool) ($flags['mfa_email_enabled'] ?? $this->mfaEmailEnabled());
+        $preferences['mfa_sms_enabled'] = (bool) ($flags['mfa_sms_enabled'] ?? $this->mfaSmsEnabled());
+        $this->preferences = $preferences;
+    }
+
     public function isClient(): bool
     {
         return $this->type === UserType::Client;

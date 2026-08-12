@@ -21,6 +21,7 @@ final class CommunicationService extends BaseService
     public function __construct(
         private readonly TemplateService $templates,
         private readonly ActivityFeedService $feed,
+        private readonly TwilioSmsService $sms,
     ) {}
 
     /**
@@ -60,6 +61,7 @@ final class CommunicationService extends BaseService
                     NotificationChannel::Mail => $this->sendMail($recipientEmail, $resolvedSubject, $resolvedBody),
                     NotificationChannel::Database => $this->sendDatabase($user, $type, $resolvedSubject, $resolvedBody, $meta),
                     NotificationChannel::Broadcast => $this->sendBroadcast($type, $resolvedSubject, $resolvedBody, $user, $meta),
+                    NotificationChannel::Sms => $this->sendSms($user, $resolvedBody, $meta),
                     NotificationChannel::Portal => null,
                 };
 
@@ -114,12 +116,27 @@ final class CommunicationService extends BaseService
             NotificationChannel::Database => $preferences->database_enabled,
             NotificationChannel::Broadcast => $preferences->broadcast_enabled,
             NotificationChannel::Portal => true,
+            NotificationChannel::Sms => true,
         };
     }
 
     private function sendMail(string $email, string $subject, string $body): void
     {
         Mail::mailer(config('mail.default'))->to($email)->send(new TemplatedMail($subject, $body));
+    }
+
+    /**
+     * @param  array<string, mixed>|null  $meta
+     */
+    private function sendSms(?User $user, string $body, ?array $meta): void
+    {
+        $phone = $user?->phone ?: (string) ($meta['phone'] ?? '');
+
+        if ($phone === '') {
+            throw new \RuntimeException('SMS recipient phone is missing.');
+        }
+
+        $this->sms->send($phone, $body);
     }
 
     /**

@@ -42,14 +42,29 @@
     @endif
 
     <div class="zy-container zy-knowledge-grid">
-        @if ($articles->isEmpty())
-            <p>No published articles match your search yet.</p>
-        @else
-            <div class="zy-grid zy-grid--3">
-                @foreach ($articles as $article)
-                    <x-knowledge.card :article="$article" />
-                @endforeach
-            </div>
-        @endif
+        <div wire:loading.delay.short wire:target="search">
+            <x-ui.skeleton-grid :count="6" />
+        </div>
+
+        <div wire:loading.remove.delay.short wire:target="search">
+            @if ($articles->isEmpty())
+                <x-ui.empty-state
+                    title="No articles match"
+                    description="No published guides match your search yet. Browse all categories or request a quote for project-specific advice."
+                    :lottie="asset('media/lottie/no-connection.lottie')"
+                >
+                    <x-slot:actions>
+                        <a href="{{ route('knowledge.index') }}" class="zy-btn zy-btn--primary">All articles</a>
+                        <a href="{{ route('quote.index') }}" class="zy-btn zy-btn--secondary">Request a quote</a>
+                    </x-slot:actions>
+                </x-ui.empty-state>
+            @else
+                <div class="zy-grid zy-grid--3">
+                    @foreach ($articles as $article)
+                        <x-knowledge.card :article="$article" />
+                    @endforeach
+                </div>
+            @endif
+        </div>
     </div>
 </div>

@@ -5,6 +5,7 @@ namespace App\Domains\Authentication\Livewire;
 use App\Core\Livewire\BaseComponent;
 use App\Domains\Authentication\Actions\AuthenticateUser;
 use App\Domains\Authentication\Data\LoginData;
+use App\Domains\Authentication\Enums\LoginStatus;
 use App\Domains\Authentication\Exceptions\AuthenticationFailedException;
 use App\Domains\Portal\Events\ClientLoggedIn;
 use App\Domains\Portal\Repositories\PortalRepository;
@@ -38,7 +39,7 @@ final class Login extends BaseComponent
         ]);
 
         try {
-            $action->handle(LoginData::fromArray([
+            $result = $action->handle(LoginData::fromArray([
                 'email' => $this->email,
                 'password' => $this->password,
                 'remember' => $this->remember,
@@ -47,6 +48,18 @@ final class Login extends BaseComponent
             ]));
         } catch (AuthenticationFailedException $e) {
             $this->addError('email', $e->getMessage());
+
+            return;
+        }
+
+        if ($result->status === LoginStatus::RequiresEmailVerification) {
+            $this->redirect(route('verification.notice'));
+
+            return;
+        }
+
+        if ($result->status === LoginStatus::RequiresTwoFactor) {
+            $this->redirect(route('login.two-factor'));
 
             return;
         }

@@ -28,7 +28,7 @@ final class PortalService extends BaseService
     public function quotations(Client $client): Collection
     {
         return $client->quotations()
-            ->with('request')
+            ->with(['request', 'documents'])
             ->orderByDesc('updated_at')
             ->get();
     }

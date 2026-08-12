@@ -58,12 +58,22 @@ Filament **Communication** group:
 
 Every channel attempt writes `notification_logs` (`sent`, `failed`, or `skipped` by preference).
 
+## Email bodies
+
+Transactional mail uses the shared Horizon shell:
+
+- Layout: `resources/views/emails/layouts/horizon.blade.php` (Zytech sage/stone)
+- Partials: `emails/partials/{copy,otp,alert,panel,cta}`
+- Auth OTP: `emails/auth/{verification,login,enrollment}-code.blade.php` via sync `AuthOtpMail`
+- Hub mail: `emails/message.blade.php` via queued `TemplatedMail` + Filament template text
+
 ## Wired callers
 
 - Welcome email (registration)
 - Quotation submitted / sent
 - Portal message / support / meeting notices
 
-## Future channels (not started)
+## Future channels (partial)
 
-Roadmap Phase 16–18: Twilio SMS, WhatsApp Business, browser Web Push — same `notify()` pipeline, new channel drivers.
+- **SMS OTP for portal login:** Twilio wired via `TwilioSmsService` + `NotificationChannel::Sms`
+- Roadmap Phase 16–18: broader Twilio SMS marketing/notices, WhatsApp Business, browser Web Push — same hub pipeline where applicable

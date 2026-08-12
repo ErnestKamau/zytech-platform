@@ -8,18 +8,23 @@ use App\Domains\Authentication\Livewire\Register;
 use App\Domains\Authentication\Livewire\ResetPassword;
 use App\Domains\Authentication\Livewire\SecuritySettings;
 use App\Domains\Authentication\Livewire\Sessions;
+use App\Domains\Authentication\Livewire\TwoFactorChallenge;
 use App\Domains\Authentication\Livewire\VerifyEmailNotice;
+use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function (): void {
     Route::get('/login', Login::class)->name('login');
+    Route::get('/login/two-factor', TwoFactorChallenge::class)->name('login.two-factor');
     Route::get('/register', Register::class)->name('register');
     Route::get('/forgot-password', ForgotPassword::class)->name('password.request');
     Route::get('/reset-password/{token}', ResetPassword::class)->name('password.reset');
 });
 
 Route::middleware('auth')->group(function (): void {
+    Route::post('/logout', LogoutController::class)->name('logout');
+
     Route::get('/email/verify', VerifyEmailNotice::class)->name('verification.notice');
     Route::get('/email/verify/{id}/{hash}', VerifyEmailController::class)
         ->middleware(['signed', 'throttle:6,1'])

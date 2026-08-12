@@ -24,7 +24,15 @@
                         @endif
                     </article>
                 @empty
-                    <p class="zy-muted">No public downloads are published yet. Browse the <a href="{{ route('knowledge.index') }}">Knowledge Centre</a> for guides.</p>
+                    <x-ui.empty-state
+                        title="No downloads yet"
+                        description="Public guides and attachments will appear here when published with Knowledge Centre articles."
+                        :lottie="asset('media/lottie/no-connection.lottie')"
+                    >
+                        <x-slot:actions>
+                            <a href="{{ route('knowledge.index') }}" class="zy-btn zy-btn--primary">Browse Knowledge Centre</a>
+                        </x-slot:actions>
+                    </x-ui.empty-state>
                 @endforelse
             </div>
         </div>

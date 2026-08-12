@@ -67,13 +67,13 @@ class AuthenticationPhase2Test extends TestCase
         ]);
         $user->assignRole(RoleType::Client->value);
 
-        $authenticated = app(AuthenticateUser::class)->handle(LoginData::fromArray([
+        $result = app(AuthenticateUser::class)->handle(LoginData::fromArray([
             'email' => 'auth@example.com',
             'password' => 'password123',
             'ip_address' => '127.0.0.1',
         ]));
 
-        $this->assertTrue($authenticated->is($user));
+        $this->assertTrue($result->user?->is($user));
         $this->assertAuthenticatedAs($user);
     }
 

@@ -6,10 +6,30 @@
  * appear to "do nothing" and only reload the same page).
  */
 
+import { DotLottie } from '@lottiefiles/dotlottie-web';
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 
 window.Pusher = Pusher;
+
+function mountLotties(root = document) {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    root.querySelectorAll('[data-zy-lottie]').forEach((canvas) => {
+        if (! (canvas instanceof HTMLCanvasElement) || canvas.dataset.zyLottieMounted === '1') {
+            return;
+        }
+
+        canvas.dataset.zyLottieMounted = '1';
+
+        new DotLottie({
+            canvas,
+            src: canvas.dataset.src ?? '',
+            loop: canvas.dataset.loop !== '0',
+            autoplay: ! reducedMotion && canvas.dataset.autoplay !== '0',
+        });
+    });
+}
 
 try {
     window.Echo = new Echo({
@@ -70,4 +90,9 @@ function bindRealtimeNotifications() {
         });
 }
 
-document.addEventListener('DOMContentLoaded', bindRealtimeNotifications);
+document.addEventListener('DOMContentLoaded', () => {
+    mountLotties();
+    bindRealtimeNotifications();
+});
+
+document.addEventListener('livewire:navigated', () => mountLotties());

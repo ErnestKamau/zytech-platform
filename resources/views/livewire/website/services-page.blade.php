@@ -41,7 +41,16 @@
                 </div>
             @endif
             @if ($services->isEmpty())
-                <p>No published services in this category yet.</p>
+                <x-ui.empty-state
+                    title="No services in this category"
+                    description="Nothing published here yet. Browse the full catalogue or talk to the team about a custom scope."
+                    :lottie="asset('media/lottie/no-connection.lottie')"
+                >
+                    <x-slot:actions>
+                        <a href="{{ route('services.index') }}" class="zy-btn zy-btn--primary">All services</a>
+                        <a href="{{ route('contact') }}" class="zy-btn zy-btn--secondary">Contact</a>
+                    </x-slot:actions>
+                </x-ui.empty-state>
             @else
                 <div class="zy-grid zy-grid--3">
                     @foreach ($services as $service)

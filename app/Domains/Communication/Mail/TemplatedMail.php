@@ -15,9 +15,13 @@ final class TemplatedMail extends Mailable implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
+    /**
+     * @param  array{intent?: string, eyebrow?: string, heading?: string, preheader?: string, ctaUrl?: string, ctaLabel?: string}  $meta
+     */
     public function __construct(
         public string $mailSubject,
         public string $mailBody,
+        public array $meta = [],
     ) {
         $this->onQueue(QueueName::MAIL);
     }
@@ -30,7 +34,17 @@ final class TemplatedMail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            htmlString: nl2br(e($this->mailBody)),
+            view: 'emails.message',
+            with: [
+                'mailSubject' => $this->mailSubject,
+                'mailBody' => $this->mailBody,
+                'intent' => $this->meta['intent'] ?? 'brand',
+                'eyebrow' => $this->meta['eyebrow'] ?? null,
+                'heading' => $this->meta['heading'] ?? $this->mailSubject,
+                'preheader' => $this->meta['preheader'] ?? null,
+                'ctaUrl' => $this->meta['ctaUrl'] ?? null,
+                'ctaLabel' => $this->meta['ctaLabel'] ?? null,
+            ],
         );
     }
 }
