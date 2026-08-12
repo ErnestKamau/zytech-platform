@@ -12,6 +12,7 @@ use App\Core\Traits\HasPublishedState;
 use App\Core\Traits\HasSlug;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Service extends BaseModel
@@ -104,5 +105,12 @@ class Service extends BaseModel
     public function relatedProjects(): HasMany
     {
         return $this->hasMany(ServiceRelatedProject::class)->orderBy('sort_order');
+    }
+
+    public function projects(): BelongsToMany
+    {
+        return $this->belongsToMany(Project::class, 'project_service')
+            ->withPivot('sort_order')
+            ->orderByPivot('sort_order');
     }
 }

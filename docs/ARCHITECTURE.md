@@ -1400,6 +1400,8 @@ Uploads go through the Media domain (Phase 5 — see `docs/MEDIA.md`). Public we
 
 The public service catalogue lives in the Services domain (Phase 6 — see `docs/SERVICES.md`). Cover images still use `config/zyntech-media.php` keys.
 
+The public portfolio lives in the Projects domain (Phase 7 — see `docs/PROJECTS.md`). Project photos and videos still use `config/zyntech-media.php` keys.
+
 Company
 
 Logo

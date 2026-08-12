@@ -15,6 +15,9 @@
     $services = ($publishedServices ?? collect())->isNotEmpty()
         ? $publishedServices
         : collect(config('zyntech-services'));
+    $featuredProjects = ($featuredProjects ?? collect())->isNotEmpty()
+        ? $featuredProjects
+        : collect();
     $images = config('zyntech-media.images');
     $walkway = $images['structural_walkway'];
     $courtyard = $images['commercial_courtyard'];
@@ -106,26 +109,32 @@
             </div>
 
             <div class="zy-grid zy-grid--3">
-                <x-ui.card interactive>
-                    <x-media.cover :src="asset($courtyard['path'])" :alt="$courtyard['alt']" />
-                    <p class="zy-card__eyebrow">Commercial</p>
-                    <p class="zy-card__title">Commercial Courtyard — Stone &amp; Paving</p>
-                    <p class="zy-card__body">Completed · Nairobi</p>
-                </x-ui.card>
+                @if ($featuredProjects->isNotEmpty())
+                    @foreach ($featuredProjects->take(3) as $project)
+                        <x-projects.card :project="$project" />
+                    @endforeach
+                @else
+                    <x-ui.card interactive>
+                        <x-media.cover :src="asset($courtyard['path'])" :alt="$courtyard['alt']" />
+                        <p class="zy-card__eyebrow">Commercial</p>
+                        <p class="zy-card__title">Commercial Courtyard — Stone &amp; Paving</p>
+                        <p class="zy-card__body">Completed · Nairobi</p>
+                    </x-ui.card>
 
-                <x-ui.card interactive>
-                    <x-media.cover :src="asset($ballast['path'])" :alt="$ballast['alt']" />
-                    <p class="zy-card__eyebrow">Site preparation</p>
-                    <p class="zy-card__title">Site Preparation — Ballast Delivery</p>
-                    <p class="zy-card__body">In progress · Nairobi</p>
-                </x-ui.card>
+                    <x-ui.card interactive>
+                        <x-media.cover :src="asset($ballast['path'])" :alt="$ballast['alt']" />
+                        <p class="zy-card__eyebrow">Site preparation</p>
+                        <p class="zy-card__title">Site Preparation — Ballast Delivery</p>
+                        <p class="zy-card__body">In progress · Nairobi</p>
+                    </x-ui.card>
 
-                <x-ui.card interactive featured>
-                    <x-media.cover :src="asset($walkway['path'])" :alt="$walkway['alt']" />
-                    <p class="zy-card__eyebrow">Structural</p>
-                    <p class="zy-card__title">Covered Walkway — Steel Frame</p>
-                    <p class="zy-card__body">In progress · Nairobi</p>
-                </x-ui.card>
+                    <x-ui.card interactive featured>
+                        <x-media.cover :src="asset($walkway['path'])" :alt="$walkway['alt']" />
+                        <p class="zy-card__eyebrow">Structural</p>
+                        <p class="zy-card__title">Covered Walkway — Steel Frame</p>
+                        <p class="zy-card__body">In progress · Nairobi</p>
+                    </x-ui.card>
+                @endif
             </div>
         </div>
     </section>

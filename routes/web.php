@@ -10,6 +10,14 @@ Route::get('/projects', function () {
     return view('pages.projects.index');
 })->name('projects.index');
 
+Route::get('/projects/category/{category}', function (string $category) {
+    return view('pages.projects.index', ['category' => $category]);
+})->name('projects.category');
+
+Route::get('/projects/{slug}', function (string $slug) {
+    return view('pages.projects.show', ['slug' => $slug]);
+})->name('projects.show');
+
 Route::get('/services', function () {
     return view('pages.services.index');
 })->name('services.index');

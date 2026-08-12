@@ -50,6 +50,21 @@ use App\Domains\Media\Listeners\OptimizeUploadedImage;
 use App\Domains\Media\Livewire\MediaPicker;
 use App\Domains\Media\Policies\FolderPolicy;
 use App\Domains\Media\Policies\MediaPolicy;
+use App\Domains\Project\Events\FeaturedProjectChanged;
+use App\Domains\Project\Events\ProjectArchived;
+use App\Domains\Project\Events\ProjectCreated;
+use App\Domains\Project\Events\ProjectPublished;
+use App\Domains\Project\Events\ProjectUpdated;
+use App\Domains\Project\Listeners\BroadcastProjectChanges;
+use App\Domains\Project\Listeners\ClearProjectCache;
+use App\Domains\Project\Listeners\GenerateProjectSeo;
+use App\Domains\Project\Listeners\IndexProject;
+use App\Domains\Project\Livewire\FeaturedProjects as FeaturedProjectComponents;
+use App\Domains\Project\Livewire\RelatedProjects as RelatedProjectComponents;
+use App\Domains\Project\Policies\ProjectCategoryPolicy;
+use App\Domains\Project\Policies\ProjectContentPolicy;
+use App\Domains\Project\Policies\ProjectPolicy;
+use App\Domains\Project\Support\ShareProjects;
 use App\Domains\Service\Events\FeaturedServiceChanged;
 use App\Domains\Service\Events\ServiceArchived;
 use App\Domains\Service\Events\ServiceCreated;
@@ -71,6 +86,8 @@ use App\Domains\User\Policies\RolePolicy;
 use App\Domains\User\Policies\UserPolicy;
 use App\Domains\Website\Livewire\AboutPage;
 use App\Domains\Website\Livewire\ContactForm;
+use App\Domains\Website\Livewire\ProjectShowPage;
+use App\Domains\Website\Livewire\ProjectsPage;
 use App\Domains\Website\Livewire\ServiceShowPage;
 use App\Domains\Website\Livewire\ServicesPage;
 use App\Infrastructure\Cache\ApplicationCache;
@@ -88,6 +105,13 @@ use App\Models\MediaTag;
 use App\Models\NavigationMenu;
 use App\Models\Partner;
 use App\Models\Permission;
+use App\Models\Project;
+use App\Models\ProjectBeforeAfter;
+use App\Models\ProjectCategory;
+use App\Models\ProjectGalleryItem;
+use App\Models\ProjectMilestone;
+use App\Models\ProjectProgressUpdate;
+use App\Models\ProjectStatistic;
 use App\Models\Role;
 use App\Models\Service;
 use App\Models\ServiceCategory;
@@ -117,6 +141,10 @@ class AppServiceProvider extends ServiceProvider
     {
         Livewire::component('website.contact-form', ContactForm::class);
         Livewire::component('website.about-page', AboutPage::class);
+        Livewire::component('website.projects-page', ProjectsPage::class);
+        Livewire::component('website.project-show', ProjectShowPage::class);
+        Livewire::component('project.featured-projects', FeaturedProjectComponents::class);
+        Livewire::component('project.related-projects', RelatedProjectComponents::class);
         Livewire::component('website.services-page', ServicesPage::class);
         Livewire::component('website.service-show', ServiceShowPage::class);
         Livewire::component('service.featured-services', FeaturedServices::class);
@@ -133,11 +161,14 @@ class AppServiceProvider extends ServiceProvider
             'pages.contact.index',
             'pages.services.index',
             'pages.services.show',
+            'pages.projects.index',
+            'pages.projects.show',
         ];
 
         View::composer($websiteViews, ShareConfiguration::class);
         View::composer($websiteViews, ShareCompany::class);
         View::composer(['pages.home', 'pages.services.index'], ShareServices::class);
+        View::composer(['pages.home', 'pages.projects.index'], ShareProjects::class);
 
         Gate::policy(User::class, UserPolicy::class);
         Gate::policy(Role::class, RolePolicy::class);
@@ -164,6 +195,13 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(ServiceProcess::class, ServiceContentPolicy::class);
         Gate::policy(ServiceStatistic::class, ServiceContentPolicy::class);
         Gate::policy(ServiceRelatedProject::class, ServiceContentPolicy::class);
+        Gate::policy(Project::class, ProjectPolicy::class);
+        Gate::policy(ProjectCategory::class, ProjectCategoryPolicy::class);
+        Gate::policy(ProjectGalleryItem::class, ProjectContentPolicy::class);
+        Gate::policy(ProjectMilestone::class, ProjectContentPolicy::class);
+        Gate::policy(ProjectProgressUpdate::class, ProjectContentPolicy::class);
+        Gate::policy(ProjectStatistic::class, ProjectContentPolicy::class);
+        Gate::policy(ProjectBeforeAfter::class, ProjectContentPolicy::class);
 
         Gate::define('viewPulse', function (?User $user = null): bool {
             return $this->app->environment('local') || $user !== null;
@@ -243,5 +281,24 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(ServiceCreated::class, IndexService::class);
         Event::listen(ServicePublished::class, IndexService::class);
         Event::listen(ServiceUpdated::class, IndexService::class);
+
+        $projectEvents = [
+            ProjectCreated::class,
+            ProjectPublished::class,
+            ProjectUpdated::class,
+            ProjectArchived::class,
+            FeaturedProjectChanged::class,
+        ];
+
+        foreach ($projectEvents as $event) {
+            Event::listen($event, ClearProjectCache::class);
+            Event::listen($event, BroadcastProjectChanges::class);
+        }
+
+        Event::listen(ProjectCreated::class, GenerateProjectSeo::class);
+        Event::listen(ProjectUpdated::class, GenerateProjectSeo::class);
+        Event::listen(ProjectCreated::class, IndexProject::class);
+        Event::listen(ProjectPublished::class, IndexProject::class);
+        Event::listen(ProjectUpdated::class, IndexProject::class);
     }
 }

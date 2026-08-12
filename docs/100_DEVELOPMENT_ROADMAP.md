@@ -3470,20 +3470,36 @@ README
 
 # Definition of Done
 
-- [ ] Project management complete
+- [x] Project management complete
 - [ ] Interactive map operational
-- [ ] Before & After slider complete
-- [ ] Timeline operational
-- [ ] Gallery complete
-- [ ] Video support complete
-- [ ] Search operational
-- [ ] Redis integrated
-- [ ] Queues operational
-- [ ] Reverb broadcasting operational
-- [ ] SEO complete
+- [x] Before & After slider complete
+- [x] Timeline operational
+- [x] Gallery complete
+- [x] Video support complete
+- [x] Search operational
+- [x] Redis integrated
+- [x] Queues operational
+- [x] Reverb broadcasting operational
+- [x] SEO complete
 - [ ] Accessibility reviewed
 - [ ] Tests passing
-- [ ] Documentation updated
+- [x] Documentation updated
+
+---
+
+# Phase 7 Notes
+
+Implemented under domain architecture:
+
+```text
+app/Domains/Project/           # portfolio, categories, timeline, gallery, map data
+app/Filament/Resources/{Projects,ProjectCategories}/
+docs/PROJECTS.md
+```
+
+Public site images and videos remain in `public/media/zyntech` and continue to be referenced from `config/zyntech-media.php`. Location grid uses stored coordinates; full interactive Kenya map is deferred. Service pages link to real projects via `project_service`.
+
+---
 
 # =============================================================================
 # PHASE 8

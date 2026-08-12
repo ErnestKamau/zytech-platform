@@ -17,7 +17,7 @@ Public photos and videos stay in `public/media/zyntech` and continue to be refer
 - Service catalogue (status, visibility, featured, pricing, SEO)
 - Categories
 - Features, process steps, per-service FAQs, statistics
-- Related project teasers (until the Projects domain lands)
+- Related projects linked via the `project_service` pivot
 
 Canonical models live in `App\Models`: `Service`, `ServiceCategory`, `ServiceFeature`, `ServiceProcess`, `ServiceFaq`, `ServiceStatistic`, `ServiceRelatedProject`.
 
@@ -59,7 +59,7 @@ Reusable Livewire: `service.featured-services`, `service.related-services`, `ser
 
 Quotation CTA on listing and detail points at `/contact` until the Quotation domain.
 
-Related project teasers link to `/projects`. Real project relations wait for Phase 7. Related articles wait for the Knowledge domain.
+Related projects link to `/projects/{slug}` when connected through the `project_service` pivot. Related articles wait for the Knowledge domain.
 
 ## SEO
 

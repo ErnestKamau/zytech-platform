@@ -1,5 +1,5 @@
 /**
- * Projects listing — page-specific overrides only.
+ * Projects listing and detail — page-specific overrides only.
  */
 
 .zy-page-projects {
@@ -22,12 +22,191 @@
     padding-bottom: var(--zy-space-16);
 }
 
-.zy-project-card__cover {
-    margin: calc(var(--zy-space-6) * -1) calc(var(--zy-space-6) * -1) 0;
-    margin-bottom: var(--zy-space-4);
-    aspect-ratio: 16 / 10;
-    border-radius: var(--zy-radius-lg) var(--zy-radius-lg) 0 0;
-    background: var(--zy-gradient-hero);
+.zy-project-card-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+}
+
+.zy-project-cats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--zy-space-3);
+    padding-block: 0 var(--zy-space-4);
+}
+
+.zy-project-cat {
+    padding: var(--zy-space-2) var(--zy-space-4);
+    border: 1px solid var(--zy-color-border);
+    border-radius: var(--zy-radius-full);
+    color: inherit;
+    font-size: var(--zy-text-sm);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.zy-project-cat.is-active,
+.zy-project-cat:hover,
+.zy-project-cat:focus-visible {
+    border-color: var(--zy-sage-300);
+    background: var(--zy-color-surface);
+}
+
+.zy-project-detail {
+    display: grid;
+    gap: var(--zy-space-10);
+}
+
+.zy-project-detail__copy p,
+.zy-project-case-study p {
+    max-width: 62ch;
+}
+
+.zy-project-case-study {
+    margin-top: var(--zy-space-6);
+}
+
+.zy-project-meta {
+    display: grid;
+    gap: var(--zy-space-3);
+    align-content: start;
+    padding: var(--zy-space-6);
+    border: 1px solid var(--zy-color-border);
+    border-radius: var(--zy-radius-lg);
+    background: var(--zy-color-surface);
+}
+
+.zy-project-progress {
+    display: grid;
+    gap: var(--zy-space-2);
+    margin-top: var(--zy-space-6);
+}
+
+.zy-project-progress__bar {
+    height: 0.5rem;
+    border-radius: var(--zy-radius-full);
+    background: var(--zy-color-border);
     overflow: hidden;
-    transition: filter var(--zy-duration-base) var(--zy-ease);
+}
+
+.zy-project-progress__bar span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--zy-sage-500);
+}
+
+.zy-project-timeline {
+    display: grid;
+    gap: var(--zy-space-6);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.zy-project-timeline li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--zy-space-4);
+    align-items: start;
+    opacity: 0.75;
+}
+
+.zy-project-timeline li.is-complete {
+    opacity: 1;
+}
+
+.zy-project-timeline span {
+    font-size: var(--zy-text-sm);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--zy-color-muted);
+}
+
+.zy-project-map {
+    display: grid;
+    gap: var(--zy-space-4);
+}
+
+.zy-project-map__item {
+    display: grid;
+    grid-template-columns: 8rem 1fr;
+    gap: var(--zy-space-4);
+    align-items: center;
+    padding: var(--zy-space-4);
+    border: 1px solid var(--zy-color-border);
+    border-radius: var(--zy-radius-lg);
+    color: inherit;
+    text-decoration: none;
+    background: var(--zy-color-surface);
+}
+
+.zy-project-map__item img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--zy-radius-md);
+}
+
+.zy-project-comparisons {
+    display: grid;
+    gap: var(--zy-space-8);
+}
+
+.zy-project-compare {
+    display: grid;
+    gap: var(--zy-space-3);
+}
+
+.zy-project-compare__stage {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--zy-radius-lg);
+    aspect-ratio: 16 / 10;
+}
+
+.zy-project-compare__stage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.zy-project-compare__before {
+    position: absolute;
+    inset: 0 auto 0 0;
+    overflow: hidden;
+    border-right: 2px solid #fff;
+}
+
+.zy-project-compare__before img {
+    width: 100vw;
+    max-width: none;
+    height: 100%;
+    object-fit: cover;
+}
+
+.zy-project-updates {
+    display: grid;
+    gap: var(--zy-space-4);
+}
+
+@media (min-width: 768px) {
+    .zy-project-detail {
+        grid-template-columns: minmax(0, 1fr) 18rem;
+        align-items: start;
+    }
+
+    .zy-project-map {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .zy-project-updates {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 1024px) {
+    .zy-project-map {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
 }

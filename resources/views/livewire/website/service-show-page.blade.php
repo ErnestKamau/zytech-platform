@@ -126,35 +126,39 @@
         </section>
     @endif
 
-    @if ($relatedProjects->isNotEmpty())
+    @if ($linkedProjects->isNotEmpty() || $teaserProjects->isNotEmpty())
         <section class="zy-section zy-section--alt">
             <div class="zy-container">
                 <div class="zy-section__header">
                     <p class="zy-section__eyebrow">Related projects</p>
                     <h2>Where this service shows up on site</h2>
-                    <p>Full project records land in the next phase. These teasers use the current site photos.</p>
                 </div>
                 <div class="zy-grid zy-grid--3">
-                    @foreach ($relatedProjects as $project)
-                        @php
-                            $projectImage = $project->image_key && isset($images[$project->image_key])
-                                ? $images[$project->image_key]
-                                : null;
-                        @endphp
-                        <x-ui.card interactive>
-                            @if ($projectImage)
-                                <x-media.cover
-                                    :src="asset($projectImage['path'])"
-                                    :alt="$projectImage['alt']"
-                                />
-                            @endif
-                            <p class="zy-card__title" style="margin-top: var(--zy-space-2);">{{ $project->title }}</p>
-                            @if ($project->summary)
-                                <p class="zy-card__body">{{ $project->summary }}</p>
-                            @endif
-                            <a href="{{ route('projects.index') }}" class="zy-btn zy-btn--ghost">View projects</a>
-                        </x-ui.card>
-                    @endforeach
+                    @if ($linkedProjects->isNotEmpty())
+                        @foreach ($linkedProjects as $project)
+                            <x-projects.card :project="$project" />
+                        @endforeach
+                    @else
+                        @foreach ($teaserProjects as $project)
+                            @php
+                                $projectImage = $project->image_key && isset($images[$project->image_key])
+                                    ? $images[$project->image_key]
+                                    : null;
+                            @endphp
+                            <x-ui.card interactive>
+                                @if ($projectImage)
+                                    <x-media.cover
+                                        :src="asset($projectImage['path'])"
+                                        :alt="$projectImage['alt']"
+                                    />
+                                @endif
+                                <p class="zy-card__title" style="margin-top: var(--zy-space-2);">{{ $project->title }}</p>
+                                @if ($project->summary)
+                                    <p class="zy-card__body">{{ $project->summary }}</p>
+                                @endif
+                            </x-ui.card>
+                        @endforeach
+                    @endif
                 </div>
             </div>
         </section>
