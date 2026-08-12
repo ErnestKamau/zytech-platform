@@ -25,6 +25,7 @@ use Spatie\Permission\Traits\HasRoles;
     'email',
     'type',
     'phone',
+    'avatar_path',
     'password',
     'failed_login_attempts',
     'locked_at',
@@ -105,6 +106,15 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     public function isClient(): bool
     {
         return $this->type === UserType::Client;
+    }
+
+    public function avatarUrl(): ?string
+    {
+        if (! filled($this->avatar_path)) {
+            return null;
+        }
+
+        return \Illuminate\Support\Facades\Storage::disk('public')->url($this->avatar_path);
     }
 
     public function isStaffOrAdmin(): bool

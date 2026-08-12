@@ -6,15 +6,18 @@
         icon="shield"
     />
 
-    <div class="zy-portal-card">
+    <div class="zy-account-card">
         @if (session('status'))
             <p class="zy-alert zy-alert--success" role="status">{{ session('status') }}</p>
         @endif
 
-        <form wire:submit="updatePassword" class="zy-stack">
+        <form wire:submit="updatePassword" class="zy-account-section">
             <div class="zy-portal-panel__title-wrap">
                 <span class="zy-portal-panel__icon" aria-hidden="true"><x-portal.icon name="shield" /></span>
-                <h2 class="zy-portal-card__subtitle">Change password</h2>
+                <div>
+                    <h2 class="zy-portal-card__subtitle">Password</h2>
+                    <p class="zy-muted">Log in with your password instead of using temporary login codes.</p>
+                </div>
             </div>
 
             <div class="zy-field">
@@ -23,42 +26,57 @@
                 @error('current_password') <p class="zy-field-error">{{ $message }}</p> @enderror
             </div>
 
-            <div class="zy-field">
-                <label class="zy-label" for="password">New password</label>
-                <input id="password" type="password" class="zy-input" wire:model="password" autocomplete="new-password">
-                @error('password') <p class="zy-field-error">{{ $message }}</p> @enderror
+            <div class="zy-account-field-row">
+                <div class="zy-field">
+                    <label class="zy-label" for="password">New password</label>
+                    <input id="password" type="password" class="zy-input" wire:model="password" autocomplete="new-password">
+                    @error('password') <p class="zy-field-error">{{ $message }}</p> @enderror
+                </div>
+                <div class="zy-field">
+                    <label class="zy-label" for="password_confirmation">Confirm password</label>
+                    <input id="password_confirmation" type="password" class="zy-input" wire:model="password_confirmation" autocomplete="new-password">
+                </div>
             </div>
 
-            <div class="zy-field">
-                <label class="zy-label" for="password_confirmation">Confirm password</label>
-                <input id="password_confirmation" type="password" class="zy-input" wire:model="password_confirmation" autocomplete="new-password">
+            <div class="zy-account-actions">
+                <button type="submit" class="zy-btn zy-btn--primary">Change password</button>
             </div>
-
-            <button type="submit" class="zy-btn zy-btn--primary">Update password</button>
         </form>
 
-        <div class="zy-stack">
-            <h2 class="zy-portal-card__subtitle">Phone for SMS OTP</h2>
-            <p class="zy-muted">International format required for Twilio, e.g. +254712345678.</p>
+        <div class="zy-account-section">
+            <div class="zy-portal-panel__title-wrap">
+                <span class="zy-portal-panel__icon" aria-hidden="true"><x-portal.icon name="sessions" /></span>
+                <div>
+                    <h2 class="zy-portal-card__subtitle">Phone for SMS OTP</h2>
+                    <p class="zy-muted">International format required for Twilio, e.g. +254712345678.</p>
+                </div>
+            </div>
             <form wire:submit="savePhone" class="zy-stack">
                 <div class="zy-field">
                     <label class="zy-label" for="phone">Phone</label>
                     <input id="phone" type="tel" class="zy-input" wire:model="phone" placeholder="+254712345678" autocomplete="tel">
                     @error('phone') <p class="zy-field-error">{{ $message }}</p> @enderror
                 </div>
-                <button type="submit" class="zy-btn zy-btn--secondary">Save phone</button>
+                <div class="zy-account-actions">
+                    <button type="submit" class="zy-btn zy-btn--secondary">Save phone</button>
+                </div>
             </form>
         </div>
 
-        <div class="zy-stack">
-            <h2 class="zy-portal-card__subtitle">Two-factor authentication</h2>
-            <p class="zy-muted">
-                @if ($mfa_enabled)
-                    2FA is on. At sign-in you will choose email or SMS for a one-time code.
-                @else
-                    After your password, Zytech will ask for a one-time code by email and/or SMS.
-                @endif
-            </p>
+        <div class="zy-account-section">
+            <div class="zy-portal-panel__title-wrap">
+                <span class="zy-portal-panel__icon" aria-hidden="true"><x-portal.icon name="shield" /></span>
+                <div>
+                    <h2 class="zy-portal-card__subtitle">Two-factor authentication</h2>
+                    <p class="zy-muted">
+                        @if ($mfa_enabled)
+                            2FA is on. At sign-in you will choose email or SMS for a one-time code.
+                        @else
+                            After your password, Zytech will ask for a one-time code by email and/or SMS.
+                        @endif
+                    </p>
+                </div>
+            </div>
 
             @if ($mfa_enabled)
                 <button type="button" class="zy-btn zy-btn--danger" wire:click="disableTwoFactor">Disable 2FA</button>
@@ -99,18 +117,12 @@
                         <input id="enrollment_code" type="text" inputmode="numeric" maxlength="6" class="zy-input" wire:model="enrollment_code" autocomplete="one-time-code">
                         @error('enrollment_code') <p class="zy-field-error">{{ $message }}</p> @enderror
                     </div>
-                    <button type="button" class="zy-btn zy-btn--primary" wire:click="confirmEnableTwoFactor">Confirm and enable 2FA</button>
-                    <button type="button" class="zy-btn zy-btn--ghost" wire:click="beginEnableTwoFactor">Resend code</button>
+                    <div class="zy-account-actions">
+                        <button type="button" class="zy-btn zy-btn--ghost" wire:click="beginEnableTwoFactor">Resend code</button>
+                        <button type="button" class="zy-btn zy-btn--primary" wire:click="confirmEnableTwoFactor">Confirm and enable 2FA</button>
+                    </div>
                 @endif
             @endif
-        </div>
-
-        <div class="zy-stack">
-            <h2 class="zy-portal-card__subtitle">Sign out</h2>
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="zy-btn zy-btn--danger">Sign out</button>
-            </form>
         </div>
     </div>
 </div>

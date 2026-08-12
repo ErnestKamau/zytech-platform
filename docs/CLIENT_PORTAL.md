@@ -52,6 +52,8 @@ Handcrafted CSS in `resources/css/portal/app.css` (shared `--zy-*` tokens from t
 
 **Shell:** Glass icon rail (desktop **icons-only by default**, expand for labels) + **full-height hamburger** toggle strip + frosted content stage + topbar + mobile labeled drawer. Collapse preference stored in `localStorage` (`zy-portal-nav-collapsed`).
 
+**Rail chrome:** Avatar + name + email sit at the **top** of the nav (no Zytech Portal brand block in the rail). Foot: Public site, scenic day/night `<x-portal.theme-switch>`, and muted-danger Sign out.
+
 **Page recipes**
 
 | Page | Pattern |
@@ -62,7 +64,8 @@ Handcrafted CSS in `resources/css/portal/app.css` (shared `--zy-*` tokens from t
 | Quotations | Status-pill rows; View / Download / Print PDF (DomPDF); search / filter / Excel |
 | Messages / Support | Master–detail split with elevated selection |
 | Notifications | Toolbar + unread filters + Excel export; Lottie empty |
-| Account | Narrow glass form cards with icon page headers |
+| Account (Profile) | Avatar upload/remove (`users.avatar_path`), personal fields, Cancel/Save |
+| Account (Security / Sessions / Settings) | Sectioned glass cards; elevated session rows; overview + quick links |
 
 Shared: `<x-portal.list-toolbar>`, `<x-ui.empty-state>` / `<x-ui.skeleton-grid>` on list loading. Icons are Heroicons via `x-portal.icon`. Glass is limited to shell, hero, and panels.
 

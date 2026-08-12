@@ -62,6 +62,7 @@
             ->implode('');
         $helloName = explode(' ', (string) ($user?->name ?? 'there'))[0] ?: 'there';
         $pageTitle = $title ?? 'Portal';
+        $avatarUrl = $user?->avatarUrl();
     @endphp
 
     <div class="zy-portal-shell">
@@ -80,17 +81,24 @@
             <div class="zy-portal__backdrop" @click="navOpen = false" aria-hidden="true"></div>
 
             <aside class="zy-portal__nav" id="zy-portal-nav">
-                <div class="zy-portal__brand-row">
-                    <a href="{{ route('home') }}" class="zy-portal__brand">
-                        <span class="zy-portal__brand-mark" aria-hidden="true">Z</span>
-                        <span class="zy-portal__brand-text">
-                            Zytech
-                            <span>Portal</span>
-                        </span>
-                    </a>
-                </div>
-
                 @auth
+                    <a
+                        href="{{ route('account.profile') }}"
+                        class="zy-portal__user zy-portal__user--header"
+                        title="{{ $user->name }}"
+                        @click="navOpen = false"
+                    >
+                        @if ($avatarUrl)
+                            <img src="{{ $avatarUrl }}" alt="" class="zy-portal__avatar zy-portal__avatar--image">
+                        @else
+                            <span class="zy-portal__avatar" aria-hidden="true">{{ $initials }}</span>
+                        @endif
+                        <div class="zy-portal__user-copy">
+                            <span class="zy-portal__user-name">{{ $user->name }}</span>
+                            <span class="zy-portal__user-meta">{{ $user->email }}</span>
+                        </div>
+                    </a>
+
                     @if ($hasPortal || request()->routeIs('portal.*'))
                         <p class="zy-portal__section">Workspace</p>
                         <nav class="zy-portal__links" aria-label="Client portal">
@@ -116,27 +124,18 @@
                 </nav>
 
                 <div class="zy-portal__nav-foot">
-                    @auth
-                        <div class="zy-portal__user" :title="'{{ $user->name }}'">
-                            <span class="zy-portal__avatar" aria-hidden="true">{{ $initials }}</span>
-                            <div class="zy-portal__user-copy">
-                                <span class="zy-portal__user-name">{{ $user->name }}</span>
-                                <span class="zy-portal__user-meta">{{ $user->email }}</span>
-                            </div>
-                        </div>
-                    @endauth
-                    <div class="zy-portal__toolbar">
-                        <a href="{{ route('home') }}" class="zy-btn zy-btn--ghost zy-btn--sm zy-portal__foot-link" title="Public site" aria-label="Public site">
-                            <x-portal.icon name="globe" />
-                            <span class="zy-portal__foot-label">Public site</span>
-                        </a>
-                        <x-ui.theme-toggle />
-                    </div>
+                    <a href="{{ route('home') }}" class="zy-portal__foot-item" title="Public site" aria-label="Public site">
+                        <x-portal.icon name="globe" />
+                        <span class="zy-portal__foot-label">Public site</span>
+                    </a>
+
+                    <x-portal.theme-switch class="zy-portal__foot-theme" />
+
                     @auth
                         <form method="POST" action="{{ route('logout') }}" class="zy-portal__logout">
                             @csrf
-                            <button type="submit" class="zy-btn zy-btn--ghost zy-btn--sm zy-portal__logout-btn" title="Sign out" aria-label="Sign out">
-                                <x-portal.icon name="arrow-right" />
+                            <button type="submit" class="zy-portal__foot-item zy-portal__foot-item--danger" title="Sign out" aria-label="Sign out">
+                                <x-portal.icon name="logout" />
                                 <span class="zy-portal__foot-label">Sign out</span>
                             </button>
                         </form>
@@ -181,7 +180,11 @@
                             </a>
                         @endif
                         @auth
-                            <span class="zy-portal__avatar zy-portal__avatar--top" aria-hidden="true">{{ $initials }}</span>
+                            @if ($avatarUrl)
+                                <img src="{{ $avatarUrl }}" alt="" class="zy-portal__avatar zy-portal__avatar--top zy-portal__avatar--image">
+                            @else
+                                <span class="zy-portal__avatar zy-portal__avatar--top" aria-hidden="true">{{ $initials }}</span>
+                            @endif
                         @endauth
                     </div>
                 </header>
