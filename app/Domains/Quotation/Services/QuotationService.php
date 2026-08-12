@@ -30,6 +30,7 @@ final class QuotationService extends BaseService
                 'reference_number' => ReferenceNumber::forQuotation(),
                 'quotation_request_id' => $request->id,
                 'sales_lead_id' => $request->sales_lead_id,
+                'client_id' => $request->client_id,
                 'title' => $title ?? 'Quotation for '.$request->full_name,
                 'type' => QuotationType::Standard,
                 'status' => QuotationStatus::Draft,

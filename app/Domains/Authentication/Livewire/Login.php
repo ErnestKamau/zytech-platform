@@ -6,6 +6,8 @@ use App\Core\Livewire\BaseComponent;
 use App\Domains\Authentication\Actions\AuthenticateUser;
 use App\Domains\Authentication\Data\LoginData;
 use App\Domains\Authentication\Exceptions\AuthenticationFailedException;
+use App\Domains\Portal\Events\ClientLoggedIn;
+use App\Domains\Portal\Repositories\PortalRepository;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
@@ -24,7 +26,7 @@ final class Login extends BaseComponent
     public function mount(): void
     {
         if (Auth::check()) {
-            $this->redirectIntended(route('account.profile'), navigate: true);
+            $this->redirectIntended($this->homeRoute(), navigate: true);
         }
     }
 
@@ -49,7 +51,12 @@ final class Login extends BaseComponent
             return;
         }
 
-        $this->redirectIntended(route('account.profile'), navigate: true);
+        $user = Auth::user();
+        if ($user !== null && app(PortalRepository::class)->clientForUser($user) !== null) {
+            event(new ClientLoggedIn($user));
+        }
+
+        $this->redirectIntended($this->homeRoute(), navigate: true);
     }
 
     public function render(): View
@@ -60,5 +67,16 @@ final class Login extends BaseComponent
                 'asideHeadline' => 'Sign in to your projects.',
                 'asideSupport' => 'Track your build across Nairobi and beyond.',
             ]);
+    }
+
+    private function homeRoute(): string
+    {
+        $user = Auth::user();
+
+        if ($user !== null && app(PortalRepository::class)->clientForUser($user) !== null) {
+            return route('portal.dashboard');
+        }
+
+        return route('account.profile');
     }
 }

@@ -80,6 +80,22 @@ use App\Domains\Media\Listeners\OptimizeUploadedImage;
 use App\Domains\Media\Livewire\MediaPicker;
 use App\Domains\Media\Policies\FolderPolicy;
 use App\Domains\Media\Policies\MediaPolicy;
+use App\Domains\Portal\Events\ClientLoggedIn;
+use App\Domains\Portal\Events\MeetingCancelled;
+use App\Domains\Portal\Events\MeetingScheduled;
+use App\Domains\Portal\Events\MessageSent;
+use App\Domains\Portal\Events\NotificationCreated;
+use App\Domains\Portal\Events\PortalDocumentDownloaded;
+use App\Domains\Portal\Events\TicketClosed;
+use App\Domains\Portal\Events\TicketOpened;
+use App\Domains\Portal\Listeners\BroadcastPortalUpdate;
+use App\Domains\Portal\Listeners\ClearDashboardCache;
+use App\Domains\Portal\Listeners\LogPortalActivity;
+use App\Domains\Portal\Listeners\SendEmailNotification;
+use App\Domains\Portal\Policies\AnnouncementPolicy;
+use App\Domains\Portal\Policies\MeetingPolicy;
+use App\Domains\Portal\Policies\MessagePolicy;
+use App\Domains\Portal\Policies\SupportPolicy;
 use App\Domains\Project\Events\FeaturedProjectChanged;
 use App\Domains\Project\Events\ProjectArchived;
 use App\Domains\Project\Events\ProjectCreated;
@@ -166,9 +182,12 @@ use App\Models\LeadSource;
 use App\Models\Media;
 use App\Models\MediaFolder;
 use App\Models\MediaTag;
+use App\Models\MeetingRequest;
 use App\Models\NavigationMenu;
 use App\Models\Partner;
 use App\Models\Permission;
+use App\Models\PortalAnnouncement;
+use App\Models\PortalConversation;
 use App\Models\Project;
 use App\Models\ProjectBeforeAfter;
 use App\Models\ProjectCategory;
@@ -195,6 +214,7 @@ use App\Models\ServiceRelatedProject;
 use App\Models\ServiceStatistic;
 use App\Models\Setting;
 use App\Models\SiteVisit;
+use App\Models\SupportTicket;
 use App\Models\Testimonial;
 use App\Models\User;
 use Illuminate\Support\Facades\Event;
@@ -312,6 +332,10 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(ClientNote::class, ClientNotePolicy::class);
         Gate::policy(ClientTag::class, ClientPolicy::class);
         Gate::policy(ClientGroup::class, ClientPolicy::class);
+        Gate::policy(PortalConversation::class, MessagePolicy::class);
+        Gate::policy(SupportTicket::class, SupportPolicy::class);
+        Gate::policy(MeetingRequest::class, MeetingPolicy::class);
+        Gate::policy(PortalAnnouncement::class, AnnouncementPolicy::class);
 
         Gate::define('viewPulse', function (?User $user = null): bool {
             return $this->app->environment('local') || $user !== null;
@@ -470,5 +494,33 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(ClientCreated::class, IndexClient::class);
         Event::listen(ClientUpdated::class, IndexClient::class);
         Event::listen(ClientArchived::class, IndexClient::class);
+
+        $portalEvents = [
+            MessageSent::class,
+            TicketOpened::class,
+            TicketClosed::class,
+            MeetingScheduled::class,
+            MeetingCancelled::class,
+            NotificationCreated::class,
+            PortalDocumentDownloaded::class,
+        ];
+
+        foreach ($portalEvents as $event) {
+            Event::listen($event, BroadcastPortalUpdate::class);
+            Event::listen($event, ClearDashboardCache::class);
+        }
+
+        Event::listen(MessageSent::class, SendEmailNotification::class);
+        Event::listen(TicketOpened::class, SendEmailNotification::class);
+        Event::listen(MeetingScheduled::class, SendEmailNotification::class);
+        Event::listen(NotificationCreated::class, SendEmailNotification::class);
+
+        Event::listen(ClientLoggedIn::class, LogPortalActivity::class);
+        Event::listen(MessageSent::class, LogPortalActivity::class);
+        Event::listen(TicketOpened::class, LogPortalActivity::class);
+        Event::listen(TicketClosed::class, LogPortalActivity::class);
+        Event::listen(MeetingScheduled::class, LogPortalActivity::class);
+        Event::listen(MeetingCancelled::class, LogPortalActivity::class);
+        Event::listen(PortalDocumentDownloaded::class, LogPortalActivity::class);
     }
 }

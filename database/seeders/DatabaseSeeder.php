@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             KnowledgeSeeder::class,
             QuotationSeeder::class,
             ClientSeeder::class,
+            PortalSeeder::class,
         ]);
     }
 }

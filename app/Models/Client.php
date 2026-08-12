@@ -131,4 +131,34 @@ class Client extends BaseModel
     {
         return $this->hasMany(SalesLead::class);
     }
+
+    public function conversations(): HasMany
+    {
+        return $this->hasMany(PortalConversation::class)->orderByDesc('last_message_at');
+    }
+
+    public function portalNotifications(): HasMany
+    {
+        return $this->hasMany(PortalNotification::class)->orderByDesc('created_at');
+    }
+
+    public function supportTickets(): HasMany
+    {
+        return $this->hasMany(SupportTicket::class)->orderByDesc('created_at');
+    }
+
+    public function meetingRequests(): HasMany
+    {
+        return $this->hasMany(MeetingRequest::class)->orderByDesc('scheduled_at');
+    }
+
+    public function favorites(): HasMany
+    {
+        return $this->hasMany(PortalFavorite::class);
+    }
+
+    public function downloads(): HasMany
+    {
+        return $this->hasMany(PortalDownload::class)->orderByDesc('downloaded_at');
+    }
 }

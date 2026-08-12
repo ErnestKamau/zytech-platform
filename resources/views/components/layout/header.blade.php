@@ -53,9 +53,16 @@
         <div class="zy-header__actions">
             <x-ui.theme-toggle />
             @auth
-                <a href="{{ route('account.profile') }}" class="zy-btn zy-btn--secondary zy-btn--sm zy-header__cta">Account</a>
+                @php
+                    $portalHome = auth()->user()->clientProfile?->portal_access_granted_at
+                        ? route('portal.dashboard')
+                        : route('account.profile');
+                @endphp
+                <a href="{{ $portalHome }}" class="zy-btn zy-btn--secondary zy-btn--sm zy-header__cta">
+                    {{ auth()->user()->clientProfile?->portal_access_granted_at ? 'Portal' : 'Account' }}
+                </a>
             @else
-                <a href="{{ route('login') }}" class="zy-btn zy-btn--secondary zy-btn--sm zy-header__cta">Sign in</a>
+                <a href="{{ route('login') }}" class="zy-btn zy-btn--secondary zy-btn--sm zy-header__cta">Client login</a>
             @endauth
             <a href="{{ route('quote.index') }}" class="zy-btn zy-btn--primary zy-btn--sm zy-header__cta">Request a Quote</a>
             <button
@@ -91,9 +98,16 @@
             </nav>
             <div class="zy-header__sheet-actions">
                 @auth
-                    <a href="{{ route('account.profile') }}" class="zy-btn zy-btn--secondary" @click="menuOpen = false">Account</a>
+                    @php
+                        $portalHome = auth()->user()->clientProfile?->portal_access_granted_at
+                            ? route('portal.dashboard')
+                            : route('account.profile');
+                    @endphp
+                    <a href="{{ $portalHome }}" class="zy-btn zy-btn--secondary" @click="menuOpen = false">
+                        {{ auth()->user()->clientProfile?->portal_access_granted_at ? 'Portal' : 'Account' }}
+                    </a>
                 @else
-                    <a href="{{ route('login') }}" class="zy-btn zy-btn--secondary" @click="menuOpen = false">Sign in</a>
+                    <a href="{{ route('login') }}" class="zy-btn zy-btn--secondary" @click="menuOpen = false">Client login</a>
                 @endauth
                 <a href="{{ route('quote.index') }}" class="zy-btn zy-btn--primary" @click="menuOpen = false">Request a Quote</a>
             </div>

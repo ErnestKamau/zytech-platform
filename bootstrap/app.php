@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\CheckPlatformMaintenance;
+use App\Http\Middleware\EnsurePortalAccess;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -16,6 +17,8 @@ return Application::configure(basePath: dirname(__DIR__))
         then: function (): void {
             Route::middleware('web')
                 ->group(base_path('routes/auth.php'));
+            Route::middleware('web')
+                ->group(base_path('routes/portal.php'));
         },
         commands: __DIR__.'/../routes/console.php',
         channels: __DIR__.'/../routes/channels.php',
@@ -33,6 +36,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => RoleMiddleware::class,
             'permission' => PermissionMiddleware::class,
             'role_or_permission' => RoleOrPermissionMiddleware::class,
+            'portal' => EnsurePortalAccess::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -6077,17 +6077,17 @@ API Documentation
 
 # Definition of Done
 
-- [ ] Dashboard complete
-- [ ] Messaging operational
-- [ ] Project tracking complete
-- [ ] Document Centre operational
-- [ ] Meeting scheduling working
-- [ ] Notifications operational
-- [ ] Redis integrated
-- [ ] Reverb broadcasting working
-- [ ] Queues operational
+- [x] Dashboard complete
+- [x] Messaging operational
+- [x] Project tracking complete
+- [x] Document Centre operational
+- [x] Meeting scheduling working
+- [x] Notifications operational
+- [x] Redis integrated
+- [x] Reverb broadcasting working
+- [x] Queues operational
 - [ ] Tests passing
-- [ ] Documentation updated
+- [x] Documentation updated
 
 Enterprise Enhancement: Make the Client Portal a "Digital Twin" of the Project
 
