@@ -24,8 +24,19 @@
 
 .zy-project-card-link {
     display: block;
+    height: 100%;
     color: inherit;
     text-decoration: none;
+}
+
+.zy-project-card-link:hover,
+.zy-project-card-link:focus-visible {
+    color: inherit;
+}
+
+.zy-project-card-link .zy-card {
+    height: 100%;
+    align-content: start;
 }
 
 .zy-project-cats {

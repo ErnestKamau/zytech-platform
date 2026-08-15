@@ -24,7 +24,7 @@
 
 <div>
     <div class="zy-container zy-services-intro">
-        <x-media.banner class="zy-media-banner--contain" :src="asset($bannerImage['path'])" :alt="$bannerImage['alt']">
+        <x-media.banner :src="asset($bannerImage['path'])" :alt="$bannerImage['alt']">
             <p class="zy-eyebrow" style="color: rgb(255 255 255 / 0.75);">{{ $service->categoryName }}</p>
             <h1 style="color: #fff;">{{ $service->title }}</h1>
             <p>{{ $service->excerpt }}</p>
