@@ -1,16 +1,28 @@
 @props(['service'])
 
 @php
-    $images = config('zyntech-media.images');
-    $image = $service->imageKey && isset($images[$service->imageKey])
-        ? $images[$service->imageKey]
-        : null;
+    $images = config('zyntech-media.images', []);
+    $slug = $service->slug;
+    $cardKey = config('zyntech-media.service_card.'.$slug);
+    if (! is_string($cardKey) || $cardKey === '' || ! isset($images[$cardKey])) {
+        $stills = config('zyntech-media.service_stills.'.$slug, []);
+        $cardKey = is_array($stills) ? collect($stills)->first(
+            fn ($key) => is_string($key) && isset($images[$key])
+        ) : null;
+    }
+
+    $image = (is_string($cardKey) && isset($images[$cardKey]))
+        ? $images[$cardKey]
+        : (($service->imageKey && isset($images[$service->imageKey]))
+            ? $images[$service->imageKey]
+            : null);
 @endphp
 
 <a href="{{ route('services.show', $service->slug) }}" class="zy-service-card-link">
     <x-ui.card interactive :featured="$service->isFeatured" id="{{ $service->slug }}">
         @if ($image)
             <x-media.cover
+                class="zy-media-cover--inset-soft"
                 :src="asset($image['path'])"
                 :alt="$image['alt']"
             />

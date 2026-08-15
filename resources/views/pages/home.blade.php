@@ -7,7 +7,7 @@
         'label' => $stat->label,
     ]);
     $heroHeadline = filled($profile?->tagline)
-        ? $profile->tagline.', engineered to last.'
+        ? $profile->tagline
         : 'Built on Kenyan soil, engineered to last.';
     $heroSupport = $profile?->shortDescription
         ?: 'Interior, exterior, and structural work across Nairobi, Kiambu, and nationwide — from first sketch to final handover.';
@@ -18,13 +18,16 @@
     $featuredProjects = ($featuredProjects ?? collect())->isNotEmpty()
         ? $featuredProjects
         : collect();
-    $featuredArticles = ($featuredArticles ?? collect())->isNotEmpty()
-        ? $featuredArticles
-        : collect();
     $images = config('zyntech-media.images');
     $walkway = $images['structural_walkway'];
     $courtyard = $images['commercial_courtyard'];
     $ballast = $images['site_prep_ballast'];
+    $aboutKey = config('zyntech-media.homepage.about', 'about_architecture');
+    $aboutImage = $images[$aboutKey] ?? $images['about_architecture'];
+    $aboutCopy = filled($profile?->about)
+        ? $profile->about
+        : ($profile?->shortDescription
+            ?: 'Zytech Contractors is a Kenyan construction firm delivering interior, exterior, and structural work with one accountable crew. We design, estimate, approve, and build — no hand-offs, no finger-pointing.');
 @endphp
 
 @section('title', ($profile->name ?? 'Zytech Contractors').' — '.($profile->tagline ?? 'Built on Kenyan soil'))
@@ -32,7 +35,6 @@
 
 @section('content')
     <x-sections.hero
-        :brand="$profile->name ?? 'Zytech Contractors'"
         :headline="$heroHeadline"
         :support="$heroSupport"
     />
@@ -67,6 +69,16 @@
         </div>
     </section>
     @endif
+
+    <section class="zy-about-band">
+        <div class="zy-container">
+            <x-media.banner class="zy-about-band__banner" :src="asset($aboutImage['path'])" :alt="$aboutImage['alt']">
+                <p class="zy-section__eyebrow">Zytech</p>
+                <h2>Built on Kenyan soil, accountable to the last stone.</h2>
+                <p>{{ $aboutCopy }}</p>
+            </x-media.banner>
+        </div>
+    </section>
 
     <section class="zy-section">
         <div class="zy-container">
@@ -141,26 +153,6 @@
             </div>
         </div>
     </section>
-
-    @if ($featuredArticles->isNotEmpty())
-        <section class="zy-section">
-            <div class="zy-container">
-                <div class="zy-section__header">
-                    <p class="zy-section__eyebrow">Knowledge Centre</p>
-                    <h2>Guides from the field</h2>
-                    <p>Practical construction advice for Kenyan homeowners and developers.</p>
-                </div>
-                <div class="zy-grid zy-grid--3">
-                    @foreach ($featuredArticles->take(3) as $article)
-                        <x-knowledge.card :article="$article" />
-                    @endforeach
-                </div>
-                <p style="margin-top: var(--zy-space-6);">
-                    <a href="{{ route('knowledge.index') }}" class="zy-btn zy-btn--secondary">Browse all articles</a>
-                </p>
-            </div>
-        </section>
-    @endif
 
     @php
         $homeTestimonials = ($homeTestimonials ?? collect());

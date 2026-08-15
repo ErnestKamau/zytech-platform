@@ -137,6 +137,7 @@
     /* ------------------------------------------------------------------ */
     --zy-font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
     --zy-font-display: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+    --zy-font-hero: "Instrument Serif", ui-serif, Georgia, serif;
 
     --zy-text-xs: 0.75rem;    /* 12 */
     --zy-text-sm: 0.875rem;   /* 14 */

@@ -1,17 +1,30 @@
 @php
     $images = config('zyntech-media.images');
-    $image = $service->imageKey && isset($images[$service->imageKey])
-        ? $images[$service->imageKey]
-        : $images['paving_gravel_leveling'];
+    $stillKeys = config('zyntech-media.service_stills.'.$service->slug, []);
+    $storyStills = collect(is_array($stillKeys) ? $stillKeys : [])
+        ->map(fn (string $key) => $images[$key] ?? null)
+        ->filter()
+        ->values();
+
+    if ($storyStills->isEmpty() && $service->imageKey && isset($images[$service->imageKey])) {
+        $storyStills = collect([$images[$service->imageKey]]);
+    }
+
+    if ($storyStills->isEmpty()) {
+        $storyStills = collect([$images['commercial_courtyard']]);
+    }
+
+    $bannerImage = $storyStills->first();
     $gallery = collect($service->galleryKeys)
         ->map(fn (string $key) => $images[$key] ?? null)
         ->filter()
         ->values();
+    $slideCount = $storyStills->count();
 @endphp
 
 <div>
     <div class="zy-container zy-services-intro">
-        <x-media.banner :src="asset($image['path'])" :alt="$image['alt']">
+        <x-media.banner class="zy-media-banner--contain" :src="asset($bannerImage['path'])" :alt="$bannerImage['alt']">
             <p class="zy-eyebrow" style="color: rgb(255 255 255 / 0.75);">{{ $service->categoryName }}</p>
             <h1 style="color: #fff;">{{ $service->title }}</h1>
             <p>{{ $service->excerpt }}</p>
@@ -20,10 +33,48 @@
 
     <section class="zy-section">
         <div class="zy-container zy-service-detail">
-            <div class="zy-service-detail__copy">
-                <p class="zy-section__eyebrow">{{ $service->type->label() }}</p>
-                <h2>{{ $service->title }}</h2>
-                <p>{{ $service->body ?: $service->excerpt }}</p>
+            <div
+                class="zy-service-detail__copy"
+                x-data="{
+                    i: 0,
+                    n: {{ $slideCount }},
+                    start() {
+                        if (this.n < 2) return;
+                        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+                        setInterval(() => { this.i = (this.i + 1) % this.n }, 6000);
+                    },
+                }"
+                x-init="start()"
+            >
+                <div class="zy-service-detail__slides" aria-hidden="true">
+                    @foreach ($storyStills as $index => $still)
+                        <img
+                            src="{{ asset($still['path']) }}"
+                            alt=""
+                            :class="{ 'is-active': i === {{ $index }} }"
+                        >
+                    @endforeach
+                </div>
+                <div class="zy-service-detail__scrim"></div>
+                <div class="zy-service-detail__text">
+                    <p class="zy-section__eyebrow">{{ $service->type->label() }}</p>
+                    <h2>{{ $service->title }}</h2>
+                    <p>{{ $service->body ?: $service->excerpt }}</p>
+                </div>
+                @if ($slideCount > 1)
+                    <div class="zy-service-detail__dots" role="tablist" aria-label="Photos">
+                        @foreach ($storyStills as $index => $still)
+                            <button
+                                type="button"
+                                class="zy-service-detail__dot"
+                                :class="{ 'is-active': i === {{ $index }} }"
+                                :aria-selected="(i === {{ $index }}).toString()"
+                                aria-label="Show photo {{ $index + 1 }}"
+                                @click="i = {{ $index }}"
+                            ></button>
+                        @endforeach
+                    </div>
+                @endif
             </div>
             <aside class="zy-service-quote">
                 <p class="zy-card__eyebrow">Pricing</p>

@@ -1,25 +1,27 @@
 /**
- * Navigation — pill links inside the glass header.
+ * Navigation — center glass pill with a solid active state.
  */
 
 .zy-nav {
     display: flex;
     align-items: center;
     gap: var(--zy-space-1);
-    padding: var(--zy-space-1);
+    padding: 0.2rem;
     border-radius: var(--zy-radius-full);
-    background: rgb(28 24 21 / 0.04);
-}
-
-[data-zy-theme="dark"] .zy-nav {
-    background: rgb(255 255 255 / 0.04);
+    background: var(--zy-glass-bg);
+    border: 1px solid var(--zy-glass-border);
+    box-shadow: inset 0 1px 0 var(--zy-glass-highlight);
+    backdrop-filter: blur(14px) saturate(1.3);
+    -webkit-backdrop-filter: blur(14px) saturate(1.3);
 }
 
 .zy-nav__link {
-    padding: var(--zy-space-2) var(--zy-space-4);
+    padding: 0.55rem 1rem;
     border-radius: var(--zy-radius-full);
-    font-size: var(--zy-text-sm);
-    font-weight: 500;
+    font-size: var(--zy-text-xs);
+    font-weight: 600;
+    letter-spacing: var(--zy-tracking-wide);
+    text-transform: uppercase;
     color: var(--zy-stone-600);
     text-decoration: none;
     transition:
@@ -30,24 +32,33 @@
 
 .zy-nav__link:hover {
     color: var(--zy-color-ink);
-    background: rgb(255 255 255 / 0.35);
+    background: rgb(255 255 255 / 0.4);
 }
 
 .zy-nav__link[aria-current="page"] {
-    color: var(--zy-color-ink);
-    background: var(--zy-glass-bg-strong);
-    box-shadow: inset 0 1px 0 var(--zy-glass-highlight);
-    font-weight: 600;
+    color: var(--zy-stone-900);
+    background: #fff;
+    box-shadow: 0 1px 2px rgb(28 24 21 / 0.08);
+    font-weight: 700;
+}
+
+[data-zy-theme="dark"] .zy-nav {
+    background: rgb(255 255 255 / 0.07);
+    border-color: rgb(255 255 255 / 0.14);
 }
 
 [data-zy-theme="dark"] .zy-nav__link {
-    color: rgb(255 255 255 / 0.62);
+    color: rgb(255 255 255 / 0.68);
 }
 
-[data-zy-theme="dark"] .zy-nav__link:hover,
-[data-zy-theme="dark"] .zy-nav__link[aria-current="page"] {
+[data-zy-theme="dark"] .zy-nav__link:hover {
     color: #fff;
     background: rgb(255 255 255 / 0.1);
+}
+
+[data-zy-theme="dark"] .zy-nav__link[aria-current="page"] {
+    color: var(--zy-stone-900);
+    background: #fff;
 }
 
 .zy-nav__brand {
@@ -61,6 +72,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    transition: color var(--zy-duration-fast) var(--zy-ease);
 }
 
 .zy-nav__brand span {
@@ -70,4 +82,25 @@
 
 [data-zy-theme="dark"] .zy-nav__brand span {
     color: var(--zy-sage-400);
+}
+
+/* Homepage overlay — frost pill, white labels, solid white active. */
+.zy-page-home .zy-header:not(.is-condensed) .zy-nav {
+    background: rgb(255 255 255 / 0.12);
+    border-color: rgb(255 255 255 / 0.22);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.2);
+}
+
+.zy-page-home .zy-header:not(.is-condensed) .zy-nav__link {
+    color: rgb(255 255 255 / 0.86);
+}
+
+.zy-page-home .zy-header:not(.is-condensed) .zy-nav__link:hover {
+    color: #fff;
+    background: rgb(255 255 255 / 0.16);
+}
+
+.zy-page-home .zy-header:not(.is-condensed) .zy-nav__link[aria-current="page"] {
+    color: var(--zy-stone-900);
+    background: #fff;
 }

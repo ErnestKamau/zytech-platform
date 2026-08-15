@@ -18,11 +18,9 @@
         }
     } else {
         $navItems = [
-            ['href' => route('home'), 'label' => 'Home', 'target' => '_self', 'current' => request()->routeIs('home')],
             ['href' => route('projects.index'), 'label' => 'Projects', 'target' => '_self', 'current' => request()->routeIs('projects.*')],
             ['href' => route('services.index'), 'label' => 'Services', 'target' => '_self', 'current' => request()->routeIs('services.*')],
             ['href' => route('knowledge.index'), 'label' => 'Knowledge', 'target' => '_self', 'current' => request()->routeIs('knowledge.*')],
-            ['href' => route('search'), 'label' => 'Search', 'target' => '_self', 'current' => request()->routeIs('search')],
             ['href' => route('about'), 'label' => 'About', 'target' => '_self', 'current' => request()->routeIs('about')],
             ['href' => route('contact'), 'label' => 'Contact', 'target' => '_self', 'current' => request()->routeIs('contact')],
         ];
@@ -31,7 +29,16 @@
 
 <header
     class="zy-header"
-    x-data="{ menuOpen: false }"
+    :class="{ 'is-condensed': condensed }"
+    x-data="{
+        menuOpen: false,
+        condensed: false,
+        syncCondensed() {
+            this.condensed = window.scrollY > 32;
+        },
+    }"
+    x-init="syncCondensed()"
+    @scroll.window.passive="syncCondensed()"
     x-effect="document.documentElement.classList.toggle('zy-nav-open', menuOpen)"
     @keydown.escape.window="menuOpen = false"
 >
@@ -52,18 +59,22 @@
         </nav>
 
         <div class="zy-header__actions">
+            <a href="{{ route('search') }}" class="zy-icon-btn zy-header__search" aria-label="Search">
+                <svg class="zy-icon zy-icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                </svg>
+            </a>
             <x-ui.theme-toggle />
             @auth
                 @php
                     $portalHome = auth()->user()->clientProfile?->portal_access_granted_at
                         ? route('portal.dashboard')
                         : route('account.profile');
+                    $accountLabel = auth()->user()->clientProfile?->portal_access_granted_at ? 'Portal' : 'Account';
                 @endphp
-                <a href="{{ $portalHome }}" class="zy-btn zy-btn--secondary zy-btn--sm zy-header__cta">
-                    {{ auth()->user()->clientProfile?->portal_access_granted_at ? 'Portal' : 'Account' }}
-                </a>
+                <a href="{{ $portalHome }}" class="zy-header__login">{{ $accountLabel }}</a>
             @else
-                <a href="{{ route('login') }}" class="zy-btn zy-btn--secondary zy-btn--sm zy-header__cta">Client login</a>
+                <a href="{{ route('login') }}" class="zy-header__login">Client login</a>
             @endauth
             <a href="{{ route('quote.index') }}" class="zy-btn zy-btn--primary zy-btn--sm zy-header__cta">Request a Quote</a>
             <button
@@ -96,6 +107,7 @@
                         @click="menuOpen = false"
                     >{{ $item['label'] }}</a>
                 @endforeach
+                <a href="{{ route('search') }}" class="zy-header__sheet-link" @click="menuOpen = false">Search</a>
             </nav>
             <div class="zy-header__sheet-actions">
                 @auth

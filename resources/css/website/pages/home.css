@@ -12,16 +12,14 @@
     position: relative;
     display: grid;
     align-items: end;
-    min-height: 88svh;
-    padding-block: var(--zy-space-16) var(--zy-space-12);
+    min-height: 100svh;
+    padding-block: 7.5rem var(--zy-space-12);
     color: #fff;
     overflow: hidden;
     isolation: isolate;
-    background: var(--zy-slate-900);
+    background: var(--zy-stone-900);
 }
 
-/* Base gradient — deliberately darker/quieter than before so the single
-   glow moment (::before) reads as THE visual event, not one of many. */
 .zy-hero__media,
 .zy-media-hero {
     position: absolute;
@@ -31,128 +29,59 @@
     background-position: center;
 }
 
-/* The one visual moment: a soft light source drifting behind the headline,
-   PlayStation-key-art style. Everything else in the hero stays quiet. */
-.zy-hero::before {
-    content: "";
-    position: absolute;
-    top: -18%;
-    right: -12%;
-    width: min(60vw, 44rem);
-    height: min(60vw, 44rem);
-    background: radial-gradient(circle, rgb(115 140 94 / 0.5) 0%, rgb(92 115 73 / 0.22) 45%, transparent 72%);
-    filter: blur(10px);
-    z-index: 0;
-    pointer-events: none;
-}
-
-/* Fine grain over the gradient kills the "flat CSS background" look. */
-.zy-hero::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    opacity: 0.35;
-    mix-blend-mode: overlay;
-    pointer-events: none;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-}
-
 .zy-hero__content {
     position: relative;
     z-index: 1;
     display: grid;
-    gap: var(--zy-space-6);
-    max-width: 40rem;
+    gap: var(--zy-space-10);
+    max-width: none;
+}
+
+.zy-hero__lead,
+.zy-hero__aside {
+    display: grid;
+    gap: var(--zy-space-5);
+    align-content: end;
 }
 
 .zy-hero__eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--zy-space-2);
-    width: fit-content;
-    padding: var(--zy-space-2) var(--zy-space-4);
-    border: 1px solid var(--zy-frost-border);
-    border-radius: var(--zy-radius-full);
-    background: var(--zy-frost-bg);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    color: rgb(255 255 255 / 0.9);
+    margin: 0;
+    max-width: none;
     font-size: var(--zy-text-xs);
     font-weight: 600;
     letter-spacing: var(--zy-tracking-wide);
     text-transform: uppercase;
+    color: rgb(255 255 255 / 0.72);
 }
 
-.zy-hero__eyebrow::before {
-    content: "";
-    width: 6px;
-    height: 6px;
-    border-radius: var(--zy-radius-full);
-    background: var(--zy-sage-400);
-    box-shadow: 0 0 0 3px rgb(92 115 73 / 0.35);
-}
-
-.zy-hero__brand {
-    /* Explicit white — the global h1 rule sets ink and would win over the
-       hero's inherited color otherwise. */
-    color: #fff;
-    font-size: clamp(var(--zy-text-4xl), 6vw, 4rem);
-    font-weight: 700;
-    letter-spacing: var(--zy-tracking-tight);
-    line-height: 0.98;
-    max-width: none;
-}
-
+h1.zy-hero__headline,
 .zy-hero__headline {
-    font-size: clamp(var(--zy-text-lg), 2.2vw, var(--zy-text-2xl));
+    margin: 0;
+    color: #fff;
+    font-family: var(--zy-font-hero);
+    font-size: clamp(3.4rem, 8.5vw, 7rem);
     font-weight: 400;
-    line-height: var(--zy-leading-snug);
-    color: rgb(255 255 255 / 0.88);
-    max-width: 34ch;
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+    max-width: 12ch;
 }
 
 .zy-hero__support {
+    margin: 0;
     font-size: var(--zy-text-base);
-    color: rgb(255 255 255 / 0.68);
-    max-width: 42ch;
+    line-height: var(--zy-leading-body);
+    color: rgb(255 255 255 / 0.78);
+    max-width: 38ch;
 }
 
 .zy-hero__actions {
     display: flex;
     flex-wrap: wrap;
     gap: var(--zy-space-3);
-    margin-top: var(--zy-space-4);
-}
-
-/* Subtle scroll cue — the kind of restrained micro-detail that reads as
-   "someone designed this" rather than "someone assembled this". */
-.zy-hero__scroll-cue {
-    position: absolute;
-    left: var(--zy-space-6);
-    bottom: var(--zy-space-8);
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    gap: var(--zy-space-3);
-    color: rgb(255 255 255 / 0.55);
-    font-size: var(--zy-text-xs);
-    letter-spacing: var(--zy-tracking-wide);
-    text-transform: uppercase;
-}
-
-.zy-hero__scroll-cue::after {
-    content: "";
-    width: 1px;
-    height: 2.5rem;
-    background: linear-gradient(180deg, rgb(255 255 255 / 0.6), transparent);
+    margin-top: var(--zy-space-2);
 }
 
 @media (max-width: 640px) {
-    .zy-hero__scroll-cue {
-        display: none;
-    }
-
     .zy-hero__actions {
         display: grid;
         width: 100%;
@@ -162,27 +91,68 @@
     .zy-hero__actions .zy-btn {
         width: 100%;
     }
+
+    .zy-hero__headline {
+        max-width: none;
+    }
 }
 
 @media (min-width: 768px) {
     .zy-hero {
-        min-height: min(92vh, 56rem);
-        padding-block: var(--zy-space-24) var(--zy-space-16);
+        min-height: 100svh;
+        padding-block: 8rem var(--zy-space-16);
+    }
+
+    .zy-hero__content {
+        grid-template-columns: minmax(0, 1.15fr) minmax(16rem, 0.85fr);
+        align-items: end;
+        column-gap: var(--zy-space-16);
+        row-gap: var(--zy-space-8);
+    }
+
+    .zy-hero__aside {
+        justify-self: end;
+        text-align: right;
+    }
+
+    .zy-hero__support {
+        margin-inline-start: auto;
+    }
+
+    .zy-hero__actions {
+        justify-content: flex-end;
     }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .zy-hero::before {
-        animation: zy-hero-drift 16s var(--zy-ease) infinite alternate;
-    }
+.zy-about-band {
+    padding-block: var(--zy-space-12);
 }
 
-@keyframes zy-hero-drift {
-    from {
-        transform: translate3d(0, 0, 0) scale(1);
+.zy-about-band__banner {
+    min-height: 22rem;
+}
+
+.zy-about-band__banner .zy-section__eyebrow {
+    color: var(--zy-sage-300);
+}
+
+.zy-about-band__banner h2 {
+    color: #fff;
+    max-width: 18ch;
+}
+
+.zy-about-band__banner p {
+    color: rgb(255 255 255 / 0.82);
+    max-width: 48ch;
+}
+
+@media (min-width: 768px) {
+    .zy-about-band {
+        padding-block: var(--zy-space-16);
     }
-    to {
-        transform: translate3d(-2%, 3%, 0) scale(1.06);
+
+    .zy-about-band__banner {
+        min-height: 28rem;
     }
 }
 
