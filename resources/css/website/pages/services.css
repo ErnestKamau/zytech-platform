@@ -64,19 +64,22 @@
 
 .zy-service-cat {
     padding: var(--zy-space-2) var(--zy-space-4);
-    border: 1px solid var(--zy-color-border);
+    border: 1px solid transparent;
     border-radius: var(--zy-radius-full);
+    background: rgb(28 24 21 / 0.04);
     color: inherit;
     font-size: var(--zy-text-sm);
     font-weight: 600;
     text-decoration: none;
+    box-shadow: none;
 }
 
 .zy-service-cat.is-active,
 .zy-service-cat:hover,
 .zy-service-cat:focus-visible {
-    border-color: var(--zy-sage-300);
+    border-color: transparent;
     background: var(--zy-color-surface);
+    box-shadow: none;
 }
 
 .zy-service-detail {

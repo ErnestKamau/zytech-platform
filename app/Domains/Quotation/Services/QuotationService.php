@@ -5,17 +5,21 @@ namespace App\Domains\Quotation\Services;
 use App\Core\Enums\ApprovalStatus;
 use App\Core\Enums\QuotationStatus;
 use App\Core\Enums\QuotationType;
+use App\Core\Enums\RevisionStatus;
 use App\Core\Services\BaseService;
+use App\Domains\Commerce\Actions\CreateSalesOrderAndDraftInvoice;
 use App\Domains\Quotation\Events\QuotationAccepted;
 use App\Domains\Quotation\Events\QuotationApproved;
 use App\Domains\Quotation\Events\QuotationCreated;
 use App\Domains\Quotation\Events\QuotationRejected;
+use App\Domains\Quotation\Events\QuotationRevisionRequested;
 use App\Domains\Quotation\Events\QuotationSent;
 use App\Domains\Quotation\Support\ReferenceNumber;
 use App\Models\Quotation;
 use App\Models\QuotationApproval;
 use App\Models\QuotationItem;
 use App\Models\QuotationRequest;
+use App\Models\QuotationRevision;
 use App\Models\QuotationStatusHistory;
 use Illuminate\Support\Facades\DB;
 
@@ -86,36 +90,71 @@ final class QuotationService extends BaseService
 
     public function send(Quotation $quotation): Quotation
     {
+        return DB::transaction(function () use ($quotation): Quotation {
+            $from = $quotation->status;
+            $wasRevision = $from === QuotationStatus::RevisionRequested
+                || ($from === QuotationStatus::Preparing && $quotation->revision_requested_at !== null);
+
+            if ($wasRevision || $quotation->revisions()->exists()) {
+                $this->publishVersion($quotation, $wasRevision
+                    ? 'Revised quotation resent to client'
+                    : 'Issued quotation version');
+            } else {
+                $this->publishVersion($quotation, 'Initial quotation issued');
+            }
+
+            $quotation->forceFill([
+                'status' => QuotationStatus::Sent,
+                'sent_at' => now(),
+                'revision_notes' => null,
+            ])->save();
+
+            $this->recordStatus($quotation, $from, QuotationStatus::Sent, 'Sent to client');
+
+            event(new QuotationSent($quotation->refresh()));
+
+            return $quotation;
+        });
+    }
+
+    public function requestRevision(Quotation $quotation, string $notes): Quotation
+    {
         $from = $quotation->status;
         $quotation->forceFill([
-            'status' => QuotationStatus::Sent,
-            'sent_at' => now(),
+            'status' => QuotationStatus::RevisionRequested,
+            'revision_notes' => $notes,
+            'revision_requested_at' => now(),
         ])->save();
 
-        $this->recordStatus($quotation, $from, QuotationStatus::Sent, 'Sent to client');
+        $this->recordStatus($quotation, $from, QuotationStatus::RevisionRequested, $notes);
 
-        event(new QuotationSent($quotation->refresh()));
+        event(new QuotationRevisionRequested($quotation->refresh()));
 
         return $quotation;
     }
 
     public function accept(Quotation $quotation): Quotation
     {
-        $from = $quotation->status;
-        $quotation->forceFill([
-            'status' => QuotationStatus::Accepted,
-            'accepted_at' => now(),
-        ])->save();
+        return DB::transaction(function () use ($quotation): Quotation {
+            $from = $quotation->status;
+            $quotation->forceFill([
+                'status' => QuotationStatus::Accepted,
+                'accepted_at' => now(),
+            ])->save();
 
-        $this->recordStatus($quotation, $from, QuotationStatus::Accepted, 'Accepted by client');
+            $this->recordStatus($quotation, $from, QuotationStatus::Accepted, 'Accepted by client');
 
-        if ($request = $quotation->request) {
-            app(QuotationRequestService::class)->transition($request, QuotationStatus::Accepted, 'Linked quotation accepted');
-        }
+            if ($request = $quotation->request) {
+                app(QuotationRequestService::class)->transition($request, QuotationStatus::Accepted, 'Linked quotation accepted');
+            }
 
-        event(new QuotationAccepted($quotation->refresh()));
+            $accepted = $quotation->refresh();
+            event(new QuotationAccepted($accepted));
 
-        return $quotation;
+            app(CreateSalesOrderAndDraftInvoice::class)->handle($accepted);
+
+            return $accepted->refresh();
+        });
     }
 
     public function reject(Quotation $quotation, ?string $notes = null): Quotation
@@ -143,6 +182,33 @@ final class QuotationService extends BaseService
         }
 
         return $item->refresh();
+    }
+
+    private function publishVersion(Quotation $quotation, string $summary): void
+    {
+        QuotationRevision::query()
+            ->where('quotation_id', $quotation->id)
+            ->where('status', RevisionStatus::Published)
+            ->update(['status' => RevisionStatus::Superseded]);
+
+        $existingCount = $quotation->revisions()->count();
+        $next = $existingCount === 0
+            ? max(1, (int) $quotation->revision_number)
+            : ((int) $quotation->revision_number) + 1;
+
+        if ($existingCount === 0 && $quotation->revision_requested_at !== null) {
+            $next = max(2, ((int) $quotation->revision_number) + 1);
+        }
+
+        $quotation->forceFill(['revision_number' => $next])->save();
+
+        QuotationRevision::query()->create([
+            'quotation_id' => $quotation->id,
+            'revision_number' => $next,
+            'status' => RevisionStatus::Published,
+            'summary' => $summary,
+            'created_by' => auth()->id(),
+        ]);
     }
 
     private function recordStatus(

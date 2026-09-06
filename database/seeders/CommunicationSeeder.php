@@ -34,7 +34,7 @@ class CommunicationSeeder extends Seeder
                 'name' => 'Quotation sent',
                 'channel' => NotificationChannel::Mail,
                 'subject' => 'Your quotation {{reference}} is ready',
-                'body' => "Hi {{name}},\n\nYour quotation {{reference}} is ready to review.\n\n{{message}}",
+                'body' => "Hi {{name}},\n\nYour quotation {{reference}} is ready to review in the client portal. You can accept, reject, or request a revision there.\n\n{{message}}",
             ],
             [
                 'key' => 'portal-message',

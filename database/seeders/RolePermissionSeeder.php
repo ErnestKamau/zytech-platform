@@ -40,12 +40,16 @@ class RolePermissionSeeder extends Seeder
         'media.manage',
         'services.view',
         'services.manage',
+        'products.view',
+        'products.manage',
         'projects.view',
         'projects.manage',
         'knowledge.view',
         'knowledge.manage',
         'quotations.view',
         'quotations.manage',
+        'commerce.view',
+        'commerce.manage',
         'clients.view',
         'clients.manage',
     ];
@@ -77,9 +81,11 @@ class RolePermissionSeeder extends Seeder
                 'company.view',
                 'media.view',
                 'services.view',
+                'products.view',
                 'projects.view',
                 'knowledge.view',
                 'quotations.view',
+                'commerce.view',
                 'clients.view',
             ]);
 

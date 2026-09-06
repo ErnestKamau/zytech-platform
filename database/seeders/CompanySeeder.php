@@ -323,7 +323,7 @@ class CompanySeeder extends Seeder
         foreach ($menus as $menu) {
             NavigationItem::query()->where('navigation_menu_id', $menu->id)
                 ->where('route_name', 'contact')
-                ->update(['sort_order' => 4]);
+                ->update(['sort_order' => 6]);
 
             NavigationItem::query()->updateOrCreate(
                 [
@@ -335,7 +335,7 @@ class CompanySeeder extends Seeder
                     'url' => null,
                     'target' => '_self',
                     'is_visible' => true,
-                    'sort_order' => 3,
+                    'sort_order' => 5,
                 ],
             );
         }

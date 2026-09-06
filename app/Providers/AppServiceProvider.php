@@ -98,6 +98,12 @@ use App\Domains\Portal\Policies\AnnouncementPolicy as PortalAnnouncementPolicy;
 use App\Domains\Portal\Policies\MeetingPolicy;
 use App\Domains\Portal\Policies\MessagePolicy;
 use App\Domains\Portal\Policies\SupportPolicy;
+use App\Domains\Product\Livewire\FeaturedProducts;
+use App\Domains\Product\Policies\ProductCategoryPolicy;
+use App\Domains\Product\Policies\ProductPolicy;
+use App\Domains\Commerce\Policies\InvoicePolicy;
+use App\Domains\Commerce\Policies\PurchaseOrderPolicy;
+use App\Domains\Commerce\Policies\SalesOrderPolicy;
 use App\Domains\Project\Events\FeaturedProjectChanged;
 use App\Domains\Project\Events\ProjectArchived;
 use App\Domains\Project\Events\ProjectCreated;
@@ -120,6 +126,7 @@ use App\Domains\Quotation\Events\QuotationApproved;
 use App\Domains\Quotation\Events\QuotationCreated;
 use App\Domains\Quotation\Events\QuotationRejected;
 use App\Domains\Quotation\Events\QuotationRequestSubmitted;
+use App\Domains\Quotation\Events\QuotationRevisionRequested;
 use App\Domains\Quotation\Events\QuotationSent;
 use App\Domains\Quotation\Events\SiteVisitScheduled;
 use App\Domains\Quotation\Listeners\BroadcastQuotationStatus;
@@ -156,6 +163,8 @@ use App\Domains\Website\Livewire\ArticleShowPage;
 use App\Domains\Website\Livewire\ContactForm;
 use App\Domains\Website\Livewire\DownloadsPage;
 use App\Domains\Website\Livewire\KnowledgePage;
+use App\Domains\Website\Livewire\ProductShowPage;
+use App\Domains\Website\Livewire\ProductsPage;
 use App\Domains\Website\Livewire\ProjectShowPage;
 use App\Domains\Website\Livewire\ProjectsPage;
 use App\Domains\Website\Livewire\RequestQuotationForm;
@@ -192,6 +201,11 @@ use App\Models\MeetingRequest;
 use App\Models\NavigationMenu;
 use App\Models\NotificationTemplate;
 use App\Models\Partner;
+use App\Models\Product;
+use App\Models\ProductCategory;
+use App\Models\PurchaseOrder;
+use App\Models\Invoice;
+use App\Models\SalesOrder;
 use App\Models\Permission;
 use App\Models\PortalAnnouncement;
 use App\Models\PortalConversation;
@@ -253,6 +267,9 @@ class AppServiceProvider extends ServiceProvider
         Livewire::component('service.featured-services', FeaturedServices::class);
         Livewire::component('service.related-services', RelatedServices::class);
         Livewire::component('service.faqs', ServiceFaqs::class);
+        Livewire::component('website.products-page', ProductsPage::class);
+        Livewire::component('website.product-show', ProductShowPage::class);
+        Livewire::component('product.featured-products', FeaturedProducts::class);
         Livewire::component('website.knowledge-page', KnowledgePage::class);
         Livewire::component('website.article-show', ArticleShowPage::class);
         Livewire::component('knowledge.featured-articles', FeaturedArticleComponents::class);
@@ -278,6 +295,8 @@ class AppServiceProvider extends ServiceProvider
             'errors.404',
             'pages.services.index',
             'pages.services.show',
+            'pages.products.index',
+            'pages.products.show',
             'pages.projects.index',
             'pages.projects.show',
             'pages.knowledge.index',
@@ -318,6 +337,11 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(ServiceProcess::class, ServiceContentPolicy::class);
         Gate::policy(ServiceStatistic::class, ServiceContentPolicy::class);
         Gate::policy(ServiceRelatedProject::class, ServiceContentPolicy::class);
+        Gate::policy(Product::class, ProductPolicy::class);
+        Gate::policy(ProductCategory::class, ProductCategoryPolicy::class);
+        Gate::policy(SalesOrder::class, SalesOrderPolicy::class);
+        Gate::policy(Invoice::class, InvoicePolicy::class);
+        Gate::policy(PurchaseOrder::class, PurchaseOrderPolicy::class);
         Gate::policy(Project::class, ProjectPolicy::class);
         Gate::policy(ProjectCategory::class, ProjectCategoryPolicy::class);
         Gate::policy(ProjectGalleryItem::class, ProjectContentPolicy::class);
@@ -485,6 +509,7 @@ class AppServiceProvider extends ServiceProvider
             QuotationSent::class,
             QuotationAccepted::class,
             QuotationRejected::class,
+            QuotationRevisionRequested::class,
             SiteVisitScheduled::class,
         ];
 

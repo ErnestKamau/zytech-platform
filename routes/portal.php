@@ -2,9 +2,11 @@
 
 use App\Domains\Portal\Livewire\Dashboard;
 use App\Domains\Portal\Livewire\Documents;
+use App\Domains\Portal\Livewire\Invoices;
 use App\Domains\Portal\Livewire\Meetings;
 use App\Domains\Portal\Livewire\Messages;
 use App\Domains\Portal\Livewire\Notifications;
+use App\Domains\Portal\Livewire\Orders;
 use App\Domains\Portal\Livewire\Projects;
 use App\Domains\Portal\Livewire\Quotations;
 use App\Domains\Portal\Livewire\Support;
@@ -21,6 +23,8 @@ Route::middleware(['auth', 'verified', EnsurePortalAccess::class])
         Route::get('/quotations', Quotations::class)->name('quotations');
         Route::get('/quotations/{quotation}/pdf', [PortalFileController::class, 'streamQuotationPdf'])->name('quotations.pdf');
         Route::get('/quotations/{quotation}/pdf/download', [PortalFileController::class, 'downloadQuotationPdf'])->name('quotations.pdf.download');
+        Route::get('/orders', Orders::class)->name('orders');
+        Route::get('/invoices', Invoices::class)->name('invoices');
         Route::get('/projects', Projects::class)->name('projects');
         Route::get('/documents', Documents::class)->name('documents');
         Route::get('/documents/{document}/download', [PortalFileController::class, 'downloadDocument'])->name('documents.download');

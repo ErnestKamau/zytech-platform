@@ -9,6 +9,8 @@ enum QuotationStatus: string
     case Reviewing = 'reviewing';
     case Preparing = 'preparing';
     case Sent = 'sent';
+    case Viewed = 'viewed';
+    case RevisionRequested = 'revision_requested';
     case Accepted = 'accepted';
     case Rejected = 'rejected';
     case Expired = 'expired';
@@ -22,6 +24,8 @@ enum QuotationStatus: string
             self::Reviewing => 'Reviewing',
             self::Preparing => 'Preparing',
             self::Sent => 'Sent',
+            self::Viewed => 'Viewed',
+            self::RevisionRequested => 'Revision requested',
             self::Accepted => 'Accepted',
             self::Rejected => 'Rejected',
             self::Expired => 'Expired',

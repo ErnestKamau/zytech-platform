@@ -32,6 +32,18 @@ Route::get('/services/{slug}', function (string $slug) {
     return view('pages.services.show', ['slug' => $slug]);
 })->name('services.show');
 
+Route::get('/products', function () {
+    return view('pages.products.index');
+})->name('products.index');
+
+Route::get('/products/category/{category}', function (string $category) {
+    return view('pages.products.index', ['category' => $category]);
+})->name('products.category');
+
+Route::get('/products/{slug}', function (string $slug) {
+    return view('pages.products.show', ['slug' => $slug]);
+})->name('products.show');
+
 Route::get('/knowledge', function () {
     return view('pages.knowledge.index');
 })->name('knowledge.index');

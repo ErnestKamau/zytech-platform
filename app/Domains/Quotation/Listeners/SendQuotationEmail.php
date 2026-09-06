@@ -54,7 +54,7 @@ final class SendQuotationEmail extends BaseListener
             replacements: [
                 'name' => (string) $name,
                 'reference' => (string) $quotation->reference_number,
-                'message' => 'Open the client portal or reply to this email if you have questions.',
+                'message' => 'Review, accept, reject, or request a revision in the client portal: '.route('portal.quotations'),
             ],
             channels: [NotificationChannel::Mail, NotificationChannel::Database],
             meta: ['quotation_id' => $quotation->id],

@@ -7,6 +7,7 @@ use App\Core\Enums\PreferredContactMethod;
 use App\Core\Enums\ProjectType;
 use App\Core\Livewire\BaseComponent;
 use App\Domains\Quotation\Actions\SubmitQuotationRequest;
+use App\Models\Product;
 use App\Models\Service;
 use Illuminate\Contracts\View\View;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
@@ -39,8 +40,40 @@ final class RequestQuotationForm extends BaseComponent
     /** @var list<string> */
     public array $selectedServices = [];
 
+    /** @var list<string> */
+    public array $selectedProducts = [];
+
     /** @var list<TemporaryUploadedFile> */
     public array $attachments = [];
+
+    public function mount(?string $product = null): void
+    {
+        if ($product === null || $product === '') {
+            $product = request()->query('product');
+        }
+
+        if (! is_string($product) || $product === '') {
+            return;
+        }
+
+        $matched = Product::query()
+            ->published()
+            ->public()
+            ->where('slug', $product)
+            ->first();
+
+        if ($matched === null) {
+            return;
+        }
+
+        $this->selectedProducts = [$matched->id];
+
+        if ($this->description === '') {
+            $this->description = 'Interested in product: '.$matched->title
+                .($matched->sku ? ' (SKU '.$matched->sku.')' : '')
+                .'. Please quote quantities and delivery.';
+        }
+    }
 
     public function submit(): void
     {
@@ -57,6 +90,8 @@ final class RequestQuotationForm extends BaseComponent
             'preferredContactMethod' => ['required', 'string'],
             'selectedServices' => ['array'],
             'selectedServices.*' => ['uuid'],
+            'selectedProducts' => ['array'],
+            'selectedProducts.*' => ['uuid'],
             'attachments' => ['array', 'max:5'],
             'attachments.*' => ['file', 'max:10240', 'mimes:pdf,jpg,jpeg,png,doc,docx,zip'],
         ]);
@@ -76,6 +111,7 @@ final class RequestQuotationForm extends BaseComponent
             ],
             $this->selectedServices,
             $this->attachments,
+            $this->selectedProducts,
         );
 
         $this->redirectRoute('quote.success', ['reference' => $request->reference_number], navigate: true);
@@ -85,6 +121,7 @@ final class RequestQuotationForm extends BaseComponent
     {
         return view('livewire.website.request-quotation-form', [
             'services' => Service::query()->published()->public()->orderBy('title')->get(),
+            'products' => Product::query()->published()->public()->orderBy('title')->get(),
             'projectTypes' => ProjectType::cases(),
             'budgetRanges' => BudgetRange::cases(),
             'contactMethods' => PreferredContactMethod::cases(),

@@ -19,6 +19,7 @@
     } else {
         $navItems = [
             ['href' => route('projects.index'), 'label' => 'Projects', 'target' => '_self', 'current' => request()->routeIs('projects.*')],
+            ['href' => route('products.index'), 'label' => 'Products', 'target' => '_self', 'current' => request()->routeIs('products.*')],
             ['href' => route('services.index'), 'label' => 'Services', 'target' => '_self', 'current' => request()->routeIs('services.*')],
             ['href' => route('knowledge.index'), 'label' => 'Knowledge', 'target' => '_self', 'current' => request()->routeIs('knowledge.*')],
             ['href' => route('about'), 'label' => 'About', 'target' => '_self', 'current' => request()->routeIs('about')],

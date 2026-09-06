@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class QuotationStatusHistory extends BaseModel
 {
+    protected $table = 'quotation_status_history';
+
     /** @var list<string> */
     protected $fillable = [
         'quotation_request_id',

@@ -4,5 +4,5 @@
 @section('page-class', 'zy-page-quote')
 
 @section('content')
-    <livewire:website.request-quotation-form />
+    <livewire:website.request-quotation-form :product="request()->query('product')" />
 @endsection

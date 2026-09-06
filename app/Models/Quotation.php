@@ -8,6 +8,7 @@ use App\Core\Models\BaseModel;
 use App\Core\Traits\HasActivity;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Quotation extends BaseModel
 {
@@ -29,11 +30,14 @@ class Quotation extends BaseModel
         'currency',
         'valid_until',
         'revision_number',
+        'revision_notes',
+        'revision_requested_at',
         'notes',
         'terms',
         'prepared_by',
         'approved_by',
         'sent_at',
+        'viewed_at',
         'accepted_at',
         'rejected_at',
         'converted_project_id',
@@ -50,7 +54,9 @@ class Quotation extends BaseModel
             'total_amount' => 'decimal:2',
             'valid_until' => 'date',
             'revision_number' => 'integer',
+            'revision_requested_at' => 'datetime',
             'sent_at' => 'datetime',
+            'viewed_at' => 'datetime',
             'accepted_at' => 'datetime',
             'rejected_at' => 'datetime',
         ];
@@ -114,5 +120,20 @@ class Quotation extends BaseModel
     public function approver(): BelongsTo
     {
         return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    public function salesOrder(): HasOne
+    {
+        return $this->hasOne(SalesOrder::class);
+    }
+
+    public function purchaseOrder(): HasOne
+    {
+        return $this->hasOne(PurchaseOrder::class);
+    }
+
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(Invoice::class);
     }
 }

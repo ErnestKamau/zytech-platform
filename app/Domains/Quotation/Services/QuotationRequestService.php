@@ -35,10 +35,11 @@ final class QuotationRequestService extends BaseService
     /**
      * @param  array<string, mixed>  $payload
      * @param  list<string>  $serviceIds
+     * @param  list<string>  $productIds
      */
-    public function submit(array $payload, array $serviceIds = []): QuotationRequest
+    public function submit(array $payload, array $serviceIds = [], array $productIds = []): QuotationRequest
     {
-        return DB::transaction(function () use ($payload, $serviceIds): QuotationRequest {
+        return DB::transaction(function () use ($payload, $serviceIds, $productIds): QuotationRequest {
             $client = $this->clients->findOrCreateFromLead(
                 (string) $payload['full_name'],
                 (string) $payload['email'],
@@ -74,9 +75,13 @@ final class QuotationRequestService extends BaseService
                 $request->services()->sync($serviceIds);
             }
 
+            if ($productIds !== []) {
+                $request->products()->sync($productIds);
+            }
+
             $this->recordStatus($request, null, QuotationStatus::Pending, 'Submitted from public website');
 
-            event(new QuotationRequestSubmitted($request->fresh(['services', 'source'])));
+            event(new QuotationRequestSubmitted($request->fresh(['services', 'products', 'source'])));
 
             return $request->refresh();
         });

@@ -28,7 +28,29 @@ final class PortalService extends BaseService
     public function quotations(Client $client): Collection
     {
         return $client->quotations()
-            ->with(['request', 'documents'])
+            ->with(['request', 'documents', 'purchaseOrder', 'salesOrder.invoice'])
+            ->orderByDesc('updated_at')
+            ->get();
+    }
+
+    /**
+     * @return Collection<int, \App\Models\SalesOrder>
+     */
+    public function salesOrders(Client $client): Collection
+    {
+        return $client->salesOrders()
+            ->with(['items', 'invoice', 'quotation', 'purchaseOrder'])
+            ->orderByDesc('updated_at')
+            ->get();
+    }
+
+    /**
+     * @return Collection<int, \App\Models\Invoice>
+     */
+    public function invoices(Client $client): Collection
+    {
+        return $client->invoices()
+            ->with(['items', 'salesOrder', 'quotation'])
             ->orderByDesc('updated_at')
             ->get();
     }

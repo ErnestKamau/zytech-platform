@@ -127,6 +127,21 @@ class Client extends BaseModel
         return $this->hasMany(Quotation::class);
     }
 
+    public function salesOrders(): HasMany
+    {
+        return $this->hasMany(SalesOrder::class);
+    }
+
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
+    public function purchaseOrders(): HasMany
+    {
+        return $this->hasMany(PurchaseOrder::class);
+    }
+
     public function salesLeads(): HasMany
     {
         return $this->hasMany(SalesLead::class);

@@ -19,6 +19,7 @@ final class SubmitQuotationRequest extends BaseAction
      * @param  array<string, mixed>  $data
      * @param  list<string>  $serviceIds
      * @param  list<UploadedFile>  $attachments
+     * @param  list<string>  $productIds
      */
     public function handle(mixed ...$arguments): QuotationRequest
     {
@@ -28,13 +29,15 @@ final class SubmitQuotationRequest extends BaseAction
         $serviceIds = $arguments[1] ?? [];
         /** @var list<UploadedFile> $attachments */
         $attachments = $arguments[2] ?? [];
+        /** @var list<string> $productIds */
+        $productIds = $arguments[3] ?? [];
 
         $source = $this->sources->findBySlug('website');
 
         $request = $this->requests->submit([
             ...$data,
             'lead_source_id' => $source?->id,
-        ], $serviceIds);
+        ], $serviceIds, $productIds);
 
         foreach ($attachments as $file) {
             $path = $file->store('quotation-requests/'.$request->id, 'local');
@@ -47,6 +50,6 @@ final class SubmitQuotationRequest extends BaseAction
             ]);
         }
 
-        return $request->refresh(['services', 'attachments']);
+        return $request->refresh(['services', 'products', 'attachments']);
     }
 }

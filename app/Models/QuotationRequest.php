@@ -75,6 +75,11 @@ class QuotationRequest extends BaseModel
         return $this->belongsToMany(Service::class, 'quotation_request_service');
     }
 
+    public function products(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'quotation_request_product');
+    }
+
     public function attachments(): HasMany
     {
         return $this->hasMany(QuotationRequestAttachment::class);

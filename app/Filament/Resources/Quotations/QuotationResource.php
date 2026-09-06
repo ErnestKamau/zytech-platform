@@ -89,9 +89,20 @@ class QuotationResource extends BaseResource
                     ->requiresConfirmation()
                     ->action(fn (Quotation $record) => app(ApproveQuotation::class)->handle($record)),
                 Action::make('send')
-                    ->visible(fn (Quotation $record): bool => in_array($record->status, [QuotationStatus::Preparing, QuotationStatus::Reviewing], true))
+                    ->visible(fn (Quotation $record): bool => in_array($record->status, [
+                        QuotationStatus::Preparing,
+                        QuotationStatus::Reviewing,
+                        QuotationStatus::RevisionRequested,
+                    ], true))
                     ->requiresConfirmation()
                     ->action(fn (Quotation $record) => app(SendQuotation::class)->handle($record)),
+                Action::make('prepare_revision')
+                    ->label('Prepare revision')
+                    ->visible(fn (Quotation $record): bool => $record->status === QuotationStatus::RevisionRequested)
+                    ->requiresConfirmation()
+                    ->action(function (Quotation $record): void {
+                        $record->forceFill(['status' => QuotationStatus::Preparing])->save();
+                    }),
                 EditAction::make()->after(fn (Quotation $record) => app(QuotationService::class)->recalculate($record)),
                 DeleteAction::make(),
             ])

@@ -138,10 +138,11 @@ class ConfigurationSeeder extends Seeder
         $links = [
             ['Home', 'home', 0],
             ['Projects', 'projects.index', 1],
-            ['Services', 'services.index', 2],
-            ['Knowledge', 'knowledge.index', 3],
-            ['About', 'about', 4],
-            ['Contact', 'contact', 5],
+            ['Products', 'products.index', 2],
+            ['Services', 'services.index', 3],
+            ['Knowledge', 'knowledge.index', 4],
+            ['About', 'about', 5],
+            ['Contact', 'contact', 6],
         ];
 
         foreach ([$header, $footer] as $menu) {

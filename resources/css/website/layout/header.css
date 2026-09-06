@@ -304,22 +304,35 @@ html.zy-nav-open body {
 @media (min-width: 1024px) {
     .zy-header__inner {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+        /* auto | flexible nav | auto — prevents center pill overflowing onto icons */
+        grid-template-columns: auto minmax(0, 1fr) auto;
         align-items: center;
+        column-gap: var(--zy-space-3);
         padding-inline: var(--zy-space-4) var(--zy-space-3);
     }
 
     .zy-nav__brand {
         justify-self: start;
+        max-width: 14rem;
     }
 
     .zy-header__nav.zy-nav {
         display: flex;
         justify-self: center;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+
+    .zy-header__nav.zy-nav::-webkit-scrollbar {
+        display: none;
     }
 
     .zy-header__actions {
         justify-self: end;
+        position: relative;
+        z-index: 2;
     }
 
     .zy-header__login,
@@ -330,6 +343,18 @@ html.zy-nav-open body {
 
     .zy-header .zy-header__menu,
     .zy-header .zy-header__panel {
+        display: none;
+    }
+}
+
+/* Tighter nav labels once Products joins the pill (6 links). */
+@media (min-width: 1024px) and (max-width: 1279px) {
+    .zy-nav__link {
+        padding-inline: 0.65rem;
+        font-size: 0.6875rem;
+    }
+
+    .zy-header__login {
         display: none;
     }
 }

@@ -87,6 +87,20 @@
                     </fieldset>
                 @endif
 
+                @if ($products->isNotEmpty())
+                    <fieldset class="zy-quote-services">
+                        <legend class="zy-label">Products of interest</legend>
+                        <div class="zy-quote-services__grid">
+                            @foreach ($products as $product)
+                                <label class="zy-quote-service">
+                                    <input type="checkbox" wire:model="selectedProducts" value="{{ $product->id }}">
+                                    <span>{{ $product->title }}@if ($product->sku) <small>({{ $product->sku }})</small>@endif</span>
+                                </label>
+                            @endforeach
+                        </div>
+                    </fieldset>
+                @endif
+
                 <div>
                     <label class="zy-label" for="quote-files">Attachments (optional)</label>
                     <input id="quote-files" type="file" class="zy-input" wire:model="attachments" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.zip">

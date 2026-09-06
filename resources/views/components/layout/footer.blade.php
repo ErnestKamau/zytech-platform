@@ -50,6 +50,7 @@
                         <div class="zy-footer__link-grid">
                             <a href="{{ route('home') }}">Home</a>
                             <a href="{{ route('projects.index') }}">Projects</a>
+                            <a href="{{ route('products.index') }}">Products</a>
                             <a href="{{ route('services.index') }}">Services</a>
                             <a href="{{ route('downloads.index') }}">Downloads</a>
                         </div>
