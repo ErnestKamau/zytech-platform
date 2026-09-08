@@ -30,6 +30,8 @@ final class QuotationService extends BaseService
     public function createFromRequest(QuotationRequest $request, ?string $title = null): Quotation
     {
         return DB::transaction(function () use ($request, $title): Quotation {
+            $request->loadMissing(['items.product', 'items.variant', 'products.defaultUnit', 'services']);
+
             $quotation = Quotation::query()->create([
                 'reference_number' => ReferenceNumber::forQuotation(),
                 'quotation_request_id' => $request->id,
@@ -43,6 +45,9 @@ final class QuotationService extends BaseService
                 'prepared_by' => auth()->id(),
             ]);
 
+            $this->seedItemsFromRequest($quotation, $request);
+            $this->recalculate($quotation);
+
             $this->recordStatus($quotation, null, QuotationStatus::Draft, 'Created from request '.$request->reference_number);
 
             QuotationApproval::query()->create([
@@ -50,10 +55,86 @@ final class QuotationService extends BaseService
                 'status' => ApprovalStatus::Pending,
             ]);
 
-            event(new QuotationCreated($quotation->fresh(['request'])));
+            app(QuotationRequestService::class)->transition(
+                $request,
+                QuotationStatus::Preparing,
+                'Quotation '.$quotation->reference_number.' drafted',
+            );
+
+            event(new QuotationCreated($quotation->fresh(['request', 'items'])));
 
             return $quotation->refresh();
         });
+    }
+
+    private function seedItemsFromRequest(Quotation $quotation, QuotationRequest $request): void
+    {
+        $sort = 0;
+
+        if ($request->items->isNotEmpty()) {
+            foreach ($request->items as $line) {
+                $sort++;
+                $unitPrice = (float) ($line->variant?->price_amount
+                    ?? $line->product?->price_amount
+                    ?? 0);
+
+                if ($unitPrice <= 0 && $line->product_id === null) {
+                    $matchedService = $request->services->first(
+                        fn ($service): bool => $service->title === $line->description
+                    );
+                    $unitPrice = (float) ($matchedService?->price_amount ?? 0);
+                }
+
+                $quantity = (float) $line->quantity;
+                $label = $line->product?->title ?? $line->description;
+
+                QuotationItem::query()->create([
+                    'quotation_id' => $quotation->id,
+                    'label' => $label,
+                    'description' => $line->description,
+                    'quantity' => $quantity,
+                    'unit' => $line->unit_snapshot,
+                    'unit_price' => $unitPrice,
+                    'line_total' => $this->pricing->lineTotal($quantity, $unitPrice),
+                    'is_optional' => false,
+                    'sort_order' => $sort,
+                ]);
+            }
+
+            return;
+        }
+
+        foreach ($request->products as $product) {
+            $sort++;
+            $unitPrice = (float) ($product->price_amount ?? 0);
+            QuotationItem::query()->create([
+                'quotation_id' => $quotation->id,
+                'label' => $product->title,
+                'description' => $product->title,
+                'quantity' => 1,
+                'unit' => $product->defaultUnit?->symbol ?? $product->unit_of_measure,
+                'unit_price' => $unitPrice,
+                'line_total' => $this->pricing->lineTotal(1, $unitPrice),
+                'is_optional' => false,
+                'sort_order' => $sort,
+            ]);
+        }
+
+        foreach ($request->services as $service) {
+            $sort++;
+            $unitPrice = (float) ($service->price_amount ?? 0);
+            QuotationItem::query()->create([
+                'quotation_id' => $quotation->id,
+                'label' => $service->title,
+                'description' => $service->title,
+                'quantity' => 1,
+                'unit' => 'service',
+                'unit_price' => $unitPrice,
+                'line_total' => $this->pricing->lineTotal(1, $unitPrice),
+                'is_optional' => false,
+                'sort_order' => $sort,
+            ]);
+        }
     }
 
     public function recalculate(Quotation $quotation): Quotation

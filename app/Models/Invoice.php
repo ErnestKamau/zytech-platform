@@ -72,4 +72,9 @@ class Invoice extends BaseModel
     {
         return $this->hasMany(InvoiceItem::class)->orderBy('sort_order');
     }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class)->orderByDesc('created_at');
+    }
 }

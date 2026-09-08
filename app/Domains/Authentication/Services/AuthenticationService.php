@@ -16,6 +16,7 @@ use App\Domains\Authentication\Events\PasswordReset;
 use App\Domains\Authentication\Events\UserLoggedIn;
 use App\Domains\Authentication\Events\UserLoggedOut;
 use App\Domains\Authentication\Exceptions\AuthenticationFailedException;
+use App\Domains\Commerce\Services\CartService;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset as LaravelPasswordReset;
 use Illuminate\Support\Facades\Auth;
@@ -123,6 +124,14 @@ final class AuthenticationService extends BaseService
     public function logout(?User $user = null): void
     {
         $user ??= Auth::user();
+
+        if ($user instanceof User) {
+            $client = app(CartService::class)->clientForUser($user);
+
+            if ($client !== null) {
+                app(CartService::class)->mergeSessionIntoClient($client);
+            }
+        }
 
         Auth::logout();
         session()->invalidate();

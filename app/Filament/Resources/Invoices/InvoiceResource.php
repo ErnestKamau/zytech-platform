@@ -3,7 +3,9 @@
 namespace App\Filament\Resources\Invoices;
 
 use App\Core\Enums\InvoiceStatus;
+use App\Core\Enums\PaymentStatus;
 use App\Core\Filament\BaseResource;
+use App\Domains\Commerce\Services\PaymentService;
 use App\Domains\Commerce\Services\SalesOrderService;
 use App\Filament\Resources\Invoices\Pages\ManageInvoices;
 use App\Models\Invoice;
@@ -55,6 +57,9 @@ class InvoiceResource extends BaseResource
                     fn (InvoiceStatus $state): string => $state->label()
                 ),
                 TextColumn::make('total_amount')->money(fn (Invoice $record): string => $record->currency ?: 'KES'),
+                TextColumn::make('amount_paid')->money(fn (Invoice $record): string => $record->currency ?: 'KES'),
+                TextColumn::make('amount_due')->money(fn (Invoice $record): string => $record->currency ?: 'KES'),
+                TextColumn::make('payments_count')->counts('payments')->label('Payments'),
             ])
             ->defaultSort('updated_at', 'desc')
             ->recordActions([
@@ -62,6 +67,24 @@ class InvoiceResource extends BaseResource
                     ->visible(fn (Invoice $record): bool => $record->status === InvoiceStatus::Draft)
                     ->requiresConfirmation()
                     ->action(fn (Invoice $record) => app(SalesOrderService::class)->issueInvoice($record)),
+                Action::make('recordPayment')
+                    ->label('Record payment')
+                    ->icon(Heroicon::OutlinedCreditCard)
+                    ->visible(fn (Invoice $record): bool => $record->status !== InvoiceStatus::Paid)
+                    ->schema([
+                        TextInput::make('amount')->numeric()->required(),
+                        TextInput::make('method')->maxLength(100),
+                        TextInput::make('reference')->maxLength(255),
+                    ])
+                    ->action(function (Invoice $record, array $data): void {
+                        app(PaymentService::class)->recordForInvoice($record, [
+                            'amount' => $data['amount'],
+                            'currency' => $record->currency,
+                            'method' => $data['method'] ?? null,
+                            'reference' => $data['reference'] ?? null,
+                            'status' => PaymentStatus::Completed,
+                        ]);
+                    }),
                 EditAction::make(),
             ]);
     }

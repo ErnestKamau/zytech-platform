@@ -69,4 +69,9 @@ class SalesOrder extends BaseModel
     {
         return $this->hasOne(Invoice::class);
     }
+
+    public function fulfillment(): HasOne
+    {
+        return $this->hasOne(Fulfillment::class);
+    }
 }

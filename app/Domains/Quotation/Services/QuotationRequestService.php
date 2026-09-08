@@ -11,8 +11,10 @@ use App\Domains\Quotation\Data\QuotationRequestData;
 use App\Domains\Quotation\Events\QuotationRequestSubmitted;
 use App\Domains\Quotation\Repositories\QuotationRequestRepository;
 use App\Domains\Quotation\Support\ReferenceNumber;
+use App\Models\Product;
 use App\Models\QuotationRequest;
 use App\Models\QuotationStatusHistory;
+use App\Models\Service;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -23,6 +25,7 @@ final class QuotationRequestService extends BaseService
         private readonly LeadService $leads,
         private readonly ClientService $clients,
         private readonly TimelineService $clientTimeline,
+        private readonly QuotationRequestItemService $requestItems,
     ) {}
 
     public function findByReference(string $reference): ?QuotationRequestData
@@ -73,15 +76,28 @@ final class QuotationRequestService extends BaseService
 
             if ($serviceIds !== []) {
                 $request->services()->sync($serviceIds);
+                $services = Service::query()->whereIn('id', $serviceIds)->get();
+                foreach ($services as $service) {
+                    $this->requestItems->addCustomLine(
+                        $request,
+                        $service->title,
+                        1,
+                        'service',
+                    );
+                }
             }
 
             if ($productIds !== []) {
                 $request->products()->sync($productIds);
+                $products = Product::query()->whereIn('id', $productIds)->get();
+                foreach ($products as $product) {
+                    $this->requestItems->addCatalogLine($request, $product);
+                }
             }
 
             $this->recordStatus($request, null, QuotationStatus::Pending, 'Submitted from public website');
 
-            event(new QuotationRequestSubmitted($request->fresh(['services', 'products', 'source'])));
+            event(new QuotationRequestSubmitted($request->fresh(['services', 'products', 'source', 'items'])));
 
             return $request->refresh();
         });

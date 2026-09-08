@@ -11,6 +11,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -41,9 +42,24 @@ class ProductCategoryResource extends BaseResource
                 TextInput::make('name')->required()->maxLength(255),
                 Textarea::make('description')->rows(3)->columnSpanFull(),
                 Textarea::make('icon_path')->rows(2)->columnSpanFull(),
+                Select::make('image_key')
+                    ->options(self::mediaImageOptions())
+                    ->searchable(),
                 Toggle::make('is_published')->default(true),
                 TextInput::make('sort_order')->numeric()->default(0),
             ]);
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public static function mediaImageOptions(): array
+    {
+        return collect(config('zyntech-media.images', []))
+            ->mapWithKeys(fn (array $image, string $key): array => [
+                $key => ($image['alt'] ?? $key).' ('.$key.')',
+            ])
+            ->all();
     }
 
     public static function table(Table $table): Table

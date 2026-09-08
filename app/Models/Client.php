@@ -132,6 +132,16 @@ class Client extends BaseModel
         return $this->hasMany(SalesOrder::class);
     }
 
+    public function carts(): HasMany
+    {
+        return $this->hasMany(Cart::class);
+    }
+
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class)->orderByDesc('placed_at');
+    }
+
     public function invoices(): HasMany
     {
         return $this->hasMany(Invoice::class);

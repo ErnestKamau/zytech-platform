@@ -9,6 +9,7 @@ use App\Core\Enums\QuotationStatus;
 use App\Core\Filament\BaseResource;
 use App\Domains\Quotation\Actions\CreateQuotationFromRequest;
 use App\Filament\Resources\QuotationRequests\Pages\ManageQuotationRequests;
+use App\Filament\Resources\Quotations\QuotationResource;
 use App\Models\QuotationRequest;
 use BackedEnum;
 use Filament\Actions\Action;
@@ -17,9 +18,11 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
@@ -63,6 +66,20 @@ class QuotationRequestResource extends BaseResource
             Textarea::make('description')->rows(4)->columnSpanFull(),
             Textarea::make('internal_notes')->rows(3)->columnSpanFull(),
             CheckboxList::make('services')->relationship('services', 'title')->columns(2)->columnSpanFull(),
+            Repeater::make('items')
+                ->relationship()
+                ->schema([
+                    Select::make('product_id')->relationship('product', 'title')->searchable(),
+                    Select::make('product_variant_id')->relationship('variant', 'title')->searchable(),
+                    TextInput::make('description')->required(),
+                    TextInput::make('quantity')->numeric()->default(1)->required(),
+                    TextInput::make('unit_snapshot')->label('Unit'),
+                    TextInput::make('sort_order')->numeric()->default(0),
+                ])
+                ->columns(3)
+                ->columnSpanFull()
+                ->defaultItems(0)
+                ->collapsible(),
         ]);
     }
 
@@ -85,9 +102,20 @@ class QuotationRequestResource extends BaseResource
             ->defaultSort('submitted_at', 'desc')
             ->recordActions([
                 Action::make('create_quotation')
+                    ->label('Create quotation')
                     ->visible(fn (QuotationRequest $record): bool => $record->quotation === null)
                     ->requiresConfirmation()
-                    ->action(fn (QuotationRequest $record) => app(CreateQuotationFromRequest::class)->handle($record)),
+                    ->action(function (QuotationRequest $record) {
+                        $quotation = app(CreateQuotationFromRequest::class)->handle($record);
+
+                        Notification::make()
+                            ->success()
+                            ->title('Quotation created')
+                            ->body($quotation->reference_number.' is ready to review and price.')
+                            ->send();
+
+                        return redirect(QuotationResource::getUrl());
+                    }),
                 EditAction::make(),
                 DeleteAction::make(),
             ])

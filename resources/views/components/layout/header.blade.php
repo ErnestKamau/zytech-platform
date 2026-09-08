@@ -66,6 +66,7 @@
                 </svg>
             </a>
             <x-ui.theme-toggle />
+            <livewire:website.cart-badge />
             @auth
                 @php
                     $portalHome = auth()->user()->clientProfile?->portal_access_granted_at
@@ -109,6 +110,7 @@
                     >{{ $item['label'] }}</a>
                 @endforeach
                 <a href="{{ route('search') }}" class="zy-header__sheet-link" @click="menuOpen = false">Search</a>
+                <a href="{{ route('cart') }}" class="zy-header__sheet-link" @click="menuOpen = false">Cart</a>
             </nav>
             <div class="zy-header__sheet-actions">
                 @auth

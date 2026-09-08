@@ -24,6 +24,10 @@ class PortalSeeder extends Seeder
         $client = Client::query()->where('email', 'james.mwangi@example.com')->first();
 
         if ($user !== null && $client !== null) {
+            if ($client->email !== $user->email) {
+                $client->forceFill(['email' => $user->email])->save();
+            }
+
             if ($client->user_id !== $user->id || $client->portal_access_granted_at === null) {
                 app(ClientService::class)->assignPortalAccess($client, $user->id);
             }

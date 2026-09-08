@@ -50,6 +50,13 @@ class ProductResource extends BaseResource
                     ->relationship('category', 'name')
                     ->required()
                     ->searchable(),
+                Select::make('brand_id')
+                    ->relationship('brand', 'name')
+                    ->searchable(),
+                Select::make('default_unit_id')
+                    ->relationship('defaultUnit', 'name')
+                    ->label('Default unit')
+                    ->searchable(),
                 TextInput::make('sku')->maxLength(100),
                 Select::make('purchase_mode')
                     ->options(collect(PurchaseMode::cases())->mapWithKeys(
@@ -111,6 +118,7 @@ class ProductResource extends BaseResource
                 TextColumn::make('title')->searchable()->sortable(),
                 TextColumn::make('sku')->toggleable(),
                 TextColumn::make('category.name')->label('Category'),
+                TextColumn::make('brand.name')->label('Brand')->toggleable(),
                 TextColumn::make('purchase_mode')
                     ->badge()
                     ->formatStateUsing(fn (PurchaseMode $state): string => $state->label()),

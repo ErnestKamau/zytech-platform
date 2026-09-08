@@ -18,6 +18,7 @@ class ProductCategory extends BaseModel
         'slug',
         'description',
         'icon_path',
+        'image_key',
         'is_published',
         'sort_order',
     ];

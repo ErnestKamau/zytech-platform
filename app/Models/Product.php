@@ -13,6 +13,7 @@ use App\Core\Traits\HasSlug;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends BaseModel
 {
@@ -23,6 +24,8 @@ class Product extends BaseModel
     /** @var list<string> */
     protected $fillable = [
         'product_category_id',
+        'brand_id',
+        'default_unit_id',
         'title',
         'slug',
         'sku',
@@ -82,6 +85,21 @@ class Product extends BaseModel
     public function category(): BelongsTo
     {
         return $this->belongsTo(ProductCategory::class, 'product_category_id');
+    }
+
+    public function brand(): BelongsTo
+    {
+        return $this->belongsTo(Brand::class);
+    }
+
+    public function defaultUnit(): BelongsTo
+    {
+        return $this->belongsTo(Unit::class, 'default_unit_id');
+    }
+
+    public function variants(): HasMany
+    {
+        return $this->hasMany(ProductVariant::class);
     }
 
     public function quotationRequests(): BelongsToMany

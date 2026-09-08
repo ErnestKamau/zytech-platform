@@ -3,13 +3,44 @@
 namespace App\Domains\Client\Repositories;
 
 use App\Models\Client;
+use App\Models\User;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 final class ClientRepository
 {
     public function findByEmail(string $email): ?Client
     {
-        return Client::query()->where('email', $email)->first();
+        $normalized = Str::lower(trim($email));
+
+        if ($normalized === '') {
+            return null;
+        }
+
+        $byClientEmail = Client::query()
+            ->whereRaw('LOWER(email) = ?', [$normalized])
+            ->first();
+
+        if ($byClientEmail !== null) {
+            return $byClientEmail;
+        }
+
+        $user = User::query()
+            ->whereRaw('LOWER(email) = ?', [$normalized])
+            ->first();
+
+        if ($user !== null) {
+            $linked = Client::query()->where('user_id', $user->id)->first()
+                ?? $user->clientProfile;
+
+            if ($linked !== null) {
+                return $linked;
+            }
+        }
+
+        return Client::query()
+            ->whereHas('contacts', fn ($query) => $query->whereRaw('LOWER(email) = ?', [$normalized]))
+            ->first();
     }
 
     /**

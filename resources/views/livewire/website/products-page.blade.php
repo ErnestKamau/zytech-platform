@@ -24,11 +24,28 @@
                         <span>All products</span>
                     </a>
                     @foreach ($categories as $item)
+                        @php
+                            $categoryImage = $item->image_key
+                                ? (config('zyntech-media.images.'.$item->image_key.'.path') ?? null)
+                                : null;
+                        @endphp
                         <a
                             href="{{ route('products.category', $item->slug) }}"
                             class="zy-ecom-rail__link {{ $selectedCategory?->slug === $item->slug ? 'is-active' : '' }}"
                         >
-                            <span>{{ $item->name }}</span>
+                            <span class="zy-ecom-rail__label-row">
+                                @if ($categoryImage)
+                                    <img
+                                        class="zy-ecom-rail__thumb"
+                                        src="{{ asset($categoryImage) }}"
+                                        alt=""
+                                        width="28"
+                                        height="28"
+                                        loading="lazy"
+                                    >
+                                @endif
+                                <span>{{ $item->name }}</span>
+                            </span>
                             @if (isset($item->published_products_count))
                                 <span class="zy-ecom-rail__count">{{ $item->published_products_count }}</span>
                             @endif

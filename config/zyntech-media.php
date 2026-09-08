@@ -87,6 +87,140 @@ return [
             'path' => 'media/zyntech/images/construction-villa-fitout.jpeg',
             'alt' => 'White villa mid-fitout during construction',
         ],
+
+        // Catalogue product photography (zyntech-products)
+        'product_lino_block_slab' => [
+            'path' => 'media/zyntech/images/products/lino-block-slab.jpg',
+            'alt' => 'Blue A4 lino block slab for printmaking',
+        ],
+        'product_lino_block_slab_sizes' => [
+            'path' => 'media/zyntech/images/products/lino-block-slab-sizes.jpg',
+            'alt' => 'Blue lino block slab labeled with A5 A4 A3 A1 sizes',
+        ],
+        'product_essdee_lino_cutters' => [
+            'path' => 'media/zyntech/images/products/essdee-lino-cutters.jpg',
+            'alt' => 'Essdee 25 assorted lino cutters with handle and blades',
+        ],
+        'product_printing_roller' => [
+            'path' => 'media/zyntech/images/products/printing-roller.jpg',
+            'alt' => 'Red-handle printing roller brayer with black rubber roller',
+        ],
+        'product_printing_roller_alt' => [
+            'path' => 'media/zyntech/images/products/printing-roller-alt.jpg',
+            'alt' => 'Printing roller brayer alternate angle',
+        ],
+        'product_fevicryl_acrylic_emerald' => [
+            'path' => 'media/zyntech/images/products/fevicryl-acrylic-emerald.jpg',
+            'alt' => 'Fevicryl acrylic colour tube 200ml emerald green',
+        ],
+        'product_maries_oil_colour_12' => [
+            'path' => 'media/zyntech/images/products/maries-oil-colour-12.jpg',
+            'alt' => 'Marie\'s oil colour set of 12 tubes 12ml',
+        ],
+        'product_maries_water_colour_12' => [
+            'path' => 'media/zyntech/images/products/maries-water-colour-12.jpg',
+            'alt' => 'Marie\'s water colour open set with 12 tubes',
+        ],
+        'product_maries_water_colour_12_box' => [
+            'path' => 'media/zyntech/images/products/maries-water-colour-12-box.jpg',
+            'alt' => 'Marie\'s water colour closed retail box',
+        ],
+        'product_abro_spray_paint' => [
+            'path' => 'media/zyntech/images/products/abro-spray-paint.jpg',
+            'alt' => 'ABRO all-purpose spray paint cans in assorted colours',
+        ],
+        'product_refined_linseed_oil' => [
+            'path' => 'media/zyntech/images/products/refined-linseed-oil.jpg',
+            'alt' => 'Refined linseed oil 120ml for artists oil colour medium',
+        ],
+        'product_crayola_coloured_pencils_12' => [
+            'path' => 'media/zyntech/images/products/crayola-coloured-pencils-12.jpg',
+            'alt' => 'Crayola coloured pencils pack of 12',
+        ],
+        'product_pelikan_coloured_pencils_12' => [
+            'path' => 'media/zyntech/images/products/pelikan-coloured-pencils-12.jpg',
+            'alt' => 'Pelikan coloured pencils pack of 12',
+        ],
+        'product_pelikan_coloured_pencils_12_back' => [
+            'path' => 'media/zyntech/images/products/pelikan-coloured-pencils-12-back.jpg',
+            'alt' => 'Pelikan coloured pencils pack reverse packaging',
+        ],
+        'product_pelikan_willow_charcoal' => [
+            'path' => 'media/zyntech/images/products/pelikan-willow-charcoal.jpg',
+            'alt' => 'Pelikan willow charcoal sticks box',
+        ],
+        'product_mont_marte_willow_charcoal_12' => [
+            'path' => 'media/zyntech/images/products/mont-marte-willow-charcoal-12.jpg',
+            'alt' => 'Mont Marte Signature willow charcoal 12 piece assortment',
+        ],
+        'product_maries_willow_charcoal_25' => [
+            'path' => 'media/zyntech/images/products/maries-willow-charcoal-25.jpg',
+            'alt' => 'Marie\'s willow charcoal tube 25 pieces',
+        ],
+        'product_chivalry_white_charcoal_3' => [
+            'path' => 'media/zyntech/images/products/chivalry-white-charcoal-3.jpg',
+            'alt' => 'Chivalry white charcoal pencils 3 piece medium',
+        ],
+        'product_pentel_oil_pastels_50' => [
+            'path' => 'media/zyntech/images/products/pentel-oil-pastels-50.jpg',
+            'alt' => 'Pentel Arts oil pastels 50 colours',
+        ],
+        'product_derwent_inktense_12' => [
+            'path' => 'media/zyntech/images/products/derwent-inktense-12.jpg',
+            'alt' => 'Derwent Inktense watercolour pencils tin of 12',
+        ],
+        'product_detail_paintbrush_set_5' => [
+            'path' => 'media/zyntech/images/products/detail-paintbrush-set-5.jpg',
+            'alt' => 'Set of five detail paintbrushes with orange tips',
+        ],
+        'product_canson_montval_paper' => [
+            'path' => 'media/zyntech/images/products/canson-montval-paper.jpg',
+            'alt' => 'Canson Montval watercolour paper 25 sheets 55x75cm 185gsm',
+        ],
+        'product_artline_999xf_gold' => [
+            'path' => 'media/zyntech/images/products/artline-999xf-gold.jpg',
+            'alt' => 'Artline 999XF gold paint marker 0.8mm',
+        ],
+        'product_uniball_signo_silver' => [
+            'path' => 'media/zyntech/images/products/uniball-signo-silver.jpg',
+            'alt' => 'Uni-ball Signo UM-100 silver gel pen',
+        ],
+        'product_uni_px20_silver_marker' => [
+            'path' => 'media/zyntech/images/products/uni-px20-silver-marker.jpg',
+            'alt' => 'uni PX-20 silver paint marker',
+        ],
+        'product_dylon_dye_reindeer' => [
+            'path' => 'media/zyntech/images/products/dylon-dye-reindeer.jpg',
+            'alt' => 'Dylon multi-purpose dye Reindeer 22 5g sachet',
+        ],
+        'product_dylon_dye_ebony' => [
+            'path' => 'media/zyntech/images/products/dylon-dye-ebony.jpg',
+            'alt' => 'Dylon multi-purpose dye Ebony 08 Black sachet',
+        ],
+        'product_vat_dye_brown_25g' => [
+            'path' => 'media/zyntech/images/products/vat-dye-brown-25g.jpg',
+            'alt' => 'Brown vat dye powder jar 25 grams',
+        ],
+        'product_glitter_art_shaker' => [
+            'path' => 'media/zyntech/images/products/glitter-art-shaker.jpg',
+            'alt' => 'Glitter art shaker multi-colour tub',
+        ],
+        'product_glitter_wheel_6colour' => [
+            'path' => 'media/zyntech/images/products/glitter-wheel-6colour.jpg',
+            'alt' => 'Six-compartment glitter wheel in assorted colours',
+        ],
+        'product_glitter_wheel_6colour_alt' => [
+            'path' => 'media/zyntech/images/products/glitter-wheel-6colour-alt.jpg',
+            'alt' => 'Six-compartment glitter wheel alternate view',
+        ],
+        'product_marbling_ink_set' => [
+            'path' => 'media/zyntech/images/products/marbling-ink-set.jpg',
+            'alt' => 'Specialist Crafts marbling ink 8 x 25ml set',
+        ],
+        'product_marbling_ink_set_alt' => [
+            'path' => 'media/zyntech/images/products/marbling-ink-set-alt.jpg',
+            'alt' => 'Specialist Crafts marbling ink set alternate angle',
+        ],
     ],
 
     'homepage' => [

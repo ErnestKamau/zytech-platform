@@ -23,6 +23,12 @@ Route::middleware('guest')->group(function (): void {
 });
 
 Route::middleware('auth')->group(function (): void {
+    Route::get('/logout', function () {
+        return redirect()
+            ->route('home')
+            ->with('status', 'Use Sign out to end your session.');
+    })->name('logout.get');
+
     Route::post('/logout', LogoutController::class)->name('logout');
 
     Route::get('/email/verify', VerifyEmailNotice::class)->name('verification.notice');

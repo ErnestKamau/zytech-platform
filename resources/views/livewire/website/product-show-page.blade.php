@@ -93,6 +93,26 @@
 
                 <p class="zy-ecom-stock {{ $stockClass }}">{{ $stockLabel }}</p>
 
+                @if ($variants->isNotEmpty())
+                    <div class="zy-ecom-qty" style="margin-bottom: 0.85rem;">
+                        <span class="zy-ecom-qty__label">Variant</span>
+                        <div class="zy-ecom-buy__actions" style="gap: 0.4rem;">
+                            @foreach ($variants as $variant)
+                                <button
+                                    type="button"
+                                    class="zy-ecom-btn zy-ecom-btn--ghost zy-ecom-btn--block {{ $selectedVariantId === $variant->id ? 'is-active' : '' }}"
+                                    wire:click="selectVariant('{{ $variant->id }}')"
+                                >
+                                    {{ $variant->title }}
+                                    @if ($variant->price_amount)
+                                        · {{ $product->priceCurrency }} {{ number_format((float) $variant->price_amount, 2) }}
+                                    @endif
+                                </button>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+
                 @if ($product->excerpt)
                     <p class="zy-ecom-buy__note">{{ $product->excerpt }}</p>
                 @endif
@@ -108,8 +128,14 @@
 
                 <div class="zy-ecom-buy__actions">
                     @if ($product->purchaseMode->allowsBuy())
-                        <button type="button" class="zy-ecom-btn zy-ecom-btn--primary zy-ecom-btn--block" disabled aria-disabled="true">
-                            Add to cart — coming soon
+                        <button
+                            type="button"
+                            class="zy-ecom-btn zy-ecom-btn--primary zy-ecom-btn--block"
+                            wire:click="addToCart"
+                            wire:loading.attr="disabled"
+                        >
+                            <span wire:loading.remove wire:target="addToCart">Add to cart</span>
+                            <span wire:loading wire:target="addToCart">Adding…</span>
                         </button>
                     @endif
                     @if ($product->purchaseMode->allowsQuote())
@@ -124,6 +150,15 @@
                         Save to wishlist — soon
                     </button>
                 </div>
+
+                @if ($cartMessage !== '')
+                    <p class="zy-ecom-buy__flash {{ $cartMessageError ? 'is-error' : '' }}" role="status">
+                        {{ $cartMessage }}
+                        @unless ($cartMessageError)
+                            <a href="{{ route('cart') }}">View cart</a>
+                        @endunless
+                    </p>
+                @endif
 
                 @if ($product->pricingNotes)
                     <p class="zy-ecom-buy__note">{{ $product->pricingNotes }}</p>

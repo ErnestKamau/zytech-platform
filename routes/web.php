@@ -44,6 +44,18 @@ Route::get('/products/{slug}', function (string $slug) {
     return view('pages.products.show', ['slug' => $slug]);
 })->name('products.show');
 
+Route::get('/cart', function () {
+    return view('pages.cart.index');
+})->name('cart');
+
+Route::get('/checkout', function () {
+    return view('pages.checkout.index');
+})->middleware(['auth'])->name('checkout');
+
+Route::get('/checkout/success/{orderNumber}', function (string $orderNumber) {
+    return view('pages.checkout.success', ['orderNumber' => $orderNumber]);
+})->name('checkout.success');
+
 Route::get('/knowledge', function () {
     return view('pages.knowledge.index');
 })->name('knowledge.index');

@@ -106,6 +106,7 @@
                             <x-portal.nav-link href="{{ route('portal.projects') }}" label="Projects" icon="folder" :active="request()->routeIs('portal.projects')" @click="navOpen = false" />
                             <x-portal.nav-link href="{{ route('portal.quotations') }}" label="Quotations" icon="document" :active="request()->routeIs('portal.quotations')" @click="navOpen = false" />
                             <x-portal.nav-link href="{{ route('portal.orders') }}" label="Orders" icon="folder" :active="request()->routeIs('portal.orders')" @click="navOpen = false" />
+                            <x-portal.nav-link href="{{ route('cart') }}" label="Cart" icon="inbox" :active="request()->routeIs('cart')" @click="navOpen = false" />
                             <x-portal.nav-link href="{{ route('portal.invoices') }}" label="Invoices" icon="document" :active="request()->routeIs('portal.invoices')" @click="navOpen = false" />
                             <x-portal.nav-link href="{{ route('portal.documents') }}" label="Documents" icon="inbox" :active="request()->routeIs('portal.documents')" @click="navOpen = false" />
                             <x-portal.nav-link href="{{ route('portal.messages') }}" label="Messages" icon="chat" :active="request()->routeIs('portal.messages')" @click="navOpen = false" />

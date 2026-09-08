@@ -85,6 +85,11 @@ class QuotationRequest extends BaseModel
         return $this->hasMany(QuotationRequestAttachment::class);
     }
 
+    public function items(): HasMany
+    {
+        return $this->hasMany(QuotationRequestItem::class)->orderBy('sort_order');
+    }
+
     public function siteVisits(): HasMany
     {
         return $this->hasMany(SiteVisit::class)->orderByDesc('scheduled_at');

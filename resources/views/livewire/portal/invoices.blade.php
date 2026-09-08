@@ -30,6 +30,9 @@
                             <p class="zy-muted">
                                 Total {{ number_format((float) $invoice->total_amount, 2) }} {{ $invoice->currency }}
                                 · Due {{ number_format((float) $invoice->amount_due, 2) }} {{ $invoice->currency }}
+                                @if ($invoice->payments->isNotEmpty())
+                                    · {{ $invoice->payments->count() }} payment{{ $invoice->payments->count() === 1 ? '' : 's' }}
+                                @endif
                             </p>
                         </div>
                     </div>
@@ -37,6 +40,19 @@
                         <span class="zy-badge zy-badge--primary">{{ $invoice->status->label() }}</span>
                     </div>
                 </div>
+                @if ($invoice->payments->isNotEmpty())
+                    <ul class="zy-muted" style="margin: 0.75rem 0 0; padding-left: 1.25rem;">
+                        @foreach ($invoice->payments as $payment)
+                            <li>
+                                {{ $payment->status->label() }}
+                                · {{ number_format((float) $payment->amount, 2) }} {{ $payment->currency }}
+                                @if ($payment->paid_at)
+                                    · {{ $payment->paid_at->toFormattedDateString() }}
+                                @endif
+                            </li>
+                        @endforeach
+                    </ul>
+                @endif
             </article>
         @empty
             <x-ui.empty-state

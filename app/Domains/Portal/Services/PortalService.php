@@ -45,12 +45,23 @@ final class PortalService extends BaseService
     }
 
     /**
+     * @return Collection<int, \App\Models\Order>
+     */
+    public function directOrders(Client $client): Collection
+    {
+        return $client->orders()
+            ->with(['items', 'fulfillment', 'payments'])
+            ->orderByDesc('placed_at')
+            ->get();
+    }
+
+    /**
      * @return Collection<int, \App\Models\Invoice>
      */
     public function invoices(Client $client): Collection
     {
         return $client->invoices()
-            ->with(['items', 'salesOrder', 'quotation'])
+            ->with(['items', 'salesOrder', 'quotation', 'payments'])
             ->orderByDesc('updated_at')
             ->get();
     }
