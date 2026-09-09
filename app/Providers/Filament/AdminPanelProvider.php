@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Auth\Login;
 use App\Filament\Pages\Dashboard;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -27,11 +28,11 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->viteTheme('resources/css/filament/admin/theme.css')
-            ->login()
-            ->brandName('Zytech Contractors')
+            ->login(Login::class)
+            ->brandName('Zytech Admin')
             ->font('Instrument Sans')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::hex('#5c7349'),
             ])
             ->sidebarCollapsibleOnDesktop()
             ->sidebarWidth('16rem')

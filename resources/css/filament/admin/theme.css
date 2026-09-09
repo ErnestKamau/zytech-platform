@@ -312,3 +312,327 @@
 .fi-needs-attention-row {
     @apply mb-1.5 flex min-h-11 flex-col gap-0.5 rounded-lg border border-gray-200 px-3 py-2 text-xs transition hover:bg-gray-50 dark:border-white/10 dark:hover:bg-white/5 sm:flex-row sm:items-center sm:justify-between sm:gap-3;
 }
+
+/* -------------------------------------------------------------------------- */
+/* Admin auth — split layout aligned with public website auth                 */
+/* -------------------------------------------------------------------------- */
+
+.zy-admin-auth {
+    --zy-admin-paper: #f7f5f2;
+    --zy-admin-ink: #1c1815;
+    --zy-admin-muted: rgb(28 24 21 / 0.62);
+    --zy-admin-sage: #5c7349;
+    --zy-admin-border: rgb(28 24 21 / 0.1);
+
+    display: flex;
+    min-height: 100vh;
+    min-height: 100svh;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    color: var(--zy-admin-ink);
+    background:
+        radial-gradient(ellipse 70% 55% at 12% 18%, rgb(92 115 73 / 0.16), transparent 58%),
+        radial-gradient(ellipse 55% 45% at 88% 82%, rgb(72 198 239 / 0.1), transparent 55%),
+        var(--zy-admin-paper);
+}
+
+.dark .zy-admin-auth {
+    --zy-admin-paper: #14110f;
+    --zy-admin-ink: #f7f5f2;
+    --zy-admin-muted: rgb(247 245 242 / 0.65);
+    --zy-admin-border: rgb(247 245 242 / 0.12);
+    background:
+        radial-gradient(ellipse 70% 55% at 12% 18%, rgb(92 115 73 / 0.22), transparent 58%),
+        radial-gradient(ellipse 55% 45% at 88% 82%, rgb(72 198 239 / 0.1), transparent 55%),
+        var(--zy-admin-paper);
+}
+
+@media (min-width: 1024px) {
+    .zy-admin-auth {
+        padding: 2rem;
+    }
+}
+
+.zy-admin-auth__card {
+    display: grid;
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100svh;
+    overflow: hidden;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    background: #fff;
+}
+
+.dark .zy-admin-auth__card {
+    background: #1c1815;
+}
+
+@media (min-width: 1024px) {
+    .zy-admin-auth__card {
+        width: min(1120px, 100%);
+        min-height: min(820px, calc(100svh - 3rem));
+        max-height: calc(100svh - 3rem);
+        grid-template-columns: minmax(0, 40fr) minmax(0, 60fr);
+        grid-template-rows: 1fr;
+        border-radius: 2.25rem;
+        border: 1px solid var(--zy-admin-border);
+        box-shadow:
+            0 1px 2px rgb(28 24 21 / 0.06),
+            0 24px 64px rgb(28 24 21 / 0.12);
+    }
+}
+
+.zy-admin-auth__aside {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    overflow: hidden;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1.25rem;
+    min-height: clamp(8.5rem, 24vw, 11rem);
+    padding: 1rem 1rem 1.25rem;
+    color: #fff;
+    border-radius: 0 0 1rem 1rem;
+    background: #1c1815;
+}
+
+@media (min-width: 1024px) {
+    .zy-admin-auth__aside {
+        min-height: 0;
+        height: 100%;
+        padding: 2rem;
+        border-radius: 0;
+    }
+}
+
+.zy-admin-auth__visual {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.zy-admin-auth__media {
+    position: absolute;
+    inset: 0;
+}
+
+.zy-admin-auth__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.zy-admin-auth__overlay {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(180deg, rgb(28 24 21 / 0.28) 0%, rgb(28 24 21 / 0.45) 40%, rgb(28 24 21 / 0.9) 100%),
+        linear-gradient(90deg, rgb(28 24 21 / 0.35) 0%, transparent 55%);
+}
+
+.zy-admin-auth__chrome,
+.zy-admin-auth__body {
+    position: relative;
+    z-index: 1;
+}
+
+.zy-admin-auth__chrome {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.zy-admin-auth__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    color: inherit;
+    text-decoration: none;
+}
+
+.zy-admin-auth__mark {
+    display: inline-grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.65rem;
+    background: rgb(92 115 73 / 0.95);
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.zy-admin-auth__brand-text {
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.zy-admin-auth__brand-text em {
+    font-style: normal;
+    font-weight: 500;
+    opacity: 0.82;
+}
+
+.zy-admin-auth__skip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.7rem;
+    border: 1px solid rgb(255 255 255 / 0.22);
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.1);
+    color: inherit;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-decoration: none;
+    backdrop-filter: blur(8px);
+}
+
+.zy-admin-auth__body {
+    display: grid;
+    gap: 0.65rem;
+}
+
+.zy-admin-auth__eyebrow {
+    margin: 0;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.85;
+}
+
+.zy-admin-auth__headline {
+    margin: 0;
+    max-width: 16ch;
+    font-size: clamp(1.45rem, 2.4vw, 2rem);
+    font-weight: 650;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+}
+
+.zy-admin-auth__lead {
+    margin: 0;
+    max-width: 34ch;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    opacity: 0.88;
+}
+
+.zy-admin-auth__features {
+    display: none;
+    margin: 0.5rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+@media (min-width: 1024px) {
+    .zy-admin-auth__features {
+        display: grid;
+        gap: 0.45rem;
+    }
+}
+
+.zy-admin-auth__features li {
+    position: relative;
+    padding-left: 1.1rem;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    opacity: 0.9;
+}
+
+.zy-admin-auth__features li::before {
+    content: '';
+    position: absolute;
+    top: 0.45rem;
+    left: 0;
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 999px;
+    background: #8fa67a;
+}
+
+.zy-admin-auth__main-wrap {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    background: inherit;
+}
+
+.zy-admin-auth__toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem 0;
+}
+
+@media (min-width: 1024px) {
+    .zy-admin-auth__toolbar {
+        padding: 1.5rem 2rem 0;
+    }
+}
+
+.zy-admin-auth__back,
+.zy-admin-auth__portal-link {
+    color: var(--zy-admin-muted);
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.zy-admin-auth__back:hover,
+.zy-admin-auth__portal-link:hover {
+    color: var(--zy-admin-sage);
+}
+
+.zy-admin-auth__main-ctn {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    padding: 1.25rem 1.25rem 2rem;
+}
+
+@media (min-width: 1024px) {
+    .zy-admin-auth__main-ctn {
+        padding: 1.5rem 2.5rem 2.5rem;
+    }
+}
+
+.zy-admin-auth__main.fi-simple-main {
+    width: 100%;
+    max-width: 26rem;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.zy-admin-auth .fi-simple-header-heading {
+    @apply text-2xl font-semibold tracking-tight text-gray-950 dark:text-white;
+}
+
+.zy-admin-auth .fi-simple-header-subheading {
+    @apply mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-300;
+}
+
+.zy-admin-auth__note {
+    display: block;
+    margin-top: 0.35rem;
+    font-size: 0.8rem;
+    color: var(--zy-admin-sage);
+    font-weight: 600;
+}
+
+.zy-admin-auth .fi-btn-primary {
+    @apply font-semibold;
+}
