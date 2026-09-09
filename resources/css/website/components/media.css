@@ -35,13 +35,21 @@
 .zy-media-hero__scrim {
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-        180deg,
-        rgb(28 24 21 / 0.28) 0%,
-        rgb(28 24 21 / 0.08) 34%,
-        rgb(28 24 21 / 0.38) 68%,
-        rgb(28 24 21 / 0.78) 100%
-    );
+    background:
+        linear-gradient(
+            90deg,
+            rgb(28 24 21 / 0.72) 0%,
+            rgb(28 24 21 / 0.42) 42%,
+            rgb(28 24 21 / 0.18) 68%,
+            rgb(28 24 21 / 0.28) 100%
+        ),
+        linear-gradient(
+            180deg,
+            rgb(28 24 21 / 0.35) 0%,
+            rgb(28 24 21 / 0.12) 36%,
+            rgb(28 24 21 / 0.45) 72%,
+            rgb(28 24 21 / 0.82) 100%
+        );
     pointer-events: none;
 }
 

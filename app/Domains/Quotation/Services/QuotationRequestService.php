@@ -7,6 +7,7 @@ use App\Core\Enums\QuotationStatus;
 use App\Core\Services\BaseService;
 use App\Domains\Client\Services\ClientService;
 use App\Domains\Client\Services\TimelineService;
+use App\Domains\Operations\Services\ActivityLogger;
 use App\Domains\Quotation\Data\QuotationRequestData;
 use App\Domains\Quotation\Events\QuotationRequestSubmitted;
 use App\Domains\Quotation\Repositories\QuotationRequestRepository;
@@ -26,6 +27,7 @@ final class QuotationRequestService extends BaseService
         private readonly ClientService $clients,
         private readonly TimelineService $clientTimeline,
         private readonly QuotationRequestItemService $requestItems,
+        private readonly ActivityLogger $activities,
     ) {}
 
     public function findByReference(string $reference): ?QuotationRequestData
@@ -42,7 +44,7 @@ final class QuotationRequestService extends BaseService
      */
     public function submit(array $payload, array $serviceIds = [], array $productIds = []): QuotationRequest
     {
-        return DB::transaction(function () use ($payload, $serviceIds, $productIds): QuotationRequest {
+        $request = DB::transaction(function () use ($payload, $serviceIds, $productIds): QuotationRequest {
             $client = $this->clients->findOrCreateFromLead(
                 (string) $payload['full_name'],
                 (string) $payload['email'],
@@ -97,10 +99,17 @@ final class QuotationRequestService extends BaseService
 
             $this->recordStatus($request, null, QuotationStatus::Pending, 'Submitted from public website');
 
-            event(new QuotationRequestSubmitted($request->fresh(['services', 'products', 'source', 'items'])));
+            $this->activities->log($request, 'quotation_request.submitted', [
+                'reference' => $request->reference_number,
+                'client_id' => $client->id,
+            ]);
 
-            return $request->refresh();
+            return $request->fresh(['services', 'products', 'source', 'items']) ?? $request->refresh();
         });
+
+        event(new QuotationRequestSubmitted($request));
+
+        return $request->refresh();
     }
 
     public function transition(QuotationRequest $request, QuotationStatus $status, ?string $notes = null): QuotationRequest

@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Quotations;
 use App\Core\Enums\QuotationStatus;
 use App\Core\Enums\QuotationType;
 use App\Core\Filament\BaseResource;
+use App\Core\Filament\BusinessHistoryAction;
 use App\Domains\Quotation\Actions\ApproveQuotation;
 use App\Domains\Quotation\Actions\SendQuotation;
 use App\Domains\Quotation\Services\QuotationService;
@@ -84,6 +85,7 @@ class QuotationResource extends BaseResource
             ])
             ->defaultSort('updated_at', 'desc')
             ->recordActions([
+                BusinessHistoryAction::make(metaKeys: ['quotation_id']),
                 Action::make('approve')
                     ->visible(fn (Quotation $record): bool => in_array($record->status, [QuotationStatus::Draft, QuotationStatus::Reviewing], true))
                     ->requiresConfirmation()

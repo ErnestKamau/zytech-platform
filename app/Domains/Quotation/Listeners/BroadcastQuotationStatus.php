@@ -3,6 +3,8 @@
 namespace App\Domains\Quotation\Listeners;
 
 use App\Core\Listeners\BaseListener;
+use App\Domains\Quotation\Events\LeadCreated;
+use App\Domains\Quotation\Events\LeadQualified;
 use App\Domains\Quotation\Events\QuotationAccepted;
 use App\Domains\Quotation\Events\QuotationApproved;
 use App\Domains\Quotation\Events\QuotationCreated;
@@ -10,6 +12,7 @@ use App\Domains\Quotation\Events\QuotationRejected;
 use App\Domains\Quotation\Events\QuotationRequestSubmitted;
 use App\Domains\Quotation\Events\QuotationRevisionRequested;
 use App\Domains\Quotation\Events\QuotationSent;
+use App\Domains\Quotation\Events\SiteVisitScheduled;
 use App\Infrastructure\Queue\QueueName;
 use Illuminate\Support\Facades\Log;
 
@@ -18,7 +21,7 @@ final class BroadcastQuotationStatus extends BaseListener
     public string $queue = QueueName::BROADCAST;
 
     public function handle(
-        QuotationRequestSubmitted|QuotationCreated|QuotationApproved|QuotationSent|QuotationAccepted|QuotationRejected|QuotationRevisionRequested $event,
+        QuotationRequestSubmitted|LeadCreated|LeadQualified|QuotationCreated|QuotationApproved|QuotationSent|QuotationAccepted|QuotationRejected|QuotationRevisionRequested|SiteVisitScheduled $event,
     ): void {
         Log::info('quotation.broadcast', [
             'event' => class_basename($event),

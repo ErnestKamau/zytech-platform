@@ -7,6 +7,7 @@ use App\Core\Enums\PreferredContactMethod;
 use App\Core\Enums\ProjectType;
 use App\Core\Enums\QuotationStatus;
 use App\Core\Filament\BaseResource;
+use App\Core\Filament\BusinessHistoryAction;
 use App\Domains\Quotation\Actions\CreateQuotationFromRequest;
 use App\Filament\Resources\QuotationRequests\Pages\ManageQuotationRequests;
 use App\Filament\Resources\Quotations\QuotationResource;
@@ -101,6 +102,7 @@ class QuotationRequestResource extends BaseResource
             ])
             ->defaultSort('submitted_at', 'desc')
             ->recordActions([
+                BusinessHistoryAction::make(metaKeys: ['quotation_request_id']),
                 Action::make('create_quotation')
                     ->label('Create quotation')
                     ->visible(fn (QuotationRequest $record): bool => $record->quotation === null)

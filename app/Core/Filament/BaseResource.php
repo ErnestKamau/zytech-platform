@@ -7,4 +7,9 @@ use Filament\Resources\Resource;
 abstract class BaseResource extends Resource
 {
     // UI only — business rules belong in domain Services / Actions / Policies.
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
 }

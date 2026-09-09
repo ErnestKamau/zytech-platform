@@ -120,6 +120,19 @@ final class CompanyService extends BaseService
     }
 
     /**
+     * Visible CMS statistics for the admin dashboard (not traffic/clicks).
+     *
+     * @return Collection<int, CompanyStatistic>
+     */
+    public function adminStatistics(): Collection
+    {
+        return CompanyStatistic::query()
+            ->where('is_visible', true)
+            ->orderBy('sort_order')
+            ->get();
+    }
+
+    /**
      * @return Collection<int, Faq>
      */
     public function faqs(): Collection

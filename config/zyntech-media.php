@@ -31,6 +31,10 @@ return [
             'path' => 'media/zyntech/images/about-architecture.jpeg',
             'alt' => 'Two contemporary building facades meeting against an overcast sky',
         ],
+        'hero_modern_residence' => [
+            'path' => 'media/zyntech/images/hero-modern-residence.jpeg',
+            'alt' => 'Two-storey residence with stone pillars, brick accent, and interlocking driveway',
+        ],
         'interior_cad_overlay' => [
             'path' => 'media/zyntech/images/interior-cad-overlay.jpeg',
             'alt' => 'Interior construction space with an architectural CAD wireframe overlay',
@@ -224,8 +228,8 @@ return [
     ],
 
     'homepage' => [
-        'hero' => 'hero_facade_dusk',
-        'about' => 'about_architecture',
+        'hero' => 'hero_modern_residence',
+        'about' => 'structure_cantilever',
     ],
 
     /**

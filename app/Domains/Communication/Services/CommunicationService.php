@@ -9,6 +9,8 @@ use App\Domains\Communication\Events\NotificationDispatched;
 use App\Domains\Communication\Events\NotificationPushed;
 use App\Domains\Communication\Mail\TemplatedMail;
 use App\Domains\Communication\Notifications\HubDatabaseNotification;
+use App\Models\Client;
+use App\Models\ClientPreference;
 use App\Models\NotificationLog;
 use App\Models\NotificationPreference;
 use App\Models\User;
@@ -33,6 +35,7 @@ final class CommunicationService extends BaseService
         string $type,
         string $recipientEmail,
         ?User $user = null,
+        ?Client $client = null,
         ?string $templateKey = null,
         array $replacements = [],
         ?array $channels = null,
@@ -42,6 +45,7 @@ final class CommunicationService extends BaseService
     ): void {
         $channels ??= [NotificationChannel::Mail, NotificationChannel::Database, NotificationChannel::Broadcast];
         $preferences = $user !== null ? $this->preferencesFor($user) : null;
+        $clientPreferences = $this->resolveClientPreferences($client, $meta);
 
         $template = $templateKey !== null ? $this->templates->findByKey($templateKey) : null;
         $resolvedSubject = $subject
@@ -52,6 +56,12 @@ final class CommunicationService extends BaseService
         foreach ($channels as $channel) {
             if ($preferences !== null && ! $this->channelAllowed($preferences, $channel)) {
                 $this->log($type, $channel, DeliveryStatus::Skipped, $recipientEmail, $user, $resolvedSubject, $resolvedBody, $meta, 'Disabled by preference');
+
+                continue;
+            }
+
+            if ($clientPreferences !== null && ! $this->clientChannelAllowed($clientPreferences, $channel)) {
+                $this->log($type, $channel, DeliveryStatus::Skipped, $recipientEmail, $user, $resolvedSubject, $resolvedBody, $meta, 'Disabled by client preference');
 
                 continue;
             }
@@ -109,6 +119,23 @@ final class CommunicationService extends BaseService
         );
     }
 
+    /**
+     * @param  array<string, mixed>|null  $meta
+     */
+    private function resolveClientPreferences(?Client $client, ?array $meta): ?ClientPreference
+    {
+        if ($client !== null) {
+            return $client->preferences ?? ClientPreference::query()->where('client_id', $client->id)->first();
+        }
+
+        $clientId = $meta['client_id'] ?? null;
+        if (! is_string($clientId) && ! is_int($clientId)) {
+            return null;
+        }
+
+        return ClientPreference::query()->where('client_id', $clientId)->first();
+    }
+
     private function channelAllowed(NotificationPreference $preferences, NotificationChannel $channel): bool
     {
         return match ($channel) {
@@ -117,6 +144,15 @@ final class CommunicationService extends BaseService
             NotificationChannel::Broadcast => $preferences->broadcast_enabled,
             NotificationChannel::Portal => true,
             NotificationChannel::Sms => true,
+        };
+    }
+
+    private function clientChannelAllowed(ClientPreference $preferences, NotificationChannel $channel): bool
+    {
+        return match ($channel) {
+            NotificationChannel::Mail => $preferences->email_notifications,
+            NotificationChannel::Sms => $preferences->sms_notifications,
+            NotificationChannel::Database, NotificationChannel::Broadcast, NotificationChannel::Portal => true,
         };
     }
 

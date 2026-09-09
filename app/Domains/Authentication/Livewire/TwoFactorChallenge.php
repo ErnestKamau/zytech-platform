@@ -21,8 +21,6 @@ final class TwoFactorChallenge extends BaseComponent
 {
     private const PHONE_REGEX = '/^\+[1-9]\d{7,14}$/';
 
-    public string $channel = '';
-
     public string $code = '';
 
     public string $phone = '';
@@ -55,10 +53,7 @@ final class TwoFactorChallenge extends BaseComponent
         }
 
         $this->phone = (string) ($user->phone ?? '');
-
-        if (count($channels) === 1) {
-            $this->channel = $channels[0]->value;
-        }
+        $this->dispatchCodes($twoFactor, $user, $channels);
     }
 
     public function sendCode(TwoFactorChallengeService $twoFactor): void
@@ -71,24 +66,21 @@ final class TwoFactorChallenge extends BaseComponent
             return;
         }
 
-        $this->validate([
-            'channel' => ['required', 'in:email,sms'],
-        ]);
+        $channels = $twoFactor->availableChannels($user);
 
-        if ($this->channel === TwoFactorChannel::Sms->value) {
-            $user = $this->ensurePhoneForSms($user);
-        }
-
-        try {
-            $twoFactor->issue($user, TwoFactorChannel::from($this->channel));
-        } catch (TwoFactorException $e) {
-            $this->addError('channel', $e->getMessage());
+        if ($channels === []) {
+            $twoFactor->clearPending();
+            $this->redirect(route('login'));
 
             return;
         }
 
-        $this->codeSent = true;
-        session()->flash('status', 'Verification code sent.');
+        if (in_array(TwoFactorChannel::Sms, $channels, true)) {
+            $user = $this->ensurePhoneForSms($user);
+            $channels = $twoFactor->availableChannels($user);
+        }
+
+        $this->dispatchCodes($twoFactor, $user, $channels);
     }
 
     public function verify(
@@ -104,12 +96,13 @@ final class TwoFactorChallenge extends BaseComponent
         }
 
         $this->validate([
-            'channel' => ['required', 'in:email,sms'],
             'code' => ['required', 'string', 'size:6'],
         ]);
 
+        $channels = $twoFactor->availableChannels($user);
+
         try {
-            $twoFactor->verify($user, TwoFactorChannel::from($this->channel), $this->code);
+            $twoFactor->verifyAny($user, $channels, $this->code);
             $authentication->completeTwoFactorLogin(
                 $user,
                 $twoFactor->pendingRemember(),
@@ -140,13 +133,30 @@ final class TwoFactorChallenge extends BaseComponent
             'channels' => $channels,
             'maskedEmail' => $user?->email,
             'maskedPhone' => $this->maskPhone($storedPhone),
-            'needsPhone' => $this->channel === TwoFactorChannel::Sms->value
+            'needsPhone' => in_array(TwoFactorChannel::Sms, $channels, true)
                 && ! $this->isValidPhone($storedPhone),
         ])->layoutData([
             'asideImageKey' => 'commercial_courtyard',
             'asideHeadline' => 'Confirm it is you.',
-            'asideSupport' => 'Choose email or SMS for a one-time code.',
+            'asideSupport' => 'We send the same code to your enrolled email and phone.',
         ]);
+    }
+
+    /**
+     * @param  list<TwoFactorChannel>  $channels
+     */
+    private function dispatchCodes(TwoFactorChallengeService $twoFactor, User $user, array $channels): void
+    {
+        try {
+            $twoFactor->issueToChannels($user, $channels);
+        } catch (TwoFactorException $e) {
+            $this->addError('code', $e->getMessage());
+
+            return;
+        }
+
+        $this->codeSent = true;
+        session()->flash('status', 'Verification code sent.');
     }
 
     private function ensurePhoneForSms(User $user): User

@@ -15,15 +15,15 @@
 }
 
 .zy-page-home .zy-header {
+    --zy-header-stack: 5.75rem;
     margin-bottom: calc(var(--zy-header-stack) * -1);
-}
-
-.zy-page-home .zy-header:not(.is-condensed) {
-    padding-inline: 0;
+    /* Clear the hero card curve — more air on phone than the generic sticky bar */
+    padding-top: max(var(--zy-space-6), calc(env(safe-area-inset-top) + var(--zy-space-4)));
+    padding-inline: var(--zy-space-4);
 }
 
 .zy-page-home .zy-header:not(.is-condensed) .zy-header__inner {
-    padding-inline: var(--zy-space-4);
+    padding-inline: var(--zy-space-5);
 }
 
 .zy-header__inner {
@@ -74,11 +74,18 @@
     color: var(--zy-color-ink);
     text-decoration: none;
     white-space: nowrap;
-    transition: color var(--zy-duration-fast) var(--zy-ease);
+    border-radius: var(--zy-radius-full);
+    border: 1px solid var(--zy-glass-border);
+    background: var(--zy-glass-bg);
+    transition:
+        color var(--zy-duration-fast) var(--zy-ease),
+        background var(--zy-duration-fast) var(--zy-ease),
+        border-color var(--zy-duration-fast) var(--zy-ease);
 }
 
 .zy-header__login:hover {
     color: var(--zy-color-primary);
+    background: rgb(255 255 255 / 0.55);
 }
 
 .zy-header__nav.zy-nav {
@@ -245,8 +252,7 @@ html.zy-nav-open body {
 /* Homepage overlay — white chrome over the video until scroll.        */
 /* ------------------------------------------------------------------ */
 
-.zy-page-home .zy-header:not(.is-condensed) .zy-nav__brand,
-.zy-page-home .zy-header:not(.is-condensed) .zy-header__login {
+.zy-page-home .zy-header:not(.is-condensed) .zy-nav__brand {
     color: #fff;
 }
 
@@ -254,12 +260,11 @@ html.zy-nav-open body {
     color: rgb(255 255 255 / 0.72);
 }
 
-.zy-page-home .zy-header:not(.is-condensed) .zy-header__login:hover {
-    color: #fff;
-}
-
 .zy-page-home .zy-header:not(.is-condensed) .zy-theme-toggle,
-.zy-page-home .zy-header:not(.is-condensed) .zy-header__search,
+.zy-page-home .zy-header:not(.is-condensed) .zy-header__cart,
+.zy-page-home .zy-header:not(.is-condensed) .zy-header__admin,
+.zy-page-home .zy-header:not(.is-condensed) .zy-header__account,
+.zy-page-home .zy-header:not(.is-condensed) .zy-header__login,
 .zy-page-home .zy-header:not(.is-condensed) .zy-header__menu {
     color: #fff;
     background: rgb(255 255 255 / 0.1);
@@ -267,7 +272,10 @@ html.zy-nav-open body {
 }
 
 .zy-page-home .zy-header:not(.is-condensed) .zy-theme-toggle:hover,
-.zy-page-home .zy-header:not(.is-condensed) .zy-header__search:hover,
+.zy-page-home .zy-header:not(.is-condensed) .zy-header__cart:hover,
+.zy-page-home .zy-header:not(.is-condensed) .zy-header__admin:hover,
+.zy-page-home .zy-header:not(.is-condensed) .zy-header__account:hover,
+.zy-page-home .zy-header:not(.is-condensed) .zy-header__login:hover,
 .zy-page-home .zy-header:not(.is-condensed) .zy-header__menu:hover {
     background: rgb(255 255 255 / 0.2);
     color: #fff;
@@ -296,6 +304,12 @@ html.zy-nav-open body {
         padding: var(--zy-space-2) var(--zy-space-3) var(--zy-space-2) var(--zy-space-5);
     }
 
+    .zy-page-home .zy-header {
+        --zy-header-stack: 5.75rem;
+        padding-top: max(var(--zy-space-6), calc(env(safe-area-inset-top) + var(--zy-space-3)));
+        padding-inline: var(--zy-space-4);
+    }
+
     .zy-page-home .zy-header:not(.is-condensed) .zy-header__inner {
         padding-inline: var(--zy-space-8);
     }
@@ -321,12 +335,10 @@ html.zy-nav-open body {
         justify-self: center;
         max-width: 100%;
         min-width: 0;
-        overflow-x: auto;
-        scrollbar-width: none;
-    }
-
-    .zy-header__nav.zy-nav::-webkit-scrollbar {
-        display: none;
+        /* Keep Contact visible — do not clip into a scroll gutter */
+        overflow: visible;
+        flex-wrap: nowrap;
+        gap: 0;
     }
 
     .zy-header__actions {
@@ -336,7 +348,9 @@ html.zy-nav-open body {
     }
 
     .zy-header__login,
-    .zy-header .zy-header__cta {
+    .zy-header .zy-header__cta,
+    .zy-header .zy-header__account,
+    .zy-header .zy-header__admin {
         display: inline-flex;
         align-items: center;
     }
@@ -349,13 +363,19 @@ html.zy-nav-open body {
 
 /* Tighter nav labels once Products joins the pill (6 links). */
 @media (min-width: 1024px) and (max-width: 1279px) {
-    .zy-nav__link {
-        padding-inline: 0.65rem;
-        font-size: 0.6875rem;
+    .zy-nav {
+        padding: 0.15rem;
     }
 
-    .zy-header__login {
-        display: none;
+    .zy-nav__link {
+        padding-inline: 0.5rem;
+        font-size: 0.6875rem;
+    }
+}
+
+@media (min-width: 1280px) {
+    .zy-nav__link {
+        padding-inline: 0.75rem;
     }
 }
 

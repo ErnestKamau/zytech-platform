@@ -5,17 +5,25 @@
     <form wire:submit="resetPassword" class="zy-stack">
         <div class="zy-field">
             <label class="zy-label" for="email">Email</label>
-            <input id="email" type="email" class="zy-input" wire:model="email" required>
+            <div class="zy-field__control">
+                <svg class="zy-icon zy-field__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                </svg>
+                <input id="email" type="email" class="zy-input zy-input--icon" wire:model="email" required>
+            </div>
             @error('email') <p class="zy-field-error">{{ $message }}</p> @enderror
         </div>
 
         <div class="zy-field" x-data="{ show: false }">
             <label class="zy-label" for="password">New password</label>
             <div class="zy-field__control">
+                <svg class="zy-icon zy-field__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                </svg>
                 <input
                     id="password"
                     :type="show ? 'text' : 'password'"
-                    class="zy-input zy-input--icon-trailing"
+                    class="zy-input zy-input--icon zy-input--icon-trailing"
                     wire:model="password"
                     autocomplete="new-password"
                     required
@@ -35,13 +43,18 @@
                     </svg>
                 </button>
             </div>
-            <p class="zy-field__message">Must be at least 8 characters.</p>
+            <p class="zy-field__message">At least 8 characters.</p>
             @error('password') <p class="zy-field-error">{{ $message }}</p> @enderror
         </div>
 
         <div class="zy-field">
             <label class="zy-label" for="password_confirmation">Confirm new password</label>
-            <input id="password_confirmation" type="password" class="zy-input" wire:model="password_confirmation" autocomplete="new-password" required>
+            <div class="zy-field__control">
+                <svg class="zy-icon zy-field__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                </svg>
+                <input id="password_confirmation" type="password" class="zy-input zy-input--icon" wire:model="password_confirmation" autocomplete="new-password" required>
+            </div>
         </div>
 
         <button type="submit" class="zy-btn zy-btn--primary zy-btn--lg" wire:loading.attr="disabled">

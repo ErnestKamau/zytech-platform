@@ -2,10 +2,6 @@
 
 @php
     $profile = $companyProfile ?? null;
-    $stats = ($companyStatistics ?? collect())->map(fn ($stat) => [
-        'value' => $stat->value,
-        'label' => $stat->label,
-    ]);
     $heroHeadline = filled($profile?->tagline)
         ? $profile->tagline
         : 'Built on Kenyan soil, engineered to last.';
@@ -22,8 +18,8 @@
     $walkway = $images['structural_walkway'];
     $courtyard = $images['commercial_courtyard'];
     $ballast = $images['site_prep_ballast'];
-    $aboutKey = config('zyntech-media.homepage.about', 'about_architecture');
-    $aboutImage = $images[$aboutKey] ?? $images['about_architecture'];
+    $aboutKey = config('zyntech-media.homepage.about', 'structure_cantilever');
+    $aboutImage = $images[$aboutKey] ?? $images['structure_cantilever'] ?? $images['about_architecture'];
     $aboutCopy = filled($profile?->about)
         ? $profile->about
         : ($profile?->shortDescription
@@ -54,21 +50,6 @@
             </x-media.gallery>
         </div>
     </section>
-
-    @if ($stats->isNotEmpty())
-    <section class="zy-section zy-section--alt" style="padding-block: var(--zy-space-12);">
-        <div class="zy-container">
-            <div class="zy-stats">
-                @foreach ($stats as $stat)
-                    <div class="zy-stat">
-                        <p class="zy-stat__value" style="font-size: var(--zy-text-3xl);">{{ $stat['value'] }}</p>
-                        <p class="zy-stat__label">{{ $stat['label'] }}</p>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </section>
-    @endif
 
     <section class="zy-about-band">
         <div class="zy-container">

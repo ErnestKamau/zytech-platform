@@ -182,8 +182,8 @@ final class AuthenticationService extends BaseService
 
         if ($enrollChannel !== null) {
             $user->setMfaPreferences([
-                'mfa_email_enabled' => $enrollChannel === TwoFactorChannel::Email,
-                'mfa_sms_enabled' => $enrollChannel === TwoFactorChannel::Sms,
+                'mfa_email_enabled' => true,
+                'mfa_sms_enabled' => filled($user->phone),
             ]);
             $user->forceFill(['mfa_enabled' => true])->save();
         }

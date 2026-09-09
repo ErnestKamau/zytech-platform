@@ -10,6 +10,7 @@ export default defineConfig({
                 'resources/css/website/app.css',
                 'resources/css/portal/app.css',
                 'resources/js/app.js',
+                'resources/css/filament/admin/theme.css',
             ],
             refresh: true,
             fonts: [

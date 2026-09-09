@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
  * A direct, "buy now" e-commerce order placed against the product catalog.
@@ -91,6 +92,11 @@ class Order extends BaseModel
     public function fulfillment(): HasOne
     {
         return $this->hasOne(Fulfillment::class);
+    }
+
+    public function domainActivities(): MorphMany
+    {
+        return $this->morphMany(DomainActivity::class, 'subject')->orderByDesc('created_at');
     }
 
     public function scopeForClient(Builder $query, Client $client): Builder

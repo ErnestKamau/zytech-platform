@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class QuotationRequest extends BaseModel
 {
@@ -103,5 +104,10 @@ class QuotationRequest extends BaseModel
     public function statusHistory(): HasMany
     {
         return $this->hasMany(QuotationStatusHistory::class)->orderByDesc('created_at');
+    }
+
+    public function domainActivities(): MorphMany
+    {
+        return $this->morphMany(DomainActivity::class, 'subject')->orderByDesc('created_at');
     }
 }

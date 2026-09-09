@@ -1,24 +1,32 @@
 <div class="zy-auth-form">
     <h1 class="zy-auth-form__title">Welcome back</h1>
-    <p class="zy-auth-form__lead">Enter your details to access your Zytech account.</p>
+    <p class="zy-auth-form__lead">Sign in to track your Zytech projects.</p>
 
     <form wire:submit="login" method="POST" class="zy-stack">
         <div class="zy-field">
             <label class="zy-label" for="email">Email</label>
-            <input id="email" type="email" class="zy-input" wire:model="email" autocomplete="username" placeholder="eg. jane@company.co.ke" required>
+            <div class="zy-field__control">
+                <svg class="zy-icon zy-field__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                </svg>
+                <input id="email" type="email" class="zy-input zy-input--icon" wire:model="email" autocomplete="username" placeholder="Email address" required>
+            </div>
             @error('email') <p class="zy-field-error">{{ $message }}</p> @enderror
         </div>
 
         <div class="zy-field" x-data="{ show: false }">
             <label class="zy-label" for="password">Password</label>
             <div class="zy-field__control">
+                <svg class="zy-icon zy-field__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                </svg>
                 <input
                     id="password"
                     :type="show ? 'text' : 'password'"
-                    class="zy-input zy-input--icon-trailing"
+                    class="zy-input zy-input--icon zy-input--icon-trailing"
                     wire:model="password"
                     autocomplete="current-password"
-                    placeholder="Enter your password"
+                    placeholder="Password"
                     required
                 >
                 <button
@@ -48,12 +56,14 @@
         </div>
 
         <button type="submit" class="zy-btn zy-btn--primary zy-btn--lg" wire:loading.attr="disabled">
-            <span wire:loading.remove wire:target="login">Log in</span>
+            <span wire:loading.remove wire:target="login">Continue with email</span>
             <span wire:loading wire:target="login">Signing in…</span>
         </button>
     </form>
 
+    <x-ui.auth-social context="login" />
+
     <p class="zy-auth-form__footer">
-        New to Zytech? <a href="{{ route('register') }}" class="zy-auth-form__link">Create an account</a>
+        Don’t have an account? <a href="{{ route('register') }}" class="zy-auth-form__link">Sign up</a>
     </p>
 </div>

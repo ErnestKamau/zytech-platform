@@ -53,7 +53,7 @@ final class Login extends BaseComponent
         }
 
         if ($result->status === LoginStatus::RequiresEmailVerification) {
-            $this->redirect(route('verification.notice'));
+            $this->redirectIntended(route('verification.notice'));
 
             return;
         }
@@ -76,7 +76,7 @@ final class Login extends BaseComponent
     {
         return view('livewire.authentication.login')
             ->layoutData([
-                'asideImageKey' => 'commercial_courtyard',
+                'asideImageKey' => 'hero_facade_dusk',
                 'asideHeadline' => 'Sign in to your projects.',
                 'asideSupport' => 'Track your build across Nairobi and beyond.',
             ]);

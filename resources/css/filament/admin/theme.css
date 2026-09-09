@@ -1,0 +1,314 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';
+
+/* -------------------------------------------------------------------------- */
+/* Global type scale — compact across the whole admin                         */
+/* -------------------------------------------------------------------------- */
+
+.fi-body,
+.fi-simple-layout {
+    font-feature-settings: 'ss01' on, 'cv11' on;
+    @apply text-[0.8125rem] leading-normal;
+}
+
+/* Page / resource titles */
+.fi-header-heading {
+    @apply text-lg font-semibold tracking-tight sm:text-xl;
+}
+
+.fi-header-subheading {
+    @apply text-xs leading-relaxed text-gray-500 dark:text-gray-400;
+}
+
+/* Section headings (forms, widgets, resource sections) */
+.fi-section-header-heading {
+    @apply text-sm font-semibold tracking-tight;
+}
+
+.fi-section-header-description {
+    @apply text-xs leading-relaxed text-gray-500 dark:text-gray-400;
+}
+
+/* Brand / topbar */
+.fi-logo {
+    @apply max-w-[8.5rem] truncate text-xs font-semibold tracking-tight sm:max-w-none sm:text-sm;
+}
+
+.fi-topbar {
+    @apply text-[0.8125rem];
+}
+
+/* Sidebar */
+.fi-sidebar-item-label {
+    @apply text-[0.8125rem] font-medium text-gray-600 dark:text-gray-400;
+}
+
+.fi-sidebar-group-label {
+    @apply text-[0.6875rem] font-semibold uppercase tracking-wider;
+}
+
+.fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-sidebar-item-label {
+    @apply font-semibold text-gray-950 dark:text-white;
+}
+
+/* Buttons */
+.fi-btn {
+    @apply text-xs;
+}
+
+.fi-btn-size-md {
+    @apply text-xs;
+}
+
+/* Tables — list resources + stacked mobile cards */
+.fi-ta-header-toolbar {
+    @apply flex-wrap gap-2;
+}
+
+.fi-ta-header-heading {
+    @apply text-sm font-semibold tracking-tight;
+}
+
+.fi-ta-header-cell-label,
+.fi-ta-text,
+.fi-ta-text-item-label,
+.fi-ta-empty-state-heading,
+.fi-ta-selection-indicator {
+    @apply text-xs;
+}
+
+.fi-ta-empty-state-description {
+    @apply text-[0.75rem] leading-relaxed;
+}
+
+.fi-ta-text:not(.fi-inline) {
+    @apply sm:py-2;
+}
+
+.fi-ta-cell {
+    @apply text-xs;
+}
+
+.fi-ta-table-stacked-on-mobile > tbody > tr {
+    @apply mb-2 rounded-xl border border-gray-200 bg-white/80 last:mb-0 dark:border-white/10 dark:bg-white/[0.04] sm:mb-0 sm:rounded-none sm:border-0 sm:bg-transparent;
+}
+
+.fi-ta-table-stacked-on-mobile > tbody > tr > .fi-ta-cell:not(.fi-ta-selection-cell) {
+    @apply px-3.5 py-1.5 sm:py-0;
+}
+
+.fi-ta-table-stacked-on-mobile .fi-ta-cell-label {
+    @apply pt-1 text-[0.6875rem] font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400;
+}
+
+.fi-ta-table-stacked-on-mobile .fi-ta-cell-content {
+    @apply break-words text-xs leading-snug text-gray-900 dark:text-gray-100;
+}
+
+.fi-ta-table-stacked-on-mobile .fi-badge {
+    @apply max-w-full whitespace-normal break-words;
+}
+
+.fi-ta-search-field {
+    @apply w-full max-w-none sm:max-w-xs;
+}
+
+.fi-pagination-overview,
+.fi-pagination-records-per-page-select,
+.fi-pagination-items {
+    @apply text-xs;
+}
+
+.fi-pagination {
+    @apply flex-wrap gap-2;
+}
+
+/* Forms — create/edit resources */
+.fi-fo-field-wrp-label,
+.fi-fo-field-label,
+.fi-fo-field-label-content,
+.fi-input,
+.fi-select-input,
+.fi-textarea,
+.fi-fo-placeholder,
+.fi-fo-helper-text,
+.fi-fo-field-wrp-hint,
+.fi-fo-field-wrp-error-message,
+.fi-checkbox-label,
+.fi-toggle-label {
+    @apply text-xs;
+}
+
+.fi-input,
+.fi-select-input-btn,
+.fi-textarea {
+    @apply text-xs leading-normal;
+}
+
+/* Infolists / view pages */
+.fi-in-entry-label,
+.fi-in-entry-wrp-label,
+.fi-in-text {
+    @apply text-xs;
+}
+
+/* Modals / actions */
+.fi-modal-heading {
+    @apply text-base font-semibold tracking-tight;
+}
+
+.fi-modal-description {
+    @apply text-xs leading-relaxed;
+}
+
+/* Breadcrumbs */
+.fi-breadcrumbs,
+.fi-breadcrumbs-item,
+.fi-breadcrumbs-item-label {
+    @apply text-xs;
+}
+
+/* Tabs */
+.fi-tabs-item-label {
+    @apply text-xs;
+}
+
+/* Widgets / KPIs */
+.fi-wi-stats-overview-stat-value {
+    @apply text-lg font-semibold tracking-tight tabular-nums sm:text-xl;
+}
+
+.fi-wi-stats-overview-stat-label {
+    @apply text-[0.6875rem] font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400;
+}
+
+.fi-wi-stats-overview-stat-description {
+    @apply text-[0.6875rem] leading-snug text-gray-500 dark:text-gray-400;
+}
+
+.fi-wi-stats-overview-stat {
+    @apply rounded-xl border border-gray-200/80 bg-white/80 dark:border-white/10 dark:bg-white/[0.04];
+}
+
+/* -------------------------------------------------------------------------- */
+/* Page chrome / density — all admin pages                                    */
+/* -------------------------------------------------------------------------- */
+
+.fi-main {
+    @apply pb-6 sm:pb-8;
+}
+
+.fi-page-main {
+    @apply gap-y-5 sm:gap-y-6;
+}
+
+.fi-header-actions {
+    @apply flex-wrap gap-2;
+}
+
+.fi-header-actions-ctn {
+    @apply w-full sm:w-auto;
+}
+
+.fi-header-actions-ctn .fi-ac,
+.fi-header-actions-ctn .fi-btn {
+    @apply w-full sm:w-auto;
+}
+
+.fi-section:not(.fi-section-not-contained) {
+    @apply rounded-xl;
+}
+
+/* Forms — prefer single column readability on phones */
+.fi-sc-has-gap {
+    @apply gap-y-4;
+}
+
+.fi-modal-content {
+    @apply max-h-[85vh] overflow-y-auto;
+}
+
+.fi-resource-manage-records-page .fi-header,
+.fi-resource-list-records-page .fi-header {
+    @apply mb-1;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Sidebar — Resend rhythm + mobile touch targets                             */
+/* -------------------------------------------------------------------------- */
+
+.fi-sidebar-nav {
+    @apply gap-y-0.5;
+}
+
+.fi-sidebar-nav-groups {
+    @apply gap-y-0.5;
+}
+
+.fi-sidebar-group-items {
+    @apply gap-y-0.5;
+}
+
+.fi-sidebar-item {
+    @apply my-px;
+}
+
+.fi-sidebar-item-btn {
+    @apply min-h-10 rounded-lg px-2.5 py-2 sm:min-h-9;
+}
+
+.fi-sidebar-item-btn > .fi-icon {
+    @apply size-5 transition duration-200 ease-out;
+    transform-origin: center;
+}
+
+.fi-sidebar-item-has-url > .fi-sidebar-item-btn:hover > .fi-icon,
+.fi-sidebar-item-has-url > .fi-sidebar-item-btn:focus-visible > .fi-icon {
+    @apply scale-110 text-gray-700 dark:text-gray-200;
+}
+
+.fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
+    @apply rounded-lg bg-gray-100 shadow-none dark:bg-white/10;
+}
+
+.fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-icon {
+    @apply scale-105 text-primary-700 dark:text-primary-400;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Hub cards                                                                  */
+/* -------------------------------------------------------------------------- */
+
+.fi-hub-card {
+    @apply min-h-14;
+}
+
+.fi-hub-card-icon {
+    @apply transition duration-200 ease-out;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Sales funnel — stack on small screens                                      */
+/* -------------------------------------------------------------------------- */
+
+.fi-sales-funnel {
+    @apply flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-stretch sm:gap-2.5;
+}
+
+.fi-sales-funnel-stage {
+    @apply w-full sm:min-w-[6.5rem] sm:flex-1;
+}
+
+.fi-sales-funnel-conversion {
+    @apply flex-row justify-start gap-2 py-0.5 sm:min-w-[3rem] sm:flex-col sm:items-center sm:justify-center sm:gap-0 sm:py-0;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Needs-attention rows                                                       */
+/* -------------------------------------------------------------------------- */
+
+.fi-needs-attention-row {
+    @apply mb-1.5 flex min-h-11 flex-col gap-0.5 rounded-lg border border-gray-200 px-3 py-2 text-xs transition hover:bg-gray-50 dark:border-white/10 dark:hover:bg-white/5 sm:flex-row sm:items-center sm:justify-between sm:gap-3;
+}

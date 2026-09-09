@@ -63,10 +63,10 @@ final class Register extends BaseComponent
     {
         return view('livewire.authentication.register')
             ->layoutData([
-                'asideImageKey' => 'structural_walkway',
-                'asideHeadline' => 'Get started with Zyntech.',
+                'asideImageKey' => 'about_architecture',
+                'asideHeadline' => 'Get started with Zytech.',
                 'asideSupport' => 'Complete these easy steps to register your account.',
-                'showRegisterSteps' => true,
+                'showRegisterSteps' => false,
             ]);
     }
 }

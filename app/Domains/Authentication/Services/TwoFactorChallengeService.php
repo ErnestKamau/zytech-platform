@@ -71,7 +71,7 @@ final class TwoFactorChallengeService extends BaseService
             $channels[] = TwoFactorChannel::Email;
         }
 
-        if ($user->mfaSmsEnabled()) {
+        if ($user->mfaSmsEnabled() && filled($user->phone)) {
             $channels[] = TwoFactorChannel::Sms;
         }
 
@@ -80,44 +80,78 @@ final class TwoFactorChallengeService extends BaseService
 
     public function issue(User $user, TwoFactorChannel $channel, string $purpose = 'login'): void
     {
-        if ($purpose === 'login' && ! in_array($channel, $this->availableChannels($user), true)) {
+        $this->issueToChannels($user, [$channel], $purpose);
+    }
+
+    /**
+     * Issue one shared code to every given channel (email and/or SMS).
+     *
+     * @param  list<TwoFactorChannel>  $channels
+     */
+    public function issueToChannels(User $user, array $channels, string $purpose = 'login'): void
+    {
+        $channels = array_values(array_unique($channels, SORT_REGULAR));
+
+        if ($channels === []) {
             throw TwoFactorException::channelUnavailable();
         }
 
-        if (
-            in_array($purpose, ['enrollment', 'verification'], true)
-            && $channel === TwoFactorChannel::Sms
-            && ! filled($user->phone)
-        ) {
-            throw TwoFactorException::channelUnavailable();
+        foreach ($channels as $channel) {
+            if ($purpose === 'login' && ! in_array($channel, $this->availableChannels($user), true)) {
+                throw TwoFactorException::channelUnavailable();
+            }
+
+            if (
+                in_array($purpose, ['enrollment', 'verification'], true)
+                && $channel === TwoFactorChannel::Sms
+                && ! filled($user->phone)
+            ) {
+                throw TwoFactorException::channelUnavailable();
+            }
         }
 
-        $resendKey = $this->resendKey($user->id, $channel, $purpose);
+        $resendKey = $this->bundleResendKey($user->id, $purpose);
 
         if (RateLimiter::tooManyAttempts($resendKey, 1)) {
             throw TwoFactorException::resendThrottled(RateLimiter::availableIn($resendKey));
         }
 
         $code = (string) random_int(100000, 999999);
-
-        Cache::put($this->cacheKey($user->id, $channel, $purpose), [
+        $payload = [
             'hash' => Hash::make($code),
             'attempts' => 0,
-        ], now()->addSeconds(self::CODE_TTL_SECONDS));
+        ];
 
-        try {
-            match ($channel) {
-                TwoFactorChannel::Email => $this->sendEmailCode($user, $code, $purpose),
-                TwoFactorChannel::Sms => $this->sendSmsCode($user, $code, $purpose),
-            };
-        } catch (Throwable $exception) {
-            Cache::forget($this->cacheKey($user->id, $channel, $purpose));
+        foreach ($channels as $channel) {
+            Cache::put(
+                $this->cacheKey($user->id, $channel, $purpose),
+                $payload,
+                now()->addSeconds(self::CODE_TTL_SECONDS),
+            );
+        }
 
-            $message = $channel === TwoFactorChannel::Sms
-                ? 'SMS could not be sent. Check Twilio configuration and your phone number.'
-                : 'Email could not be sent. Please try again shortly.';
+        $failures = [];
 
-            throw TwoFactorException::sendFailed($message.($exception instanceof RuntimeException ? ' '.$exception->getMessage() : ''));
+        foreach ($channels as $channel) {
+            try {
+                match ($channel) {
+                    TwoFactorChannel::Email => $this->sendEmailCode($user, $code, $purpose),
+                    TwoFactorChannel::Sms => $this->sendSmsCode($user, $code, $purpose),
+                };
+            } catch (Throwable $exception) {
+                $failures[] = $channel === TwoFactorChannel::Sms
+                    ? 'SMS could not be sent. Check Twilio configuration and your phone number.'
+                        .($exception instanceof RuntimeException ? ' '.$exception->getMessage() : '')
+                    : 'Email could not be sent. Please try again shortly.';
+            }
+        }
+
+        if (count($failures) === count($channels)) {
+            foreach ($channels as $channel) {
+                Cache::forget($this->cacheKey($user->id, $channel, $purpose));
+            }
+
+            throw TwoFactorException::sendFailed(implode(' ', $failures));
         }
 
         RateLimiter::hit($resendKey, self::RESEND_DECAY_SECONDS);
@@ -125,30 +159,75 @@ final class TwoFactorChallengeService extends BaseService
 
     public function verify(User $user, TwoFactorChannel $channel, string $code, string $purpose = 'login'): void
     {
-        $key = $this->cacheKey($user->id, $channel, $purpose);
-        $payload = Cache::get($key);
+        $this->verifyAny($user, [$channel], $code, $purpose);
+    }
 
-        if (! is_array($payload) || ! isset($payload['hash'])) {
+    /**
+     * Accept a code that was issued to any of the given channels (same shared OTP).
+     *
+     * @param  list<TwoFactorChannel>  $channels
+     */
+    public function verifyAny(User $user, array $channels, string $code, string $purpose = 'login'): void
+    {
+        $channels = array_values(array_unique($channels, SORT_REGULAR));
+        $code = trim($code);
+        $keys = [];
+        $hash = null;
+        $attempts = 0;
+
+        foreach ($channels as $channel) {
+            $key = $this->cacheKey($user->id, $channel, $purpose);
+            $payload = Cache::get($key);
+
+            if (! is_array($payload) || ! isset($payload['hash'])) {
+                continue;
+            }
+
+            $keys[] = $key;
+            $hash = (string) $payload['hash'];
+            $attempts = max($attempts, (int) ($payload['attempts'] ?? 0));
+        }
+
+        if ($hash === null || $keys === []) {
             throw TwoFactorException::invalidCode();
         }
 
-        $attempts = (int) ($payload['attempts'] ?? 0);
-
         if ($attempts >= self::MAX_VERIFY_ATTEMPTS) {
-            Cache::forget($key);
+            foreach ($keys as $key) {
+                Cache::forget($key);
+            }
 
             throw TwoFactorException::tooManyAttempts(self::RESEND_DECAY_SECONDS);
         }
 
-        if (! Hash::check(trim($code), (string) $payload['hash'])) {
-            $payload['attempts'] = $attempts + 1;
-            Cache::put($key, $payload, now()->addSeconds(self::CODE_TTL_SECONDS));
+        if (! Hash::check($code, $hash)) {
+            $attempts++;
+            $payload = [
+                'hash' => $hash,
+                'attempts' => $attempts,
+            ];
+
+            foreach ($keys as $key) {
+                Cache::put($key, $payload, now()->addSeconds(self::CODE_TTL_SECONDS));
+            }
+
+            if ($attempts >= self::MAX_VERIFY_ATTEMPTS) {
+                foreach ($keys as $key) {
+                    Cache::forget($key);
+                }
+
+                throw TwoFactorException::tooManyAttempts(self::RESEND_DECAY_SECONDS);
+            }
 
             throw TwoFactorException::invalidCode();
         }
 
-        Cache::forget($key);
-        RateLimiter::clear($this->resendKey($user->id, $channel, $purpose));
+        foreach ($channels as $channel) {
+            Cache::forget($this->cacheKey($user->id, $channel, $purpose));
+            RateLimiter::clear($this->resendKey($user->id, $channel, $purpose));
+        }
+
+        RateLimiter::clear($this->bundleResendKey($user->id, $purpose));
     }
 
     private function sendEmailCode(User $user, string $code, string $purpose): void
@@ -185,5 +264,10 @@ final class TwoFactorChallengeService extends BaseService
     private function resendKey(string $userId, TwoFactorChannel $channel, string $purpose): string
     {
         return "auth.otp.resend.{$purpose}.{$userId}.{$channel->value}";
+    }
+
+    private function bundleResendKey(string $userId, string $purpose): string
+    {
+        return "auth.otp.resend.{$purpose}.{$userId}.bundle";
     }
 }

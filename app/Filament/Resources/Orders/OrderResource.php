@@ -6,6 +6,7 @@ use App\Core\Enums\OrderPaymentStatus;
 use App\Core\Enums\OrderStatus;
 use App\Core\Enums\PaymentStatus;
 use App\Core\Filament\BaseResource;
+use App\Core\Filament\BusinessHistoryAction;
 use App\Domains\Commerce\Services\OrderService;
 use App\Domains\Commerce\Services\PaymentService;
 use App\Filament\Resources\Orders\Pages\ManageOrders;
@@ -82,6 +83,7 @@ class OrderResource extends BaseResource
             ])
             ->defaultSort('placed_at', 'desc')
             ->recordActions([
+                BusinessHistoryAction::make(metaKeys: ['order_id']),
                 EditAction::make(),
                 Action::make('confirm')
                     ->visible(fn (Order $record): bool => $record->status === OrderStatus::Pending)

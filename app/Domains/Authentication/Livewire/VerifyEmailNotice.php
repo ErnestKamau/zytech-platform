@@ -20,15 +20,13 @@ final class VerifyEmailNotice extends BaseComponent
 {
     private const PHONE_REGEX = '/^\+[1-9]\d{7,14}$/';
 
-    public string $channel = '';
-
     public string $phone = '';
 
     public string $code = '';
 
     public bool $codeSent = false;
 
-    public function mount(): void
+    public function mount(TwoFactorChallengeService $twoFactor): void
     {
         $user = Auth::user();
 
@@ -45,6 +43,10 @@ final class VerifyEmailNotice extends BaseComponent
         }
 
         $this->phone = (string) ($user->phone ?? '');
+
+        if ($this->isValidPhone($this->phone)) {
+            $this->dispatchCodes($twoFactor, $user);
+        }
     }
 
     public function sendCode(TwoFactorChallengeService $twoFactor): void
@@ -52,24 +54,8 @@ final class VerifyEmailNotice extends BaseComponent
         $user = Auth::user();
         abort_unless($user !== null, 403);
 
-        $this->validate([
-            'channel' => ['required', 'in:email,sms'],
-        ]);
-
-        if ($this->channel === TwoFactorChannel::Sms->value) {
-            $user = $this->ensurePhoneForSms($user);
-        }
-
-        try {
-            $twoFactor->issue($user, TwoFactorChannel::from($this->channel), 'verification');
-        } catch (TwoFactorException $e) {
-            $this->addError('channel', $e->getMessage());
-
-            return;
-        }
-
-        $this->codeSent = true;
-        session()->flash('status', 'Verification code sent.');
+        $user = $this->ensurePhoneForSms($user);
+        $this->dispatchCodes($twoFactor, $user);
     }
 
     public function verify(
@@ -80,14 +66,14 @@ final class VerifyEmailNotice extends BaseComponent
         abort_unless($user !== null, 403);
 
         $this->validate([
-            'channel' => ['required', 'in:email,sms'],
             'code' => ['required', 'string', 'size:6'],
         ]);
 
+        $channels = $this->deliveryChannels($user);
+
         try {
-            $channel = TwoFactorChannel::from($this->channel);
-            $twoFactor->verify($user, $channel, $this->code, 'verification');
-            $authentication->verifyEmail($user, $channel);
+            $twoFactor->verifyAny($user, $channels, $this->code, 'verification');
+            $authentication->verifyEmail($user, TwoFactorChannel::Email);
         } catch (TwoFactorException $e) {
             $this->addError('code', $e->getMessage());
 
@@ -105,13 +91,40 @@ final class VerifyEmailNotice extends BaseComponent
         return view('livewire.authentication.verify-email', [
             'maskedEmail' => $user?->email,
             'maskedPhone' => $this->maskPhone($storedPhone),
-            'needsPhone' => $this->channel === TwoFactorChannel::Sms->value
-                && ! $this->isValidPhone($storedPhone),
+            'needsPhone' => ! $this->isValidPhone($storedPhone),
         ])->layoutData([
             'asideImageKey' => 'commercial_courtyard',
             'asideHeadline' => 'One more step.',
-            'asideSupport' => 'Choose email or SMS to verify your account.',
+            'asideSupport' => 'We send the same code to your email and phone.',
         ]);
+    }
+
+    private function dispatchCodes(TwoFactorChallengeService $twoFactor, User $user): void
+    {
+        try {
+            $twoFactor->issueToChannels($user, $this->deliveryChannels($user), 'verification');
+        } catch (TwoFactorException $e) {
+            $this->addError('phone', $e->getMessage());
+
+            return;
+        }
+
+        $this->codeSent = true;
+        session()->flash('status', 'Verification code sent to email and SMS.');
+    }
+
+    /**
+     * @return list<TwoFactorChannel>
+     */
+    private function deliveryChannels(User $user): array
+    {
+        $channels = [TwoFactorChannel::Email];
+
+        if ($this->isValidPhone((string) ($user->phone ?? ''))) {
+            $channels[] = TwoFactorChannel::Sms;
+        }
+
+        return $channels;
     }
 
     private function ensurePhoneForSms(User $user): User
@@ -123,7 +136,7 @@ final class VerifyEmailNotice extends BaseComponent
         $this->validate([
             'phone' => ['required', 'string', 'max:32', 'regex:'.self::PHONE_REGEX],
         ], [
-            'phone.required' => 'A phone number is required to receive an SMS code.',
+            'phone.required' => 'A phone number is required so we can text your code.',
             'phone.regex' => 'Use international format, e.g. +254712345678.',
         ]);
 

@@ -26,6 +26,15 @@
             ['href' => route('contact'), 'label' => 'Contact', 'target' => '_self', 'current' => request()->routeIs('contact')],
         ];
     }
+
+    $portalHome = null;
+    $accountLabel = 'Account';
+    if (auth()->check()) {
+        $portalHome = auth()->user()->clientProfile?->portal_access_granted_at
+            ? route('portal.dashboard')
+            : route('account.profile');
+        $accountLabel = auth()->user()->clientProfile?->portal_access_granted_at ? 'Portal' : 'Account';
+    }
 @endphp
 
 <header
@@ -60,23 +69,21 @@
         </nav>
 
         <div class="zy-header__actions">
-            <a href="{{ route('search') }}" class="zy-icon-btn zy-header__search" aria-label="Search">
-                <svg class="zy-icon zy-icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-                </svg>
-            </a>
             <x-ui.theme-toggle />
             <livewire:website.cart-badge />
+            <a href="{{ url('/admin') }}" class="zy-icon-btn zy-header__admin" aria-label="Admin">
+                <svg class="zy-icon zy-icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                </svg>
+            </a>
             @auth
-                @php
-                    $portalHome = auth()->user()->clientProfile?->portal_access_granted_at
-                        ? route('portal.dashboard')
-                        : route('account.profile');
-                    $accountLabel = auth()->user()->clientProfile?->portal_access_granted_at ? 'Portal' : 'Account';
-                @endphp
-                <a href="{{ $portalHome }}" class="zy-header__login">{{ $accountLabel }}</a>
+                <a href="{{ $portalHome }}" class="zy-icon-btn zy-header__account" aria-label="{{ $accountLabel }}">
+                    <svg class="zy-icon zy-icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                    </svg>
+                </a>
             @else
-                <a href="{{ route('login') }}" class="zy-header__login">Client login</a>
+                <a href="{{ route('login') }}" class="zy-header__login">Sign in</a>
             @endauth
             <a href="{{ route('quote.index') }}" class="zy-btn zy-btn--primary zy-btn--sm zy-header__cta">Request a Quote</a>
             <button
@@ -109,21 +116,14 @@
                         @click="menuOpen = false"
                     >{{ $item['label'] }}</a>
                 @endforeach
-                <a href="{{ route('search') }}" class="zy-header__sheet-link" @click="menuOpen = false">Search</a>
-                <a href="{{ route('cart') }}" class="zy-header__sheet-link" @click="menuOpen = false">Cart</a>
             </nav>
             <div class="zy-header__sheet-actions">
                 @auth
-                    @php
-                        $portalHome = auth()->user()->clientProfile?->portal_access_granted_at
-                            ? route('portal.dashboard')
-                            : route('account.profile');
-                    @endphp
                     <a href="{{ $portalHome }}" class="zy-btn zy-btn--secondary" @click="menuOpen = false">
-                        {{ auth()->user()->clientProfile?->portal_access_granted_at ? 'Portal' : 'Account' }}
+                        {{ $accountLabel }}
                     </a>
                 @else
-                    <a href="{{ route('login') }}" class="zy-btn zy-btn--secondary" @click="menuOpen = false">Client login</a>
+                    <a href="{{ route('login') }}" class="zy-btn zy-btn--secondary" @click="menuOpen = false">Sign in</a>
                 @endauth
                 <a href="{{ route('quote.index') }}" class="zy-btn zy-btn--primary" @click="menuOpen = false">Request a Quote</a>
             </div>

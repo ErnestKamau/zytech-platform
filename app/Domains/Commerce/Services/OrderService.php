@@ -12,6 +12,7 @@ use App\Domains\Commerce\Events\OrderPlaced;
 use App\Domains\Commerce\Events\OrderStatusChanged;
 use App\Domains\Commerce\Exceptions\CartException;
 use App\Domains\Commerce\Exceptions\OrderException;
+use App\Domains\Operations\Services\ActivityLogger;
 use App\Models\Cart;
 use App\Models\Client;
 use App\Models\Order;
@@ -21,6 +22,7 @@ final class OrderService extends BaseService
 {
     public function __construct(
         private readonly InventoryService $inventory,
+        private readonly ActivityLogger $activities,
     ) {}
 
     /**
@@ -42,7 +44,7 @@ final class OrderService extends BaseService
             throw CartException::cartIsEmpty();
         }
 
-        return $this->transaction(function () use ($cart, $client, $details): Order {
+        $order = $this->transaction(function () use ($cart, $client, $details): Order {
             $subtotal = $cart->items->sum(
                 fn ($item): float => (float) $item->unit_price * (float) $item->quantity
             );
@@ -88,10 +90,20 @@ final class OrderService extends BaseService
 
             $cart->update(['status' => CartStatus::Converted, 'converted_at' => now()]);
 
-            event(new OrderPlaced($order->fresh(['items'])));
+            $order = $order->fresh(['items']) ?? $order->refresh();
 
-            return $order->refresh();
+            $this->activities->log($order, 'order.placed', [
+                'order_number' => $order->order_number,
+                'client_id' => $client->id,
+                'total_amount' => (float) $order->total_amount,
+            ]);
+
+            return $order;
         });
+
+        event(new OrderPlaced($order));
+
+        return $order->refresh();
     }
 
     /**
@@ -101,14 +113,20 @@ final class OrderService extends BaseService
      */
     public function confirm(Order $order): Order
     {
-        return $this->transaction(function () use ($order): Order {
-            $confirmed = $this->transitionTo($order, OrderStatus::Confirmed, ['confirmed_at' => now()]);
+        $from = $order->status;
+
+        $confirmed = $this->transaction(function () use ($order): Order {
+            $confirmed = $this->transitionTo($order, OrderStatus::Confirmed, ['confirmed_at' => now()], dispatchEvent: false);
 
             $this->inventory->reserveForOrder($confirmed);
             app(FulfillmentService::class)->createForOrder($confirmed);
 
-            return $confirmed->fresh(['fulfillment', 'items']);
+            return $confirmed->fresh(['fulfillment', 'items']) ?? $confirmed;
         });
+
+        event(new OrderStatusChanged($confirmed, $from, OrderStatus::Confirmed));
+
+        return $confirmed;
     }
 
     public function markProcessing(Order $order): Order
@@ -132,25 +150,51 @@ final class OrderService extends BaseService
             throw OrderException::notCancellable();
         }
 
-        $order->forceFill([
-            'status' => OrderStatus::Cancelled,
-            'cancelled_at' => now(),
-        ])->save();
+        $cancelled = $this->transaction(function () use ($order): Order {
+            $from = $order->status;
 
-        event(new OrderCancelled($order->refresh()));
+            $order->forceFill([
+                'status' => OrderStatus::Cancelled,
+                'cancelled_at' => now(),
+            ])->save();
 
-        return $order->refresh();
+            $this->activities->log($order, 'order.cancelled', [
+                'order_number' => $order->order_number,
+                'from_status' => $from->value,
+            ]);
+
+            return $order->refresh();
+        });
+
+        event(new OrderCancelled($cancelled));
+
+        return $cancelled;
     }
 
-    private function transitionTo(Order $order, OrderStatus $status, array $extra = []): Order
+    /**
+     * @param  array<string, mixed>  $extra
+     */
+    private function transitionTo(Order $order, OrderStatus $status, array $extra = [], bool $dispatchEvent = true): Order
     {
         $from = $order->status;
 
-        $order->forceFill(array_merge(['status' => $status], $extra))->save();
+        $order = $this->transaction(function () use ($order, $status, $extra, $from): Order {
+            $order->forceFill(array_merge(['status' => $status], $extra))->save();
 
-        event(new OrderStatusChanged($order->refresh(), $from, $status));
+            $this->activities->log($order, 'order.status_changed', [
+                'order_number' => $order->order_number,
+                'from_status' => $from->value,
+                'to_status' => $status->value,
+            ]);
 
-        return $order->refresh();
+            return $order->refresh();
+        });
+
+        if ($dispatchEvent) {
+            event(new OrderStatusChanged($order, $from, $status));
+        }
+
+        return $order;
     }
 
     private function nextOrderNumber(): string
