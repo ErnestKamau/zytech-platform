@@ -58,10 +58,6 @@
 
             <div class="zy-admin-auth__main-wrap">
                 <div class="zy-admin-auth__toolbar">
-                    <a href="{{ url('/') }}" class="zy-admin-auth__back">
-                        <span aria-hidden="true">←</span>
-                        Public site
-                    </a>
                     <a href="{{ route('login') }}" class="zy-admin-auth__portal-link">
                         Client / account login
                     </a>

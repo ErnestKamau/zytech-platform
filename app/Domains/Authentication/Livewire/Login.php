@@ -7,6 +7,7 @@ use App\Domains\Authentication\Actions\AuthenticateUser;
 use App\Domains\Authentication\Data\LoginData;
 use App\Domains\Authentication\Enums\LoginStatus;
 use App\Domains\Authentication\Exceptions\AuthenticationFailedException;
+use App\Domains\Authentication\Support\AuthenticatedHome;
 use App\Domains\Portal\Events\ClientLoggedIn;
 use App\Domains\Portal\Repositories\PortalRepository;
 use Illuminate\Contracts\View\View;
@@ -84,12 +85,6 @@ final class Login extends BaseComponent
 
     private function homeRoute(): string
     {
-        $user = Auth::user();
-
-        if ($user !== null && app(PortalRepository::class)->clientForUser($user) !== null) {
-            return route('portal.dashboard');
-        }
-
-        return route('account.profile');
+        return AuthenticatedHome::url();
     }
 }

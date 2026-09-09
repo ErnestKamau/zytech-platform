@@ -5,7 +5,6 @@ namespace App\Filament\Pages\Auth;
 use Filament\Actions\Action;
 use Filament\Auth\Pages\Login as BaseLogin;
 use Illuminate\Contracts\Support\Htmlable;
-use Illuminate\Support\HtmlString;
 
 final class Login extends BaseLogin
 {
@@ -22,7 +21,7 @@ final class Login extends BaseLogin
             return parent::getHeading();
         }
 
-        return 'Operations console';
+        return 'Admin sign in';
     }
 
     public function getSubheading(): string | Htmlable | null
@@ -31,10 +30,7 @@ final class Login extends BaseLogin
             return parent::getSubheading();
         }
 
-        return new HtmlString(
-            'Sign in to manage clients, quotations, orders, projects, and the Zytech team. '
-            .'<span class="zy-admin-auth__note">Staff access only — not the client portal.</span>'
-        );
+        return 'Staff console for clients, sales, and projects.';
     }
 
     public function hasLogo(): bool

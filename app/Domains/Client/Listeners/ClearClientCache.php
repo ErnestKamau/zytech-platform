@@ -8,6 +8,7 @@ use App\Domains\Client\Events\ClientCreated;
 use App\Domains\Client\Events\ClientUpdated;
 use App\Domains\Client\Events\CommunicationLogged;
 use App\Domains\Client\Events\DocumentUploaded;
+use App\Domains\Client\Events\PortalAccessGranted;
 use App\Domains\Client\Services\ClientAnalyticsService;
 
 final class ClearClientCache extends BaseListener
@@ -15,7 +16,7 @@ final class ClearClientCache extends BaseListener
     public function __construct(private readonly ClientAnalyticsService $analytics) {}
 
     public function handle(
-        ClientCreated|ClientUpdated|ClientArchived|DocumentUploaded|CommunicationLogged $event,
+        ClientCreated|ClientUpdated|ClientArchived|DocumentUploaded|CommunicationLogged|PortalAccessGranted $event,
     ): void {
         $this->analytics->forget();
     }

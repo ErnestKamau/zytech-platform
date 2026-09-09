@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Domains\Authentication\Actions\VerifyEmail;
+use App\Domains\Authentication\Support\AuthenticatedHome;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -26,6 +27,6 @@ final class VerifyEmailController extends Controller
 
         $action->handle($user);
 
-        return redirect()->route('account.profile')->with('status', 'Email verified.');
+        return redirect()->to(AuthenticatedHome::url())->with('status', 'Email verified.');
     }
 }

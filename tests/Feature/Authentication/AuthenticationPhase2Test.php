@@ -10,6 +10,7 @@ use App\Domains\Authentication\Actions\RegisterUser;
 use App\Domains\Authentication\Data\LoginData;
 use App\Domains\Authentication\Data\RegisterUserData;
 use App\Domains\Authentication\Exceptions\AuthenticationFailedException;
+use App\Domains\Authentication\Support\AuthenticatedHome;
 use App\Domains\User\Actions\AssignRole;
 use App\Domains\User\Data\AssignRoleData;
 use App\Domains\User\Policies\UserPolicy;
@@ -49,6 +50,7 @@ class AuthenticationPhase2Test extends TestCase
             'email' => 'new-client@example.com',
             'password' => 'password123',
             'type' => UserType::Client,
+            'phone' => '+254712345678',
         ]));
 
         $this->assertDatabaseHas('users', [
@@ -57,6 +59,13 @@ class AuthenticationPhase2Test extends TestCase
         ]);
         $this->assertTrue($user->hasRole(RoleType::Client->value));
         $this->assertTrue(Hash::check('password123', $user->password));
+
+        $this->assertDatabaseHas('clients', [
+            'email' => 'new-client@example.com',
+            'user_id' => $user->id,
+        ]);
+        $this->assertNotNull($user->clientProfile?->portal_access_granted_at);
+        $this->assertSame(route('portal.dashboard'), AuthenticatedHome::url($user));
     }
 
     public function test_user_can_authenticate(): void

@@ -6,6 +6,7 @@ use App\Core\Enums\UserType;
 use App\Core\Livewire\BaseComponent;
 use App\Domains\Authentication\Actions\RegisterUser;
 use App\Domains\Authentication\Data\RegisterUserData;
+use App\Domains\Authentication\Support\AuthenticatedHome;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
@@ -29,7 +30,7 @@ final class Register extends BaseComponent
     public function mount(): void
     {
         if (Auth::check()) {
-            $this->redirect(route('account.profile'));
+            $this->redirect(AuthenticatedHome::url());
         }
     }
 

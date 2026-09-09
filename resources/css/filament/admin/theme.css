@@ -569,7 +569,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     gap: 0.75rem;
     padding: 1rem 1.25rem 0;
 }
@@ -580,7 +580,6 @@
     }
 }
 
-.zy-admin-auth__back,
 .zy-admin-auth__portal-link {
     color: var(--zy-admin-muted);
     font-size: 0.8rem;
@@ -588,7 +587,6 @@
     text-decoration: none;
 }
 
-.zy-admin-auth__back:hover,
 .zy-admin-auth__portal-link:hover {
     color: var(--zy-admin-sage);
 }
@@ -618,19 +616,11 @@
 }
 
 .zy-admin-auth .fi-simple-header-heading {
-    @apply text-2xl font-semibold tracking-tight text-gray-950 dark:text-white;
+    @apply text-xl font-semibold tracking-tight text-gray-950 dark:text-white sm:text-2xl;
 }
 
 .zy-admin-auth .fi-simple-header-subheading {
-    @apply mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-300;
-}
-
-.zy-admin-auth__note {
-    display: block;
-    margin-top: 0.35rem;
-    font-size: 0.8rem;
-    color: var(--zy-admin-sage);
-    font-weight: 600;
+    @apply mt-1.5 max-w-[28ch] text-[0.8125rem] leading-snug text-gray-500 dark:text-gray-400 sm:mt-2 sm:max-w-none sm:text-sm sm:leading-relaxed;
 }
 
 .zy-admin-auth .fi-btn-primary {

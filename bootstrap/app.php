@@ -1,5 +1,6 @@
 <?php
 
+use App\Domains\Authentication\Support\AuthenticatedHome;
 use App\Http\Middleware\AddPublicCacheHeaders;
 use App\Http\Middleware\CheckPlatformMaintenance;
 use App\Http\Middleware\EnsurePortalAccess;
@@ -38,7 +39,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->redirectGuestsTo(fn () => route('login'));
-        $middleware->redirectUsersTo(fn () => route('account.profile'));
+        $middleware->redirectUsersTo(fn () => AuthenticatedHome::url());
 
         $middleware->alias([
             'role' => RoleMiddleware::class,

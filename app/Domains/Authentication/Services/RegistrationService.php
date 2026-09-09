@@ -7,10 +7,15 @@ use App\Core\Enums\UserType;
 use App\Core\Services\BaseService;
 use App\Domains\Authentication\Data\RegisterUserData;
 use App\Domains\Authentication\Events\UserRegistered;
+use App\Domains\Client\Services\ClientService;
 use App\Models\User;
 
 final class RegistrationService extends BaseService
 {
+    public function __construct(
+        private readonly ClientService $clients,
+    ) {}
+
     public function register(RegisterUserData $data): User
     {
         return $this->transaction(function () use ($data): User {
@@ -29,6 +34,13 @@ final class RegistrationService extends BaseService
             };
 
             $user->assignRole($role);
+
+            $client = $this->clients->findOrCreateFromLead(
+                $user->name,
+                $user->email,
+                $user->phone,
+            );
+            $this->clients->assignPortalAccess($client, $user->id);
 
             event(new UserRegistered($user));
 

@@ -7,7 +7,7 @@ use App\Domains\Authentication\Enums\TwoFactorChannel;
 use App\Domains\Authentication\Exceptions\TwoFactorException;
 use App\Domains\Authentication\Services\AuthenticationService;
 use App\Domains\Authentication\Services\TwoFactorChallengeService;
-use App\Domains\Portal\Repositories\PortalRepository;
+use App\Domains\Authentication\Support\AuthenticatedHome;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
@@ -152,13 +152,7 @@ final class VerifyEmailNotice extends BaseComponent
 
     private function homeRoute(): string
     {
-        $user = Auth::user();
-
-        if ($user !== null && app(PortalRepository::class)->clientForUser($user) !== null) {
-            return route('portal.dashboard');
-        }
-
-        return route('account.profile');
+        return AuthenticatedHome::url();
     }
 
     private function maskPhone(string $phone): string
