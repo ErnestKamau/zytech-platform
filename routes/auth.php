@@ -10,9 +10,14 @@ use App\Domains\Authentication\Livewire\SecuritySettings;
 use App\Domains\Authentication\Livewire\Sessions;
 use App\Domains\Authentication\Livewire\TwoFactorChallenge;
 use App\Domains\Authentication\Livewire\VerifyEmailNotice;
+use App\Http\Controllers\Auth\AcceptStaffInviteController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/admin/invite/{token}', AcceptStaffInviteController::class)
+    ->middleware('throttle:10,1')
+    ->name('admin.invite.accept');
 
 Route::middleware('guest')->group(function (): void {
     Route::get('/login', Login::class)->name('login');

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Core\Contracts\CacheStore;
+use App\Filament\Auth\Http\Responses\LoginResponse as AdminLoginResponse;
 use App\Domains\Authentication\Events\AccountLocked;
 use App\Domains\Authentication\Events\UserLoggedIn;
 use App\Domains\Authentication\Events\UserLoggedOut;
@@ -279,6 +280,10 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton(CacheStore::class, fn (): ApplicationCache => new ApplicationCache);
         $this->app->alias(CacheStore::class, ApplicationCache::class);
+        $this->app->singleton(
+            \Filament\Auth\Http\Responses\Contracts\LoginResponse::class,
+            AdminLoginResponse::class,
+        );
     }
 
     public function boot(): void

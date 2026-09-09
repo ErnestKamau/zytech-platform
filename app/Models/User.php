@@ -33,8 +33,12 @@ use Spatie\Permission\Traits\HasRoles;
     'mfa_enabled',
     'mfa_secret',
     'preferences',
+    'admin_invite_token',
+    'admin_invite_sent_at',
+    'admin_invite_expires_at',
+    'admin_onboarded_at',
 ])]
-#[Hidden(['password', 'remember_token', 'mfa_secret'])]
+#[Hidden(['password', 'remember_token', 'mfa_secret', 'admin_invite_token'])]
 class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
@@ -61,6 +65,9 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
             'mfa_secret' => 'encrypted',
             'preferences' => 'array',
             'failed_login_attempts' => 'integer',
+            'admin_invite_sent_at' => 'datetime',
+            'admin_invite_expires_at' => 'datetime',
+            'admin_onboarded_at' => 'datetime',
         ];
     }
 
@@ -75,6 +82,17 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
             'administrator',
             'staff',
         ]);
+    }
+
+    public function needsAdminOnboarding(): bool
+    {
+        return $this->canAccessPanel(filament()->getPanel('admin'))
+            && $this->admin_onboarded_at === null;
+    }
+
+    public function isInviteEligible(): bool
+    {
+        return $this->isStaffOrAdmin() || $this->canAccessPanel(filament()->getPanel('admin'));
     }
 
     public function isLocked(): bool

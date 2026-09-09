@@ -626,3 +626,109 @@
 .zy-admin-auth .fi-btn-primary {
     @apply font-semibold;
 }
+
+/* -------------------------------------------------------------------------- */
+/* Admin onboarding wizard                                                    */
+/* -------------------------------------------------------------------------- */
+
+.zy-admin-onboard {
+    display: grid;
+    gap: 1rem;
+    width: 100%;
+    max-width: 26rem;
+}
+
+.zy-admin-onboard__progress {
+    display: flex;
+    gap: 0.4rem;
+    margin-bottom: 0.25rem;
+}
+
+.zy-admin-onboard__progress span {
+    height: 0.28rem;
+    flex: 1;
+    border-radius: 999px;
+    background: rgb(28 24 21 / 0.12);
+}
+
+.dark .zy-admin-onboard__progress span {
+    background: rgb(247 245 242 / 0.15);
+}
+
+.zy-admin-onboard__progress span.is-active {
+    background: #5c7349;
+}
+
+.zy-admin-onboard__title {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    color: var(--zy-admin-ink, inherit);
+}
+
+.zy-admin-onboard__lead {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--zy-admin-muted, #736354);
+}
+
+.zy-admin-onboard__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.45rem;
+}
+
+.zy-admin-onboard__list li {
+    position: relative;
+    padding-left: 1.1rem;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+.zy-admin-onboard__list li::before {
+    content: '';
+    position: absolute;
+    top: 0.45rem;
+    left: 0;
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 999px;
+    background: #8fa67a;
+}
+
+.zy-admin-onboard__tip {
+    margin: 0;
+    padding: 0.85rem 1rem;
+    border-radius: 0.85rem;
+    background: rgb(92 115 73 / 0.1);
+    font-size: 0.8rem;
+    line-height: 1.45;
+}
+
+.zy-admin-onboard__mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.78rem;
+}
+
+.zy-admin-onboard__actions {
+    display: grid;
+    gap: 0.65rem;
+}
+
+.zy-admin-onboard__back {
+    margin-top: 0.25rem;
+    border: 0;
+    background: transparent;
+    color: var(--zy-admin-muted, #736354);
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.zy-admin-onboard__back:hover {
+    color: #5c7349;
+}

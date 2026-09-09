@@ -58,9 +58,15 @@
 
             <div class="zy-admin-auth__main-wrap">
                 <div class="zy-admin-auth__toolbar">
-                    <a href="{{ route('login') }}" class="zy-admin-auth__portal-link">
-                        Client / account login
-                    </a>
+                    @auth
+                        <a href="{{ url('/') }}" class="zy-admin-auth__portal-link">
+                            Public website
+                        </a>
+                    @else
+                        <a href="{{ route('login') }}" class="zy-admin-auth__portal-link">
+                            Client / account login
+                        </a>
+                    @endauth
                 </div>
 
                 <div class="zy-admin-auth__main-ctn">

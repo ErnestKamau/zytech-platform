@@ -6,6 +6,7 @@ use App\Core\Enums\UserType;
 use App\Core\Filament\BaseResource;
 use App\Domains\Authentication\Actions\LockAccount;
 use App\Domains\Authentication\Actions\UnlockAccount;
+use App\Domains\Authentication\Services\StaffInviteService;
 use App\Filament\Resources\Users\Pages\ManageUsers;
 use App\Models\User;
 use BackedEnum;
@@ -18,11 +19,13 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Notifications\Notification;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Throwable;
 
 class UserResource extends BaseResource
 {
@@ -105,6 +108,28 @@ class UserResource extends BaseResource
             ->filters([])
             ->recordActions([
                 EditAction::make(),
+                Action::make('sendInvite')
+                    ->label('Send admin invite')
+                    ->icon(Heroicon::OutlinedEnvelope)
+                    ->visible(fn (User $record): bool => $record->isInviteEligible())
+                    ->authorize('users.invite')
+                    ->requiresConfirmation()
+                    ->action(function (User $record): void {
+                        try {
+                            app(StaffInviteService::class)->send($record);
+
+                            Notification::make()
+                                ->title('Invite sent')
+                                ->success()
+                                ->send();
+                        } catch (Throwable $e) {
+                            Notification::make()
+                                ->title('Invite failed')
+                                ->body($e->getMessage())
+                                ->danger()
+                                ->send();
+                        }
+                    }),
                 Action::make('lock')
                     ->visible(fn (User $record): bool => ! $record->isLocked())
                     ->requiresConfirmation()
