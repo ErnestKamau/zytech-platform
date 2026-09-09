@@ -4,6 +4,11 @@ namespace App\Providers;
 
 use App\Core\Contracts\CacheStore;
 use App\Filament\Auth\Http\Responses\LoginResponse as AdminLoginResponse;
+use Filament\Actions\CreateAction;
+use Filament\Actions\EditAction;
+use Filament\Support\Enums\Alignment;
+use Filament\Support\Enums\Width;
+use Filament\Tables\Table;
 use App\Domains\Authentication\Events\AccountLocked;
 use App\Domains\Authentication\Events\UserLoggedIn;
 use App\Domains\Authentication\Events\UserLoggedOut;
@@ -267,7 +272,6 @@ use App\Models\SupportTicket;
 use App\Models\Testimonial;
 use App\Models\Unit;
 use App\Models\User;
-use Filament\Tables\Table;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
@@ -290,6 +294,23 @@ class AppServiceProvider extends ServiceProvider
     {
         Table::configureUsing(function (Table $table): void {
             $table->stackedOnMobile();
+        });
+
+        CreateAction::configureUsing(function (CreateAction $action): void {
+            $action
+                ->stickyModalHeader()
+                ->stickyModalFooter()
+                ->modalWidth(Width::Large)
+                ->modalFooterActionsAlignment(Alignment::End)
+                ->createAnotherAction(fn ($action) => $action->label('Create another'));
+        });
+
+        EditAction::configureUsing(function (EditAction $action): void {
+            $action
+                ->stickyModalHeader()
+                ->stickyModalFooter()
+                ->modalWidth(Width::Large)
+                ->modalFooterActionsAlignment(Alignment::End);
         });
 
         Livewire::component('website.contact-form', ContactForm::class);

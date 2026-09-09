@@ -2,10 +2,13 @@
 
 namespace App\Filament\Pages;
 
-use App\Filament\Widgets\CompanyStatisticsOverview;
-use App\Filament\Widgets\FinanceOverview;
-use App\Filament\Widgets\NeedsAttention;
-use App\Filament\Widgets\SalesFunnelOverview;
+use App\Filament\Widgets\BusinessOverviewWidget;
+use App\Filament\Widgets\NeedsAttentionWidget;
+use App\Filament\Widgets\OrderOverviewWidget;
+use App\Filament\Widgets\ProjectOverviewWidget;
+use App\Filament\Widgets\RecentActivityWidget;
+use App\Filament\Widgets\RevenueChartWidget;
+use App\Filament\Widgets\SalesPipelineWidget;
 use Filament\Pages\Dashboard as BaseDashboard;
 use Filament\Support\Icons\Heroicon;
 
@@ -18,15 +21,21 @@ class Dashboard extends BaseDashboard
     public function getWidgets(): array
     {
         return [
-            CompanyStatisticsOverview::class,
-            FinanceOverview::class,
-            SalesFunnelOverview::class,
-            NeedsAttention::class,
+            BusinessOverviewWidget::class,
+            RevenueChartWidget::class,
+            SalesPipelineWidget::class,
+            NeedsAttentionWidget::class,
+            OrderOverviewWidget::class,
+            ProjectOverviewWidget::class,
+            RecentActivityWidget::class,
         ];
     }
 
     public function getColumns(): int|array
     {
-        return 1;
+        return [
+            'default' => 1,
+            'md' => 2,
+        ];
     }
 }

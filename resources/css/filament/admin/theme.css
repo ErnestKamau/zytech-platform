@@ -163,6 +163,79 @@
     @apply text-xs leading-relaxed;
 }
 
+/* -------------------------------------------------------------------------- */
+/* Mobile form modals — full-bleed, sticky chrome, stacked actions            */
+/* -------------------------------------------------------------------------- */
+
+@media (max-width: 640px) {
+    .fi-modal:not(.fi-modal-slide-over):not(.fi-width-screen) > .fi-modal-window-ctn {
+        @apply items-stretch p-0;
+    }
+
+    .fi-modal:not(.fi-modal-slide-over):not(.fi-width-screen)
+        > .fi-modal-window-ctn
+        > .fi-modal-window {
+        @apply m-0 max-h-[100dvh] w-full max-w-none rounded-none;
+    }
+
+    .fi-modal-header {
+        @apply px-4 py-3;
+    }
+
+    .fi-modal-content {
+        @apply max-h-none flex-1 overflow-y-auto overscroll-contain px-4 py-3;
+        padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    }
+
+    .fi-modal-footer {
+        @apply border-t border-gray-200 px-4 py-3 dark:border-white/10;
+        padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+    }
+
+    .fi-modal-footer-actions {
+        @apply flex w-full flex-col-reverse items-stretch gap-2;
+    }
+
+    .fi-modal-footer-actions .fi-ac,
+    .fi-modal-footer-actions .fi-btn {
+        @apply w-full justify-center;
+    }
+
+    .fi-modal-footer-actions .fi-btn {
+        @apply min-h-11 text-sm;
+    }
+
+    /* Form fields — roomy touch targets */
+    .fi-modal .fi-input,
+    .fi-modal .fi-select-input-btn,
+    .fi-modal .fi-textarea {
+        @apply min-h-11 text-sm;
+    }
+
+    .fi-modal .fi-fo-field-wrp {
+        @apply gap-y-1.5;
+    }
+
+    .fi-modal .fi-sc-has-gap {
+        @apply gap-y-5;
+    }
+
+    /* Multi-select chips wrap cleanly */
+    .fi-modal .fi-badge {
+        @apply max-w-full whitespace-normal break-all text-[0.7rem] leading-snug;
+    }
+
+    .fi-modal .fi-input-wrp {
+        @apply min-h-11;
+    }
+}
+
+@media (min-width: 641px) {
+    .fi-modal-content {
+        @apply max-h-[min(70vh,40rem)] overflow-y-auto;
+    }
+}
+
 /* Breadcrumbs */
 .fi-breadcrumbs,
 .fi-breadcrumbs-item,
@@ -224,10 +297,6 @@
 /* Forms — prefer single column readability on phones */
 .fi-sc-has-gap {
     @apply gap-y-4;
-}
-
-.fi-modal-content {
-    @apply max-h-[85vh] overflow-y-auto;
 }
 
 .fi-resource-manage-records-page .fi-header,

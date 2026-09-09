@@ -15,6 +15,14 @@ class CompanyStatisticsOverview extends StatsOverviewWidget
     protected ?string $description = 'CMS website statistics (not traffic or clicks).';
 
     /**
+     * Kept for Company CMS hub use — not shown on the operational admin dashboard.
+     */
+    public static function canView(): bool
+    {
+        return false;
+    }
+
+    /**
      * @var int | array<string, ?int> | null
      */
     protected int|array|null $columns = [

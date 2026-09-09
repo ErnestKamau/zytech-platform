@@ -7,6 +7,7 @@ use App\Filament\Resources\Invoices\InvoiceResource;
 use App\Filament\Resources\Payments\PaymentResource;
 use App\Models\Invoice;
 use App\Models\Payment;
+use App\Support\Helpers\MoneyFormatter;
 use Filament\Actions\Action;
 use Filament\Support\Icons\Heroicon;
 
@@ -47,9 +48,9 @@ class FinanceHub extends AdminHubPage
         return [
             [
                 'title' => 'Overview',
-                'description' => 'KES '.number_format($snapshot['revenue_mtd'], 2).' MTD · '
-                    .number_format($snapshot['outstanding'], 2).' outstanding · '
-                    .$snapshot['invoices_overdue'].' overdue',
+                'description' => MoneyFormatter::format($snapshot['revenue_mtd']).' MTD · '
+                    .MoneyFormatter::format($snapshot['outstanding']).' outstanding · '
+                    .MoneyFormatter::format($snapshot['overdue_amount']).' overdue',
                 'cards' => [
                     $this->hubCard('Invoices', InvoiceResource::class, Heroicon::OutlinedDocumentCurrencyDollar, count: Invoice::query()->count()),
                     $this->hubCard('Payments', PaymentResource::class, Heroicon::OutlinedCreditCard, count: Payment::query()->count()),
