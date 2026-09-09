@@ -24,8 +24,8 @@
         $images = config('zyntech-media.images');
         $asideKey = $asideImageKey ?? 'hero_facade_dusk';
         $aside = $images[$asideKey] ?? $images['hero_facade_dusk'] ?? $images['commercial_courtyard'];
-        $asideHeadline = $asideHeadline ?? 'Sign in to your projects.';
-        $asideSupport = $asideSupport ?? 'Track your build across Nairobi and beyond.';
+        $asideHeadline = $asideHeadline ?? 'Your project, always within reach.';
+        $asideSupport = $asideSupport ?? 'Follow your build, review updates, and stay connected with Zytech.';
         $showRegisterSteps = $showRegisterSteps ?? false;
     @endphp
 

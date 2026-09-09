@@ -1,6 +1,6 @@
 <div class="zy-auth-form zy-auth-form--register">
-    <h1 class="zy-auth-form__title">Create an account</h1>
-    <p class="zy-auth-form__lead">Join the Zytech client portal to follow your build.</p>
+    <h1 class="zy-auth-form__title">Let’s build something remarkable.</h1>
+    <p class="zy-auth-form__lead">Create your client account to follow your project and stay connected from the first idea to the final detail.</p>
 
     <form wire:submit="register" method="POST" class="zy-stack">
         <div class="zy-field">

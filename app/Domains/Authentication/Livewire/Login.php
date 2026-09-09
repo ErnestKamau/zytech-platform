@@ -78,8 +78,8 @@ final class Login extends BaseComponent
         return view('livewire.authentication.login')
             ->layoutData([
                 'asideImageKey' => 'hero_facade_dusk',
-                'asideHeadline' => 'Sign in to your projects.',
-                'asideSupport' => 'Track your build across Nairobi and beyond.',
+                'asideHeadline' => 'Your project, always within reach.',
+                'asideSupport' => 'Follow your build, review updates, and stay connected with Zytech.',
             ]);
     }
 

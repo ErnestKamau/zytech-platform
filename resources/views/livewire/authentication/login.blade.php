@@ -1,6 +1,6 @@
 <div class="zy-auth-form">
-    <h1 class="zy-auth-form__title">Welcome back</h1>
-    <p class="zy-auth-form__lead">Sign in to track your Zytech projects.</p>
+    <h1 class="zy-auth-form__title">Your project, always within reach.</h1>
+    <p class="zy-auth-form__lead">Sign in to follow your build, review updates, and stay connected with Zytech.</p>
 
     <form wire:submit="login" method="POST" class="zy-stack">
         <div class="zy-field">
