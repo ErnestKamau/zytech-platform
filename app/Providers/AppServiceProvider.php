@@ -3,12 +3,6 @@
 namespace App\Providers;
 
 use App\Core\Contracts\CacheStore;
-use App\Filament\Auth\Http\Responses\LoginResponse as AdminLoginResponse;
-use Filament\Actions\CreateAction;
-use Filament\Actions\EditAction;
-use Filament\Support\Enums\Alignment;
-use Filament\Support\Enums\Width;
-use Filament\Tables\Table;
 use App\Domains\Authentication\Events\AccountLocked;
 use App\Domains\Authentication\Events\UserLoggedIn;
 use App\Domains\Authentication\Events\UserLoggedOut;
@@ -31,6 +25,7 @@ use App\Domains\Client\Listeners\NotifyAssignedStaff;
 use App\Domains\Client\Policies\ClientDocumentPolicy;
 use App\Domains\Client\Policies\ClientNotePolicy;
 use App\Domains\Client\Policies\ClientPolicy;
+use App\Domains\Commerce\Events\DraftInvoiceCreated;
 use App\Domains\Commerce\Events\OrderCancelled;
 use App\Domains\Commerce\Events\OrderPlaced;
 use App\Domains\Commerce\Events\OrderStatusChanged;
@@ -195,6 +190,7 @@ use App\Domains\Website\Livewire\RequestQuotationForm;
 use App\Domains\Website\Livewire\ServiceShowPage;
 use App\Domains\Website\Livewire\ServicesPage;
 use App\Domains\Website\Livewire\TrackQuotationPage;
+use App\Filament\Auth\Http\Responses\LoginResponse as AdminLoginResponse;
 use App\Infrastructure\Cache\ApplicationCache;
 use App\Models\Announcement;
 use App\Models\Article;
@@ -272,6 +268,12 @@ use App\Models\SupportTicket;
 use App\Models\Testimonial;
 use App\Models\Unit;
 use App\Models\User;
+use Filament\Actions\CreateAction;
+use Filament\Actions\EditAction;
+use Filament\Auth\Http\Responses\Contracts\LoginResponse;
+use Filament\Support\Enums\Alignment;
+use Filament\Support\Enums\Width;
+use Filament\Tables\Table;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
@@ -285,7 +287,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(CacheStore::class, fn (): ApplicationCache => new ApplicationCache);
         $this->app->alias(CacheStore::class, ApplicationCache::class);
         $this->app->singleton(
-            \Filament\Auth\Http\Responses\Contracts\LoginResponse::class,
+            LoginResponse::class,
             AdminLoginResponse::class,
         );
     }
@@ -628,11 +630,30 @@ class AppServiceProvider extends ServiceProvider
             MeetingCancelled::class,
             NotificationCreated::class,
             PortalDocumentDownloaded::class,
+            QuotationSent::class,
+            QuotationAccepted::class,
+            QuotationRejected::class,
+            OrderPlaced::class,
+            OrderCancelled::class,
+            OrderStatusChanged::class,
+            DraftInvoiceCreated::class,
+            DocumentUploaded::class,
         ];
 
         foreach ($portalEvents as $event) {
-            Event::listen($event, BroadcastPortalUpdate::class);
             Event::listen($event, ClearDashboardCache::class);
+        }
+
+        foreach ([
+            MessageSent::class,
+            TicketOpened::class,
+            TicketClosed::class,
+            MeetingScheduled::class,
+            MeetingCancelled::class,
+            NotificationCreated::class,
+            PortalDocumentDownloaded::class,
+        ] as $event) {
+            Event::listen($event, BroadcastPortalUpdate::class);
         }
 
         Event::listen(MessageSent::class, SendEmailNotification::class);

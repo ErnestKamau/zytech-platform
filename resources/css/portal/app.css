@@ -1108,6 +1108,141 @@ html[data-zy-portal-nav="collapsed"] .zy-portal__user--header {
     min-height: 7.25rem;
 }
 
+.zy-portal-stat__hint {
+    margin: 0.35rem 0 0;
+    font-size: 0.75rem;
+    line-height: 1.35;
+    color: var(--zy-portal-muted, rgb(28 24 21 / 0.58));
+}
+
+[data-zy-theme="dark"] .zy-portal-stat__hint {
+    color: rgb(247 245 242 / 0.55);
+}
+
+.zy-portal-dash-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--zy-space-4);
+    margin-block: var(--zy-space-4);
+}
+
+.zy-portal-dash-grid--footer {
+    margin-top: 0;
+}
+
+.zy-portal-panel--actions {
+    margin-top: var(--zy-space-4);
+}
+
+.zy-portal-actions-list {
+    display: grid;
+    gap: var(--zy-space-3);
+}
+
+.zy-portal-action {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--zy-space-3);
+    padding: var(--zy-space-3) var(--zy-space-4);
+    border-radius: 1rem;
+    border: 1px solid var(--zy-glass-border);
+    background: rgb(255 255 255 / 0.4);
+}
+
+[data-zy-theme="dark"] .zy-portal-action {
+    background: rgb(255 255 255 / 0.04);
+}
+
+.zy-portal-action--critical {
+    border-color: rgb(185 70 70 / 0.35);
+    background: linear-gradient(135deg, rgb(185 70 70 / 0.08), transparent 60%);
+}
+
+.zy-portal-action--warning {
+    border-color: rgb(180 120 40 / 0.35);
+    background: linear-gradient(135deg, rgb(180 120 40 / 0.1), transparent 60%);
+}
+
+.zy-portal-action--info {
+    border-color: rgb(72 140 198 / 0.35);
+    background: linear-gradient(135deg, rgb(72 140 198 / 0.1), transparent 60%);
+}
+
+.zy-portal-action__title {
+    margin: 0;
+    font-weight: 600;
+}
+
+.zy-portal-action__body {
+    min-width: 0;
+    flex: 1 1 14rem;
+}
+
+.zy-portal-row__end {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--zy-space-2);
+}
+
+.zy-portal-project {
+    display: grid;
+    gap: var(--zy-space-2);
+    padding: var(--zy-space-3);
+    border-radius: 1rem;
+    background: rgb(255 255 255 / 0.28);
+}
+
+[data-zy-theme="dark"] .zy-portal-project {
+    background: rgb(255 255 255 / 0.04);
+}
+
+.zy-portal-project__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--zy-space-2);
+}
+
+.zy-portal-progress {
+    height: 0.45rem;
+    border-radius: 999px;
+    background: rgb(28 24 21 / 0.08);
+    overflow: hidden;
+}
+
+[data-zy-theme="dark"] .zy-portal-progress {
+    background: rgb(255 255 255 / 0.1);
+}
+
+.zy-portal-progress__bar {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--zy-sage-600, #5c7349), rgb(72 198 239 / 0.85));
+}
+
+.zy-portal-finance {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--zy-space-3);
+}
+
+.zy-portal-finance__value {
+    margin: 0.15rem 0 0;
+    font-size: 1.05rem;
+    font-weight: 650;
+    letter-spacing: -0.02em;
+}
+
+.zy-portal-panel__summary {
+    margin: 0 0 var(--zy-space-3);
+    font-size: 0.875rem;
+    color: var(--zy-portal-muted, rgb(28 24 21 / 0.58));
+}
+
 .zy-portal-toolbar {
     display: flex;
     flex-wrap: wrap;
@@ -1804,7 +1939,8 @@ html[data-zy-portal-nav="collapsed"] .zy-portal__user--header {
     .zy-portal-stats,
     .zy-portal-project-grid,
     .zy-portal-featured,
-    .zy-portal-dash {
+    .zy-portal-dash,
+    .zy-portal-dash-grid {
         grid-template-columns: 1fr;
     }
 

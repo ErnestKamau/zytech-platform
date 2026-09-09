@@ -3,13 +3,6 @@
 namespace App\Domains\Portal\Listeners;
 
 use App\Core\Listeners\BaseListener;
-use App\Domains\Portal\Events\MeetingCancelled;
-use App\Domains\Portal\Events\MeetingScheduled;
-use App\Domains\Portal\Events\MessageSent;
-use App\Domains\Portal\Events\NotificationCreated;
-use App\Domains\Portal\Events\PortalDocumentDownloaded;
-use App\Domains\Portal\Events\TicketClosed;
-use App\Domains\Portal\Events\TicketOpened;
 use App\Domains\Portal\Services\DashboardService;
 use App\Models\Client;
 
@@ -17,9 +10,8 @@ final class ClearDashboardCache extends BaseListener
 {
     public function __construct(private readonly DashboardService $dashboard) {}
 
-    public function handle(
-        MessageSent|TicketOpened|TicketClosed|MeetingScheduled|MeetingCancelled|NotificationCreated|PortalDocumentDownloaded $event,
-    ): void {
+    public function handle(object $event): void
+    {
         $client = $this->resolveClient($event);
 
         if ($client !== null) {
@@ -35,6 +27,10 @@ final class ClearDashboardCache extends BaseListener
             isset($event->meeting) => $event->meeting->client,
             isset($event->notification) => $event->notification->client,
             isset($event->download) => $event->download->client,
+            isset($event->quotation) => $event->quotation->client,
+            isset($event->order) => $event->order->client,
+            isset($event->invoice) => $event->invoice->client,
+            isset($event->document) => $event->document->client,
             default => null,
         };
     }

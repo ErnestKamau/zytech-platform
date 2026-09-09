@@ -176,9 +176,13 @@ final class ProductService extends BaseService
     private function toData(Product $product): ProductData
     {
         $category = $product->category;
+        $unitOfMeasure = $product->unit_of_measure
+            ?: $product->defaultUnit?->code
+            ?: $product->defaultUnit?->name;
 
         return ProductData::fromArray([
             ...$product->toArray(),
+            'unit_of_measure' => $unitOfMeasure,
             'category_name' => $category?->name ?? '',
             'category_slug' => $category?->slug ?? '',
         ]);

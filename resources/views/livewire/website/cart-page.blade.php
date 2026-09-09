@@ -58,16 +58,19 @@
                                 $product = $item->product;
                                 $imageKey = $product?->image_key;
                                 $image = ($imageKey && isset($images[$imageKey])) ? $images[$imageKey] : null;
+                                $uploadedIcon = $product?->iconUrl();
                                 $unit = $product?->unit_of_measure ?: $product?->price_unit;
                             @endphp
                             <li class="zy-ecom-cart__line" wire:key="cart-item-{{ $item->id }}">
                                 <div class="zy-ecom-cart__thumb">
                                     @if ($image)
                                         <img src="{{ asset($image['path']) }}" alt="{{ $image['alt'] ?? ($product?->title ?? 'Product') }}" loading="lazy">
+                                    @elseif ($uploadedIcon)
+                                        <img src="{{ $uploadedIcon }}" alt="{{ $product?->title ?? 'Product' }}" loading="lazy">
                                     @else
                                         <span class="zy-ecom-cart__thumb-fallback" aria-hidden="true">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="{{ $product?->icon_path ?: 'M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z' }}" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
                                             </svg>
                                         </span>
                                     @endif

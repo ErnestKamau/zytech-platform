@@ -46,7 +46,7 @@ class ProductVariantResource extends BaseResource
                     ->relationship('unit', 'name')
                     ->searchable(),
                 TextInput::make('price_amount')->numeric()->prefix('KES'),
-                TextInput::make('stock_display')->numeric()->helperText('Display-only stock count'),
+                TextInput::make('stock_display')->label('Stock count')->numeric(),
                 Toggle::make('is_active')->default(true),
                 KeyValue::make('attributes')
                     ->keyLabel('Attribute')

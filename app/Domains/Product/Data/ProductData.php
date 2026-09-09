@@ -5,6 +5,7 @@ namespace App\Domains\Product\Data;
 use App\Core\Data\BaseDTO;
 use App\Core\Enums\PricingModel;
 use App\Core\Enums\PurchaseMode;
+use Illuminate\Support\Facades\Storage;
 
 final readonly class ProductData extends BaseDTO
 {
@@ -117,5 +118,20 @@ final readonly class ProductData extends BaseDTO
             'meta_description' => $this->metaDescription,
             'og_image_key' => $this->ogImageKey,
         ];
+    }
+
+    public function hasUploadedIcon(): bool
+    {
+        return $this->iconPath !== ''
+            && (str_contains($this->iconPath, '/') || str_contains($this->iconPath, '.'));
+    }
+
+    public function iconUrl(): ?string
+    {
+        if (! $this->hasUploadedIcon()) {
+            return null;
+        }
+
+        return Storage::disk('public')->url($this->iconPath);
     }
 }

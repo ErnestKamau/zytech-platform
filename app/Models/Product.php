@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 
 class Product extends BaseModel
 {
@@ -105,5 +106,26 @@ class Product extends BaseModel
     public function quotationRequests(): BelongsToMany
     {
         return $this->belongsToMany(QuotationRequest::class, 'quotation_request_product');
+    }
+
+    /**
+     * True when icon_path holds an uploaded file path (not a legacy SVG path `d`).
+     */
+    public function hasUploadedIcon(): bool
+    {
+        $path = $this->icon_path;
+
+        return is_string($path)
+            && $path !== ''
+            && (str_contains($path, '/') || str_contains($path, '.'));
+    }
+
+    public function iconUrl(): ?string
+    {
+        if (! $this->hasUploadedIcon()) {
+            return null;
+        }
+
+        return Storage::disk('public')->url($this->icon_path);
     }
 }
