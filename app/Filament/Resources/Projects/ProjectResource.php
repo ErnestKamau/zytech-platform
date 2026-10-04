@@ -3,6 +3,8 @@
 namespace App\Filament\Resources\Projects;
 
 use App\Core\Enums\ConstructionStage;
+use App\Core\Enums\MediaCollection;
+use App\Core\Enums\MediaType;
 use App\Core\Enums\MilestoneStatus;
 use App\Core\Enums\ProjectStatus;
 use App\Core\Enums\ProjectType;
@@ -11,9 +13,11 @@ use App\Core\Filament\BaseResource;
 use App\Domains\Project\Actions\ArchiveProject;
 use App\Domains\Project\Actions\FeatureProject;
 use App\Domains\Project\Actions\PublishProject;
+use App\Domains\Project\Actions\SyncMilestoneMedia;
 use App\Domains\Project\Services\ProjectService;
 use App\Filament\Resources\Projects\Pages\ManageProjects;
 use App\Models\Project;
+use App\Models\ProjectMilestone;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
@@ -22,6 +26,8 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -93,7 +99,30 @@ class ProjectResource extends BaseResource
                         fn (MilestoneStatus $status): array => [$status->value => $status->label()]
                     ))->default(MilestoneStatus::Pending->value),
                     DatePicker::make('completed_on'),
-                ])->orderColumn('sort_order')->collapsible()->columnSpanFull(),
+                    Placeholder::make('current_media')
+                        ->label('Current media')
+                        ->content(function (?ProjectMilestone $record): string {
+                            if (! $record instanceof ProjectMilestone) {
+                                return 'No media attached yet.';
+                            }
+
+                            return match ($record->mediaType()) {
+                                MediaType::Video => '🎬 Video attached',
+                                MediaType::Image => '🖼 Image attached',
+                                default => 'No media attached yet.',
+                            };
+                        })
+                        ->visibleOn('edit'),
+                    FileUpload::make('media_upload')
+                        ->label('Upload image or video')
+                        ->disk('public')
+                        ->directory('milestone-media-tmp')
+                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'video/mp4', 'video/quicktime'])
+                        ->maxSize(102400)
+                        ->helperText('Uploading replaces the existing file for this milestone.'),
+                ])->orderColumn('sort_order')->collapsible()
+                    ->itemLabel(fn (array $state): ?string => $state['title'] ?? null)
+                    ->columnSpanFull(),
                 Repeater::make('statistics')->relationship()->schema([
                     TextInput::make('label')->required(),
                     TextInput::make('value')->required(),
@@ -141,7 +170,10 @@ class ProjectResource extends BaseResource
                 Action::make('archive')->visible(fn (Project $record): bool => $record->status !== ProjectStatus::Archived)
                     ->color('danger')->requiresConfirmation()
                     ->action(fn (Project $record) => app(ArchiveProject::class)->handle($record)),
-                EditAction::make()->after(fn (Project $record) => app(ProjectService::class)->persisted($record)),
+                EditAction::make()->after(function (array $data, Project $record): void {
+                    app(SyncMilestoneMedia::class)->handle($record, $data['milestones'] ?? []);
+                    app(ProjectService::class)->persisted($record);
+                }),
                 DeleteAction::make()->after(fn () => app(ProjectService::class)->forget()),
             ])
             ->toolbarActions([

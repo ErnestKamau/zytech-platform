@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Projects\Pages;
 
+use App\Domains\Project\Actions\SyncMilestoneMedia;
 use App\Domains\Project\Services\ProjectService;
 use App\Filament\Resources\Projects\ProjectResource;
 use App\Models\Project;
@@ -15,7 +16,10 @@ class ManageProjects extends ManageRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make()->after(fn (Project $record) => app(ProjectService::class)->persisted($record, created: true)),
+            CreateAction::make()->after(function (array $data, Project $record): void {
+                app(SyncMilestoneMedia::class)->handle($record, $data['milestones'] ?? []);
+                app(ProjectService::class)->persisted($record, created: true);
+            }),
         ];
     }
 }

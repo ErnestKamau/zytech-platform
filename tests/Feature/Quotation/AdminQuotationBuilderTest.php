@@ -108,6 +108,43 @@ class AdminQuotationBuilderTest extends TestCase
             ->assertHeader('Content-Type', 'application/pdf');
     }
 
+    public function test_admin_can_assign_line_items_to_a_section_via_wizard_builder(): void
+    {
+        $request = $this->submitRequest();
+
+        Livewire::test(ViewQuotationRequest::class, ['record' => $request->getKey()])
+            ->callAction('create_quotation')
+            ->assertRedirect();
+
+        $quotation = Quotation::query()->where('quotation_request_id', $request->id)->firstOrFail();
+
+        $section = $quotation->sections()->create(['title' => 'Phase 1 — Demolition', 'sort_order' => 0]);
+
+        Livewire::test(EditQuotation::class, ['record' => $quotation->getKey()])
+            ->assertOk()
+            ->assertSee('Client & request')
+            ->assertSee('Line items & sections')
+            ->assertSee('Pricing, tax & terms')
+            ->set('data.items', [
+                'a' => [
+                    'label' => 'Strip-out',
+                    'description' => null,
+                    'quantity' => 1,
+                    'unit' => 'lot',
+                    'unit_price' => 20000,
+                    'is_optional' => false,
+                    'quotation_section_id' => $section->id,
+                ],
+            ])
+            ->call('save')
+            ->assertHasNoFormErrors();
+
+        $this->assertSame(
+            $section->id,
+            $quotation->items()->where('label', 'Strip-out')->value('quotation_section_id'),
+        );
+    }
+
     public function test_recalculate_refreshes_stale_line_totals(): void
     {
         $request = $this->submitRequest();

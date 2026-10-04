@@ -33,6 +33,7 @@
     <x-sections.hero
         :headline="$heroHeadline"
         :support="$heroSupport"
+        :slides="$homepageSlides ?? collect()"
     />
 
     <section class="zy-story">

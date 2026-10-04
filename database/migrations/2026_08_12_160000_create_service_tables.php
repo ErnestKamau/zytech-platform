@@ -29,7 +29,7 @@ return new class extends Migration
             $table->text('body')->nullable();
             $table->text('icon_path')->nullable();
             $table->string('image_key')->nullable();
-            $table->json('gallery_keys')->nullable();
+            $table->jsonb('gallery_keys')->nullable();
             $table->string('type')->default('design');
             $table->string('status')->default('draft');
             $table->string('visibility')->default('public');

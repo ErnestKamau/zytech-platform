@@ -9,6 +9,7 @@ enum NotificationChannel: string
     case Broadcast = 'broadcast';
     case Portal = 'portal';
     case Sms = 'sms';
+    case WhatsApp = 'whatsapp';
 
     public function label(): string
     {
@@ -18,6 +19,7 @@ enum NotificationChannel: string
             self::Broadcast => 'Realtime',
             self::Portal => 'Client portal',
             self::Sms => 'SMS (Twilio)',
+            self::WhatsApp => 'WhatsApp (Twilio)',
         };
     }
 }

@@ -204,6 +204,8 @@ final class ProjectService extends BaseService
                     'description' => $milestone->description ?? '',
                     'status' => $milestone->status->value,
                     'sort_order' => $milestone->sort_order,
+                    'media_type' => $milestone->mediaType()?->value,
+                    'media_url' => $milestone->mediaUrl(),
                 ])
                 ->all();
         }

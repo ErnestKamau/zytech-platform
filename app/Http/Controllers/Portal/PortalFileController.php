@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Portal;
 
+use App\Domains\Commerce\Services\ProformaInvoicePDFService;
 use App\Domains\Portal\Actions\DownloadDocument;
 use App\Domains\Portal\Repositories\PortalRepository;
 use App\Domains\Quotation\Services\QuotationPDFService;
 use App\Http\Controllers\Controller;
 use App\Models\ClientDocument;
+use App\Models\ProformaInvoice;
 use App\Models\Quotation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -49,6 +51,41 @@ final class PortalFileController extends Controller
         );
     }
 
+    public function streamProformaPdf(
+        Request $request,
+        ProformaInvoice $proformaInvoice,
+        PortalRepository $portal,
+        ProformaInvoicePDFService $pdf,
+    ): StreamedResponse {
+        $this->assertOwnsProforma($request, $portal, $proformaInvoice);
+        $document = $pdf->ensure($proformaInvoice);
+
+        return Storage::disk('local')->response(
+            $document->stored_path,
+            basename((string) $document->stored_path),
+            [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="'.$proformaInvoice->reference_number.'.pdf"',
+            ],
+        );
+    }
+
+    public function downloadProformaPdf(
+        Request $request,
+        ProformaInvoice $proformaInvoice,
+        PortalRepository $portal,
+        ProformaInvoicePDFService $pdf,
+    ): StreamedResponse {
+        $this->assertOwnsProforma($request, $portal, $proformaInvoice);
+        $document = $pdf->ensure($proformaInvoice);
+
+        return Storage::disk('local')->download(
+            $document->stored_path,
+            $proformaInvoice->reference_number.'.pdf',
+            ['Content-Type' => 'application/pdf'],
+        );
+    }
+
     public function downloadDocument(
         Request $request,
         ClientDocument $document,
@@ -79,5 +116,13 @@ final class PortalFileController extends Controller
         $client = $portal->clientForUser($user) ?? abort(403);
         abort_unless($quotation->client_id === $client->id, 403);
         abort_unless($quotation->isSharedWithClient(), 404);
+    }
+
+    private function assertOwnsProforma(Request $request, PortalRepository $portal, ProformaInvoice $proformaInvoice): void
+    {
+        $user = $request->user();
+        abort_unless($user !== null, 403);
+        $client = $portal->clientForUser($user) ?? abort(403);
+        abort_unless($proformaInvoice->client_id === $client->id, 403);
     }
 }

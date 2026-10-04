@@ -48,6 +48,8 @@ class ClientResource extends BaseResource
             ))->required(),
             TextInput::make('name')->required()->maxLength(255),
             TextInput::make('legal_name')->maxLength(255),
+            TextInput::make('kra_pin')->label('KRA PIN')->maxLength(255)
+                ->helperText('Printed on Proforma Invoice and Tax Invoice PDFs for B2B clients.'),
             TextInput::make('email')->email()->required(),
             TextInput::make('phone'),
             TextInput::make('industry'),

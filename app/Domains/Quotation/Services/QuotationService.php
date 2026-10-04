@@ -3,11 +3,14 @@
 namespace App\Domains\Quotation\Services;
 
 use App\Core\Enums\ApprovalStatus;
+use App\Core\Enums\ClientTimelineEvent;
 use App\Core\Enums\QuotationStatus;
 use App\Core\Enums\QuotationType;
 use App\Core\Enums\RevisionStatus;
 use App\Core\Services\BaseService;
+use App\Domains\Client\Services\TimelineService;
 use App\Domains\Commerce\Actions\CreateSalesOrderAndDraftInvoice;
+use App\Domains\Commerce\Actions\GenerateProformaInvoiceFromQuotation;
 use App\Domains\Operations\Services\ActivityLogger;
 use App\Domains\Quotation\Events\QuotationAccepted;
 use App\Domains\Quotation\Events\QuotationApproved;
@@ -38,7 +41,19 @@ final class QuotationService extends BaseService
     public function __construct(
         private readonly PricingService $pricing,
         private readonly ActivityLogger $activities,
+        private readonly TimelineService $timeline,
     ) {}
+
+    private function recordTimeline(Quotation $quotation, ClientTimelineEvent $event, string $title, ?string $description = null): void
+    {
+        if ($quotation->client === null) {
+            return;
+        }
+
+        $this->timeline->record($quotation->client, $event, $title, $description, [
+            'quotation_id' => $quotation->id,
+        ]);
+    }
 
     public function createFromRequest(QuotationRequest $request, ?string $title = null): Quotation
     {
@@ -227,6 +242,13 @@ final class QuotationService extends BaseService
                 'from_status' => $from->value,
             ]);
 
+            $this->recordTimeline(
+                $quotation,
+                ClientTimelineEvent::QuotationSent,
+                'Quotation '.$quotation->reference_number.' sent',
+                number_format((float) $quotation->total_amount, 2).' '.$quotation->currency,
+            );
+
             return $quotation->refresh();
         });
 
@@ -277,6 +299,13 @@ final class QuotationService extends BaseService
 
             $this->recordStatus($quotation, $from, QuotationStatus::RevisionRequested, $notes);
 
+            $this->recordTimeline(
+                $quotation,
+                ClientTimelineEvent::QuotationRevisionRequested,
+                'Revision requested for '.$quotation->reference_number,
+                $notes,
+            );
+
             return $quotation->refresh();
         });
 
@@ -307,7 +336,15 @@ final class QuotationService extends BaseService
                 'from_status' => $from->value,
             ]);
 
+            $this->recordTimeline(
+                $accepted,
+                ClientTimelineEvent::QuotationAccepted,
+                'Quotation '.$accepted->reference_number.' accepted',
+                number_format((float) $accepted->total_amount, 2).' '.$accepted->currency,
+            );
+
             app(CreateSalesOrderAndDraftInvoice::class)->handle($accepted);
+            app(GenerateProformaInvoiceFromQuotation::class)->handle($accepted);
 
             return $accepted->refresh();
         });
@@ -333,6 +370,13 @@ final class QuotationService extends BaseService
                 'from_status' => $from->value,
                 'notes' => $notes,
             ]);
+
+            $this->recordTimeline(
+                $quotation,
+                ClientTimelineEvent::QuotationRejected,
+                'Quotation '.$quotation->reference_number.' rejected',
+                $notes,
+            );
 
             return $quotation->refresh();
         });

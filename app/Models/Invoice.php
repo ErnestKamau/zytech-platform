@@ -7,6 +7,7 @@ use App\Core\Models\BaseModel;
 use App\Core\Traits\HasActivity;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Invoice extends BaseModel
 {
@@ -76,5 +77,15 @@ class Invoice extends BaseModel
     public function payments(): HasMany
     {
         return $this->hasMany(Payment::class)->orderByDesc('created_at');
+    }
+
+    public function documents(): HasMany
+    {
+        return $this->hasMany(InvoiceDocument::class)->orderByDesc('created_at');
+    }
+
+    public function domainActivities(): MorphMany
+    {
+        return $this->morphMany(DomainActivity::class, 'subject')->orderByDesc('created_at');
     }
 }

@@ -206,3 +206,40 @@
         display: block;
     }
 }
+
+.zy-hero-carousel__slide {
+    position: absolute;
+    inset: 0;
+}
+
+.zy-hero-carousel__controls {
+    position: absolute;
+    z-index: 1;
+    inset-inline: 0;
+    bottom: var(--zy-space-6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--zy-space-4);
+}
+
+.zy-hero-carousel__dots {
+    display: flex;
+    gap: var(--zy-space-2);
+}
+
+.zy-hero-carousel__dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: var(--zy-radius-full, 999px);
+    background: rgb(255 255 255 / 0.4);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: background var(--zy-duration-base) var(--zy-ease), transform var(--zy-duration-base) var(--zy-ease);
+}
+
+.zy-hero-carousel__dot.is-active {
+    background: #fff;
+    transform: scale(1.25);
+}

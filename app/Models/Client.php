@@ -23,6 +23,7 @@ class Client extends BaseModel
         'status',
         'name',
         'legal_name',
+        'kra_pin',
         'email',
         'phone',
         'industry',

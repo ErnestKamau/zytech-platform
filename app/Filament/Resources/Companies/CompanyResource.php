@@ -11,9 +11,11 @@ use App\Models\Company;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
@@ -67,6 +69,40 @@ class CompanyResource extends BaseResource
                 TextInput::make('website')->url(),
                 TextInput::make('registration_number'),
                 TextInput::make('tax_number'),
+
+                Section::make('Tax & banking')
+                    ->description('Shown on Proforma Invoice and Tax Invoice PDFs — required for Kenyan tax-invoice compliance.')
+                    ->columns(2)
+                    ->schema([
+                        TextInput::make('kra_pin')->label('KRA PIN'),
+                        TextInput::make('vat_number')->label('VAT number'),
+                        TextInput::make('bank_name'),
+                        TextInput::make('bank_account_name'),
+                        TextInput::make('bank_account_number'),
+                        TextInput::make('bank_branch'),
+                        TextInput::make('mpesa_paybill')->label('M-Pesa paybill'),
+                        TextInput::make('mpesa_account_name')->label('M-Pesa account name'),
+                        FileUpload::make('logo_path')
+                            ->label('Company logo')
+                            ->image()
+                            ->disk('public')
+                            ->directory('company')
+                            ->visibility('public')
+                            ->imageEditor()
+                            ->imagePreviewHeight('120')
+                            ->columnSpanFull(),
+                    ]),
+
+                Section::make('Registered address')
+                    ->columns(2)
+                    ->schema([
+                        TextInput::make('address_line1')->label('Address line 1')->columnSpanFull(),
+                        TextInput::make('address_line2')->label('Address line 2')->columnSpanFull(),
+                        TextInput::make('address_city')->label('City'),
+                        TextInput::make('address_county')->label('County'),
+                        TextInput::make('address_country')->label('Country')->default('Kenya'),
+                    ]),
+
                 Select::make('status')
                     ->options(collect(CompanyStatus::cases())->mapWithKeys(
                         fn (CompanyStatus $status): array => [$status->value => $status->label()]

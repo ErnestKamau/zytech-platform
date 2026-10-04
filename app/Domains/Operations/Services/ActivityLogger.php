@@ -54,6 +54,8 @@ final class ActivityLogger
             'quotation.sent' => 'Quote sent',
             'quotation.accepted' => 'Quote accepted',
             'quotation.rejected' => 'Quote rejected',
+            'proforma_invoice.issued' => 'Proforma invoice issued',
+            'invoice.issued' => 'Invoice issued',
             'order.placed' => 'Order placed',
             'order.cancelled' => 'Order cancelled',
             'order.status_changed' => 'Order status changed',

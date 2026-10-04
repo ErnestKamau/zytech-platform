@@ -1,16 +1,20 @@
 @props([
     'headline' => 'Built on Kenyan soil, engineered to last.',
     'support' => 'Interior, exterior, and structural work across Nairobi, Kiambu, and nationwide — from first sketch to final handover.',
+    'slides' => null,
 ])
 
 @php
+    $slides = collect($slides ?? []);
     $images = config('zyntech-media.images');
     $heroKey = config('zyntech-media.homepage.hero', 'hero_modern_residence');
     $hero = $images[$heroKey] ?? $images['hero_modern_residence'] ?? $images['about_architecture'] ?? null;
 @endphp
 
 <section class="zy-hero">
-    @if ($hero)
+    @if ($slides->isNotEmpty())
+        <x-media.hero-carousel :slides="$slides" />
+    @elseif ($hero)
         <x-media.hero
             :image="asset($hero['path'])"
             :alt="$hero['alt']"

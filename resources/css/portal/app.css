@@ -15,6 +15,7 @@
 @import '../website/components/icons.css';
 @import '../website/components/empty-state.css';
 @import '../website/components/skeleton.css';
+@import '../website/components/modal.css';
 @import '../website/pages/auth.css';
 
 /* ------------------------------------------------------------------ */

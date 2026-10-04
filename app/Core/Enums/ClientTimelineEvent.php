@@ -8,6 +8,10 @@ enum ClientTimelineEvent: string
     case QuotationRequested = 'quotation-requested';
     case QuotationSent = 'quotation-sent';
     case QuotationAccepted = 'quotation-accepted';
+    case QuotationRevisionRequested = 'quotation-revision-requested';
+    case QuotationRejected = 'quotation-rejected';
+    case ProformaInvoiceIssued = 'proforma-invoice-issued';
+    case InvoiceIssued = 'invoice-issued';
     case ProjectStarted = 'project-started';
     case ProjectCompleted = 'project-completed';
     case DocumentUploaded = 'document-uploaded';
@@ -24,6 +28,10 @@ enum ClientTimelineEvent: string
             self::QuotationRequested => 'Quotation requested',
             self::QuotationSent => 'Quotation sent',
             self::QuotationAccepted => 'Quotation accepted',
+            self::QuotationRevisionRequested => 'Revision requested',
+            self::QuotationRejected => 'Quotation rejected',
+            self::ProformaInvoiceIssued => 'Proforma invoice issued',
+            self::InvoiceIssued => 'Invoice issued',
             self::ProjectStarted => 'Project started',
             self::ProjectCompleted => 'Project completed',
             self::DocumentUploaded => 'Document uploaded',

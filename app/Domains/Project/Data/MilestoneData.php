@@ -12,6 +12,8 @@ final readonly class MilestoneData extends BaseDTO
         public string $description,
         public MilestoneStatus $status,
         public int $sortOrder,
+        public ?string $mediaType = null,
+        public ?string $mediaUrl = null,
     ) {}
 
     public static function fromArray(array $data): static
@@ -26,6 +28,8 @@ final readonly class MilestoneData extends BaseDTO
             description: (string) ($data['description'] ?? ''),
             status: $status,
             sortOrder: (int) ($data['sort_order'] ?? 0),
+            mediaType: $data['media_type'] ?? null,
+            mediaUrl: $data['media_url'] ?? null,
         );
     }
 
@@ -36,6 +40,8 @@ final readonly class MilestoneData extends BaseDTO
             'description' => $this->description,
             'status' => $this->status->value,
             'sort_order' => $this->sortOrder,
+            'media_type' => $this->mediaType,
+            'media_url' => $this->mediaUrl,
         ];
     }
 }

@@ -4,6 +4,8 @@ namespace App\Providers\Filament;
 
 use App\Filament\Pages\Auth\Login;
 use App\Filament\Pages\Dashboard;
+use App\Http\Controllers\Admin\DocumentViewerController;
+use App\Http\Controllers\Admin\ProformaInvoicePdfPreviewController;
 use App\Http\Controllers\Admin\QuotationPdfPreviewController;
 use App\Http\Controllers\Admin\QuotationRequestAttachmentController;
 use Filament\Http\Middleware\Authenticate;
@@ -62,8 +64,14 @@ class AdminPanelProvider extends PanelProvider
             ->authenticatedRoutes(function (): void {
                 Route::get('/quotations/{quotation}/pdf-preview', QuotationPdfPreviewController::class)
                     ->name('quotations.pdf-preview');
+                Route::get('/proforma-invoices/{proformaInvoice}/pdf-preview', ProformaInvoicePdfPreviewController::class)
+                    ->name('proforma-invoices.pdf-preview');
                 Route::get('/quotation-request-attachments/{attachment}', QuotationRequestAttachmentController::class)
                     ->name('quotation-request-attachments.download');
+                Route::get('/documents/quotations/{quotation}', [DocumentViewerController::class, 'quotation'])
+                    ->name('documents.quotation');
+                Route::get('/documents/proforma-invoices/{proformaInvoice}', [DocumentViewerController::class, 'proforma'])
+                    ->name('documents.proforma');
             })
             ->routes(function (): void {
                 Route::get('/logout', function () {

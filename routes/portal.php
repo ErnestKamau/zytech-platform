@@ -9,6 +9,7 @@ use App\Domains\Portal\Livewire\Notifications;
 use App\Domains\Portal\Livewire\Orders;
 use App\Domains\Portal\Livewire\Projects;
 use App\Domains\Portal\Livewire\Quotations;
+use App\Domains\Portal\Livewire\QuotationShow;
 use App\Domains\Portal\Livewire\Support;
 use App\Domains\Portal\Livewire\Timeline;
 use App\Http\Controllers\Portal\PortalFileController;
@@ -23,6 +24,9 @@ Route::middleware(['auth', 'verified', EnsurePortalAccess::class])
         Route::get('/quotations', Quotations::class)->name('quotations');
         Route::get('/quotations/{quotation}/pdf', [PortalFileController::class, 'streamQuotationPdf'])->name('quotations.pdf');
         Route::get('/quotations/{quotation}/pdf/download', [PortalFileController::class, 'downloadQuotationPdf'])->name('quotations.pdf.download');
+        Route::get('/quotations/{quotation}', QuotationShow::class)->name('quotations.show');
+        Route::get('/proforma-invoices/{proformaInvoice}/pdf', [PortalFileController::class, 'streamProformaPdf'])->name('proforma.pdf');
+        Route::get('/proforma-invoices/{proformaInvoice}/pdf/download', [PortalFileController::class, 'downloadProformaPdf'])->name('proforma.pdf.download');
         Route::get('/orders', Orders::class)->name('orders');
         Route::get('/invoices', Invoices::class)->name('invoices');
         Route::get('/projects', Projects::class)->name('projects');

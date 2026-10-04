@@ -115,12 +115,29 @@
     list-style: none;
 }
 
+@keyframes zy-timeline-reveal {
+    from {
+        transform: translateY(8px);
+    }
+
+    to {
+        transform: none;
+    }
+}
+
 .zy-project-timeline li {
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: auto 1fr auto;
     gap: var(--zy-space-4);
     align-items: start;
     opacity: 0.75;
+    animation: zy-timeline-reveal 300ms var(--zy-ease, ease) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .zy-project-timeline li {
+        animation: none;
+    }
 }
 
 .zy-project-timeline li.is-complete {
@@ -132,6 +149,77 @@
     font-weight: 700;
     letter-spacing: 0.08em;
     color: var(--zy-color-muted);
+}
+
+.zy-project-timeline__body {
+    flex: 1;
+}
+
+.zy-project-timeline__media {
+    position: relative;
+    width: 6.5rem;
+    height: 4.5rem;
+    flex-shrink: 0;
+    border-radius: var(--zy-radius-md);
+    overflow: hidden;
+    background: var(--zy-stone-200);
+}
+
+.zy-project-timeline__image,
+.zy-project-timeline__media-trigger {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.zy-project-timeline__image {
+    object-fit: cover;
+}
+
+.zy-project-timeline__media-trigger {
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.zy-project-timeline__media-trigger video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.zy-project-timeline__play-icon {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    background: rgb(28 24 21 / 0.35);
+    font-size: var(--zy-text-sm);
+}
+
+.zy-project-timeline__video {
+    width: 100%;
+    max-height: 70vh;
+    border-radius: var(--zy-radius-md);
+}
+
+@media (max-width: 640px) {
+    .zy-project-timeline li {
+        grid-template-columns: auto 1fr;
+    }
+
+    .zy-project-timeline__media {
+        grid-column: 2;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16 / 10;
+    }
 }
 
 .zy-project-map {

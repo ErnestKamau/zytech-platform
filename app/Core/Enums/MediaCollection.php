@@ -19,6 +19,9 @@ enum MediaCollection: string
     case Downloads = 'downloads';
     case Company = 'company';
     case Seo = 'seo';
+    case HomepageSlideMedia = 'homepage_slide_media';
+    case HomepageSlidePoster = 'homepage_slide_poster';
+    case MilestoneMedia = 'milestone_media';
 
     public function label(): string
     {
@@ -38,6 +41,9 @@ enum MediaCollection: string
             self::Downloads => 'Downloads',
             self::Company => 'Company',
             self::Seo => 'SEO',
+            self::HomepageSlideMedia => 'Homepage Slide Media',
+            self::HomepageSlidePoster => 'Homepage Slide Poster',
+            self::MilestoneMedia => 'Milestone Media',
         };
     }
 
@@ -52,7 +58,8 @@ enum MediaCollection: string
     public function acceptsConversions(): bool
     {
         return match ($this) {
-            self::Videos, self::Documents, self::Certificates, self::Downloads => false,
+            self::Videos, self::Documents, self::Certificates, self::Downloads,
+            self::HomepageSlideMedia, self::MilestoneMedia => false,
             default => true,
         };
     }

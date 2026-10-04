@@ -37,7 +37,7 @@
                     \App\Core\Enums\QuotationStatus::Viewed,
                 ], true);
             @endphp
-            <article class="zy-portal-panel zy-portal-panel--lift">
+            <a href="{{ route('portal.quotations.show', $quotation) }}" class="zy-portal-panel zy-portal-panel--lift" style="text-decoration:none;color:inherit;">
                 <div class="zy-portal-quote-row">
                     <div class="zy-portal-panel__title-wrap" style="align-items: start;">
                         <span class="zy-portal-panel__icon" aria-hidden="true"><x-portal.icon name="document" /></span>
@@ -58,9 +58,6 @@
                             @else
                                 <p class="zy-muted">Our team is pricing this quotation. We'll notify you as soon as it's ready to review and accept.</p>
                             @endif
-                            @if ($quotation->status === \App\Core\Enums\QuotationStatus::RevisionRequested && $quotation->revision_notes)
-                                <p class="zy-muted" style="margin-top: var(--zy-space-2);">Revision notes: {{ $quotation->revision_notes }}</p>
-                            @endif
                             @if ($quotation->salesOrder)
                                 <p class="zy-muted" style="margin-top: var(--zy-space-2);">
                                     Order {{ $quotation->salesOrder->reference_number }}
@@ -73,66 +70,14 @@
                     </div>
                     <div class="zy-portal-actions">
                         <span class="zy-badge zy-badge--primary">{{ $shared ? $quotation->status->label() : 'Being prepared' }}</span>
-                        @if ($shared)
-                            <a href="{{ route('portal.quotations.pdf', $quotation) }}" target="_blank" class="zy-btn zy-btn--ghost zy-btn--sm">
-                                <x-portal.icon name="eye" />
-                                View PDF
-                            </a>
-                            <a href="{{ route('portal.quotations.pdf.download', $quotation) }}" class="zy-btn zy-btn--secondary zy-btn--sm">
-                                <x-portal.icon name="download" />
-                                Download
-                            </a>
-                        @endif
                         @if ($reviewable)
-                            <button
-                                type="button"
-                                class="zy-btn zy-btn--primary zy-btn--sm"
-                                wire:click="accept('{{ $quotation->id }}')"
-                                wire:confirm="Accept {{ $quotation->reference_number }} for {{ number_format((float) $quotation->total_amount, 2) }} {{ $quotation->currency }}? We'll create your order and invoice."
-                            >Accept quotation</button>
-                            <button type="button" class="zy-btn zy-btn--ghost zy-btn--sm" wire:click="reject('{{ $quotation->id }}')" wire:confirm="Reject this quotation?">Reject</button>
-                        @endif
-                        @if ($quotation->status === \App\Core\Enums\QuotationStatus::Accepted && ! $quotation->purchaseOrder)
-                            <button type="button" class="zy-btn zy-btn--secondary zy-btn--sm" wire:click="startPoUpload('{{ $quotation->id }}')">Upload PO</button>
+                            <span class="zy-btn zy-btn--primary zy-btn--sm">Review quotation</span>
+                        @elseif ($shared)
+                            <span class="zy-btn zy-btn--ghost zy-btn--sm">View details</span>
                         @endif
                     </div>
                 </div>
-
-                @if ($reviewable)
-                    <div style="margin-top: var(--zy-space-4); display: grid; gap: var(--zy-space-2);">
-                        <label class="zy-label" for="revision-{{ $quotation->id }}">Request a revision</label>
-                        <textarea id="revision-{{ $quotation->id }}" class="zy-textarea" rows="2" wire:model="revisionNotes" placeholder="Tell us what should change…"></textarea>
-                        @error('revisionNotes') <p class="zy-form-error">{{ $message }}</p> @enderror
-                        <button type="button" class="zy-btn zy-btn--ghost zy-btn--sm" style="justify-self: start;" wire:click="requestRevision('{{ $quotation->id }}')">
-                            Request revision
-                        </button>
-                    </div>
-                @endif
-
-                @if ($poQuotationId === $quotation->id)
-                    <form wire:submit="uploadPo" style="margin-top: var(--zy-space-4); display: grid; gap: var(--zy-space-3);">
-                        <h3 class="zy-portal-panel__title">Upload purchase order</h3>
-                        <div>
-                            <label class="zy-label" for="po-number">PO number</label>
-                            <input id="po-number" type="text" class="zy-input" wire:model="poNumber" required>
-                            @error('poNumber') <p class="zy-form-error">{{ $message }}</p> @enderror
-                        </div>
-                        <div>
-                            <label class="zy-label" for="po-file">PO document</label>
-                            <input id="po-file" type="file" class="zy-input" wire:model="poFile" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" required>
-                            @error('poFile') <p class="zy-form-error">{{ $message }}</p> @enderror
-                        </div>
-                        <div>
-                            <label class="zy-label" for="po-notes">Notes (optional)</label>
-                            <textarea id="po-notes" class="zy-textarea" rows="2" wire:model="poNotes"></textarea>
-                        </div>
-                        <div class="zy-portal-actions">
-                            <button type="submit" class="zy-btn zy-btn--primary zy-btn--sm">Submit PO</button>
-                            <button type="button" class="zy-btn zy-btn--ghost zy-btn--sm" wire:click="$set('poQuotationId', null)">Cancel</button>
-                        </div>
-                    </form>
-                @endif
-            </article>
+            </a>
         @empty
             <x-ui.empty-state
                 class="zy-portal-panel"

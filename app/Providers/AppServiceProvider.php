@@ -29,11 +29,15 @@ use App\Domains\Commerce\Events\DraftInvoiceCreated;
 use App\Domains\Commerce\Events\OrderCancelled;
 use App\Domains\Commerce\Events\OrderPlaced;
 use App\Domains\Commerce\Events\OrderStatusChanged;
+use App\Domains\Commerce\Events\ProformaInvoiceIssued;
+use App\Domains\Commerce\Listeners\GenerateProformaInvoicePdf;
 use App\Domains\Commerce\Listeners\MergeCartOnLogin;
 use App\Domains\Commerce\Listeners\SendOrderNotification;
+use App\Domains\Commerce\Listeners\SendProformaInvoiceEmail;
 use App\Domains\Commerce\Policies\FulfillmentPolicy;
 use App\Domains\Commerce\Policies\InventoryLevelPolicy;
 use App\Domains\Commerce\Policies\InvoicePolicy;
+use App\Domains\Commerce\Policies\ProformaInvoicePolicy;
 use App\Domains\Commerce\Policies\OrderPolicy;
 use App\Domains\Commerce\Policies\PaymentPolicy;
 use App\Domains\Commerce\Policies\PurchaseOrderPolicy;
@@ -133,6 +137,7 @@ use App\Domains\Project\Livewire\RelatedProjects as RelatedProjectComponents;
 use App\Domains\Project\Policies\ProjectCategoryPolicy;
 use App\Domains\Project\Policies\ProjectContentPolicy;
 use App\Domains\Project\Policies\ProjectPolicy;
+use App\Domains\Homepage\Support\ShareHomepageSlides;
 use App\Domains\Project\Support\ShareProjects;
 use App\Domains\Quotation\Events\LeadCreated;
 use App\Domains\Quotation\Events\LeadQualified;
@@ -218,6 +223,7 @@ use App\Models\FollowUp;
 use App\Models\Fulfillment;
 use App\Models\InventoryLevel;
 use App\Models\Invoice;
+use App\Models\ProformaInvoice;
 use App\Models\LeadershipMember;
 use App\Models\LeadSource;
 use App\Models\Media;
@@ -375,6 +381,7 @@ class AppServiceProvider extends ServiceProvider
         View::composer(['pages.home', 'pages.services.index'], ShareServices::class);
         View::composer(['pages.home', 'pages.projects.index'], ShareProjects::class);
         View::composer(['pages.home', 'pages.knowledge.index'], ShareKnowledge::class);
+        View::composer(['pages.home'], ShareHomepageSlides::class);
 
         Gate::policy(User::class, UserPolicy::class);
         Gate::policy(Role::class, RolePolicy::class);
@@ -409,6 +416,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(SalesOrder::class, SalesOrderPolicy::class);
         Gate::policy(Order::class, OrderPolicy::class);
         Gate::policy(Invoice::class, InvoicePolicy::class);
+        Gate::policy(ProformaInvoice::class, ProformaInvoicePolicy::class);
         Gate::policy(PurchaseOrder::class, PurchaseOrderPolicy::class);
         Gate::policy(Payment::class, PaymentPolicy::class);
         Gate::policy(InventoryLevel::class, InventoryLevelPolicy::class);
@@ -598,6 +606,9 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(QuotationRejected::class, SendQuotationEmail::class);
         Event::listen(QuotationApproved::class, GenerateQuotationPdf::class);
         Event::listen(QuotationSent::class, GenerateQuotationPdf::class);
+
+        Event::listen(ProformaInvoiceIssued::class, GenerateProformaInvoicePdf::class);
+        Event::listen(ProformaInvoiceIssued::class, SendProformaInvoiceEmail::class);
 
         Event::listen(OrderPlaced::class, SendOrderNotification::class);
         Event::listen(OrderCancelled::class, SendOrderNotification::class);

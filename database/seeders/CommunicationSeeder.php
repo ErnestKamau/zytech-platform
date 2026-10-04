@@ -51,6 +51,20 @@ class CommunicationSeeder extends Seeder
                 'body' => "Hi {{name}},\n\nWe have recorded that quotation {{reference}} was declined.\n\n{{message}}",
             ],
             [
+                'key' => 'proforma-invoice-issued',
+                'name' => 'Proforma invoice issued',
+                'channel' => NotificationChannel::Mail,
+                'subject' => 'Proforma invoice {{reference}} is ready',
+                'body' => "Hi {{name}},\n\nA proforma invoice {{reference}} has been issued for your accepted quotation. You can view and download it in the client portal.\n\n{{message}}",
+            ],
+            [
+                'key' => 'invoice-issued',
+                'name' => 'Invoice issued',
+                'channel' => NotificationChannel::Mail,
+                'subject' => 'Invoice {{reference}} is ready',
+                'body' => "Hi {{name}},\n\nInvoice {{reference}} has been issued. You can view, download, and pay it in the client portal.\n\n{{message}}",
+            ],
+            [
                 'key' => 'order-placed',
                 'name' => 'Order placed',
                 'channel' => NotificationChannel::Mail,

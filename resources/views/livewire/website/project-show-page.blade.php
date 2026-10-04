@@ -83,12 +83,42 @@
                 </div>
                 <ol class="zy-project-timeline">
                     @foreach ($project->milestones as $index => $milestone)
-                        <li class="{{ $milestone->status->value === 'completed' ? 'is-complete' : '' }}">
+                        <li
+                            class="{{ $milestone->status->value === 'completed' ? 'is-complete' : '' }}"
+                            style="animation-delay: {{ $index * 0.1 }}s"
+                        >
                             <span>{{ str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) }}</span>
-                            <div>
+                            <div class="zy-project-timeline__body">
                                 <p class="zy-card__title">{{ $milestone->title }}</p>
                                 <p class="zy-card__body">{{ $milestone->description }}</p>
                             </div>
+                            @if ($milestone->mediaUrl)
+                                <div class="zy-project-timeline__media">
+                                    @if ($milestone->mediaType === 'video')
+                                        <div x-data="{ open: false }">
+                                            <button
+                                                type="button"
+                                                class="zy-project-timeline__media-trigger"
+                                                x-on:click="open = true"
+                                                aria-label="Play milestone video: {{ $milestone->title }}"
+                                            >
+                                                <video muted preload="metadata" src="{{ $milestone->mediaUrl }}"></video>
+                                                <span class="zy-project-timeline__play-icon" aria-hidden="true">▶</span>
+                                            </button>
+                                            <x-ui.modal show="open" title="{{ $milestone->title }}">
+                                                <video controls autoplay class="zy-project-timeline__video" src="{{ $milestone->mediaUrl }}"></video>
+                                            </x-ui.modal>
+                                        </div>
+                                    @else
+                                        <img
+                                            src="{{ $milestone->mediaUrl }}"
+                                            alt="{{ $milestone->title }}"
+                                            loading="lazy"
+                                            class="zy-project-timeline__image"
+                                        >
+                                    @endif
+                                </div>
+                            @endif
                         </li>
                     @endforeach
                 </ol>

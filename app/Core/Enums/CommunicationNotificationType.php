@@ -9,6 +9,8 @@ enum CommunicationNotificationType: string
     case QuotationSent = 'quotation-sent';
     case QuotationAccepted = 'quotation-accepted';
     case QuotationRejected = 'quotation-rejected';
+    case ProformaInvoiceIssued = 'proforma-invoice-issued';
+    case InvoiceIssued = 'invoice-issued';
     case OrderPlaced = 'order-placed';
     case OrderCancelled = 'order-cancelled';
     case OrderStatusChanged = 'order-status-changed';
@@ -26,6 +28,8 @@ enum CommunicationNotificationType: string
             self::QuotationSent => 'Quotation sent',
             self::QuotationAccepted => 'Quotation accepted',
             self::QuotationRejected => 'Quotation rejected',
+            self::ProformaInvoiceIssued => 'Proforma invoice issued',
+            self::InvoiceIssued => 'Invoice issued',
             self::OrderPlaced => 'Order placed',
             self::OrderCancelled => 'Order cancelled',
             self::OrderStatusChanged => 'Order status changed',

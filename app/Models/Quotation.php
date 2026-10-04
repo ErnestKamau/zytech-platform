@@ -152,4 +152,9 @@ class Quotation extends BaseModel
     {
         return $this->hasMany(Invoice::class);
     }
+
+    public function proformaInvoices(): HasMany
+    {
+        return $this->hasMany(ProformaInvoice::class)->orderByDesc('created_at');
+    }
 }

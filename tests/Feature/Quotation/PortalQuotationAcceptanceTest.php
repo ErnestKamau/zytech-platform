@@ -7,11 +7,14 @@ use App\Core\Enums\ClientType;
 use App\Core\Enums\ProjectType;
 use App\Core\Enums\QuotationStatus;
 use App\Core\Enums\RoleType;
+use App\Domains\Portal\Livewire\QuotationShow;
 use App\Domains\Portal\Livewire\Quotations;
 use App\Domains\Quotation\Services\QuotationRequestService;
 use App\Domains\Quotation\Services\QuotationService;
 use App\Filament\Resources\Quotations\Pages\EditQuotation;
 use App\Models\Client;
+use App\Models\ClientTimeline;
+use App\Models\ProformaInvoice;
 use App\Models\Quotation;
 use App\Models\User;
 use Database\Seeders\ConfigurationSeeder;
@@ -52,7 +55,7 @@ class PortalQuotationAcceptanceTest extends TestCase
         ]);
     }
 
-    public function test_draft_is_hidden_until_sent_then_client_can_accept(): void
+    public function test_draft_is_hidden_until_sent_then_client_can_review_and_accept_via_modal_flow(): void
     {
         $quotation = $this->draftQuotation();
 
@@ -60,8 +63,7 @@ class PortalQuotationAcceptanceTest extends TestCase
 
         Livewire::test(Quotations::class)
             ->assertSee('Being prepared')
-            ->assertDontSee('Accept quotation')
-            ->assertDontSee('View PDF');
+            ->assertDontSee('Review quotation');
 
         $this->get(route('portal.quotations.pdf', $quotation))->assertNotFound();
 
@@ -79,10 +81,51 @@ class PortalQuotationAcceptanceTest extends TestCase
         $this->get(route('portal.quotations.pdf', $quotation))->assertOk();
 
         Livewire::test(Quotations::class)
-            ->assertSee('Accept quotation')
-            ->call('accept', $quotation->id);
+            ->assertSee('Review quotation');
+
+        // Step-based accept flow: open modal -> review step -> confirm step -> accept.
+        Livewire::test(QuotationShow::class, ['quotation' => $quotation->id])
+            ->assertSee($quotation->reference_number)
+            ->call('openModal', 'accept')
+            ->assertSet('acceptStep', 1)
+            ->call('nextAcceptStep')
+            ->assertSet('acceptStep', 2)
+            ->call('accept');
 
         $this->assertSame(QuotationStatus::Accepted, $quotation->refresh()->status);
+
+        // Accepting generates a Proforma Invoice and a client timeline entry.
+        $this->assertTrue(ProformaInvoice::query()->where('quotation_id', $quotation->id)->exists());
+        $this->assertTrue(
+            ClientTimeline::query()
+                ->where('meta->quotation_id', $quotation->id)
+                ->where('event_type', 'quotation-accepted')
+                ->exists()
+        );
+    }
+
+    public function test_client_can_reject_and_request_revision_via_modals(): void
+    {
+        $quotation = $this->draftQuotation();
+
+        $this->actingAs($this->admin);
+        app(QuotationService::class)->approve($quotation);
+        app(QuotationService::class)->send($quotation->fresh());
+
+        $this->actingAs($this->clientUser);
+
+        Livewire::test(QuotationShow::class, ['quotation' => $quotation->id])
+            ->call('openModal', 'revision')
+            ->set('reviewNotes', 'Please add a provisional sum for electrical works.')
+            ->call('requestRevision');
+
+        $this->assertSame(QuotationStatus::RevisionRequested, $quotation->refresh()->status);
+        $this->assertTrue(
+            ClientTimeline::query()
+                ->where('meta->quotation_id', $quotation->id)
+                ->where('event_type', 'quotation-revision-requested')
+                ->exists()
+        );
     }
 
     public function test_send_is_blocked_without_priced_items(): void
