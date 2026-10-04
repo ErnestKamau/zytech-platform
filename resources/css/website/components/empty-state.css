@@ -25,6 +25,7 @@
     height: auto;
     max-width: 18rem;
     aspect-ratio: 1;
+    color: var(--zy-color-ink);
 }
 
 .zy-empty--hero .zy-empty__media,

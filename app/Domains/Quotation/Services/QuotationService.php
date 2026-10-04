@@ -22,10 +22,19 @@ use App\Models\QuotationItem;
 use App\Models\QuotationRequest;
 use App\Models\QuotationRevision;
 use App\Models\QuotationStatusHistory;
+use DomainException;
 use Illuminate\Support\Facades\DB;
 
 final class QuotationService extends BaseService
 {
+    public const DEFAULT_TERMS = <<<'TERMS'
+        1. This quotation is valid for 30 days from the date of issue.
+        2. A 50% deposit is required before work begins; the balance is due on completion.
+        3. Prices exclude statutory approvals and permits unless stated otherwise.
+        4. Any work outside the quoted scope will be quoted and approved separately.
+        5. Materials remain the property of Zytech Contractors until paid in full.
+        TERMS;
+
     public function __construct(
         private readonly PricingService $pricing,
         private readonly ActivityLogger $activities,
@@ -45,7 +54,8 @@ final class QuotationService extends BaseService
                 'type' => QuotationType::Standard,
                 'status' => QuotationStatus::Draft,
                 'valid_until' => now()->addDays(30)->toDateString(),
-                'terms' => 'Valid for 30 days from issue date. Prices exclude statutory approvals unless stated.',
+                'tax_rate' => PricingService::DEFAULT_TAX_RATE,
+                'terms' => self::DEFAULT_TERMS,
                 'prepared_by' => auth()->id(),
             ]);
 
@@ -145,6 +155,16 @@ final class QuotationService extends BaseService
 
     public function recalculate(Quotation $quotation): Quotation
     {
+        $quotation->load('items');
+
+        foreach ($quotation->items as $item) {
+            $lineTotal = $this->pricing->lineTotal((float) $item->quantity, (float) $item->unit_price);
+
+            if ((float) $item->line_total !== $lineTotal) {
+                $item->forceFill(['line_total' => $lineTotal])->save();
+            }
+        }
+
         $totals = $this->pricing->totals($quotation);
 
         $quotation->forceFill($totals)->save();
@@ -213,6 +233,36 @@ final class QuotationService extends BaseService
         event(new QuotationSent($quotation));
 
         return $quotation;
+    }
+
+    public const SENDABLE_STATUSES = [
+        QuotationStatus::Draft,
+        QuotationStatus::Pending,
+        QuotationStatus::Reviewing,
+        QuotationStatus::Preparing,
+        QuotationStatus::RevisionRequested,
+    ];
+
+    /**
+     * Approves an unapproved draft, then issues it to the client portal.
+     */
+    public function sendToClient(Quotation $quotation): Quotation
+    {
+        if (! in_array($quotation->status, self::SENDABLE_STATUSES, true)) {
+            throw new DomainException('Only draft or in-progress quotations can be sent.');
+        }
+
+        $quotation = $this->recalculate($quotation);
+
+        if ($quotation->items->where('is_optional', false)->isEmpty() || (float) $quotation->total_amount <= 0) {
+            throw new DomainException('Add at least one priced line item before sending.');
+        }
+
+        if (in_array($quotation->status, [QuotationStatus::Draft, QuotationStatus::Pending, QuotationStatus::Reviewing], true)) {
+            $quotation = $this->approve($quotation, 'Approved on send');
+        }
+
+        return $this->send($quotation);
     }
 
     public function requestRevision(Quotation $quotation, string $notes): Quotation

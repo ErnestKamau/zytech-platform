@@ -4,6 +4,8 @@ namespace App\Providers\Filament;
 
 use App\Filament\Pages\Auth\Login;
 use App\Filament\Pages\Dashboard;
+use App\Http\Controllers\Admin\QuotationPdfPreviewController;
+use App\Http\Controllers\Admin\QuotationRequestAttachmentController;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -57,6 +59,12 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
+            ->authenticatedRoutes(function (): void {
+                Route::get('/quotations/{quotation}/pdf-preview', QuotationPdfPreviewController::class)
+                    ->name('quotations.pdf-preview');
+                Route::get('/quotation-request-attachments/{attachment}', QuotationRequestAttachmentController::class)
+                    ->name('quotation-request-attachments.download');
+            })
             ->routes(function (): void {
                 Route::get('/logout', function () {
                     return redirect()

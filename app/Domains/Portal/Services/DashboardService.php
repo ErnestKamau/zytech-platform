@@ -94,7 +94,7 @@ final class DashboardService extends BaseService
         $quotations = $client->quotations()
             ->orderByDesc('updated_at')
             ->limit(5)
-            ->get(['id', 'reference_number', 'title', 'status', 'total_amount', 'currency', 'valid_until']);
+            ->get(['id', 'reference_number', 'title', 'status', 'total_amount', 'currency', 'valid_until', 'sent_at']);
 
         $projects = $client->projects()
             ->where('projects.status', '!=', ProjectStatus::Archived)
@@ -167,9 +167,11 @@ final class DashboardService extends BaseService
                     'id' => $q->id,
                     'reference_number' => $q->reference_number,
                     'title' => $q->title,
-                    'status' => $status?->label() ?? (string) $q->status,
+                    'status' => $q->isSharedWithClient() ? ($status?->label() ?? (string) $q->status) : 'Being prepared',
                     'total_amount' => (float) $q->total_amount,
-                    'amount_label' => MoneyFormatter::compact((float) $q->total_amount, $q->currency ?: 'KES'),
+                    'amount_label' => $q->isSharedWithClient()
+                        ? MoneyFormatter::compact((float) $q->total_amount, $q->currency ?: 'KES')
+                        : 'Pricing in progress',
                     'reviewable' => $status !== null && in_array($status, $reviewStatuses, true),
                     'valid_until' => $q->valid_until?->toDateString(),
                 ];

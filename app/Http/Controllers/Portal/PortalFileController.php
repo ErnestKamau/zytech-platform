@@ -78,5 +78,6 @@ final class PortalFileController extends Controller
         abort_unless($user !== null, 403);
         $client = $portal->clientForUser($user) ?? abort(403);
         abort_unless($quotation->client_id === $client->id, 403);
+        abort_unless($quotation->isSharedWithClient(), 404);
     }
 }

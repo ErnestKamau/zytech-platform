@@ -31,7 +31,8 @@
     <div class="zy-portal-stack" wire:loading.delay.remove>
         @forelse ($quotations as $quotation)
             @php
-                $reviewable = in_array($quotation->status, [
+                $shared = $quotation->isSharedWithClient();
+                $reviewable = $shared && in_array($quotation->status, [
                     \App\Core\Enums\QuotationStatus::Sent,
                     \App\Core\Enums\QuotationStatus::Viewed,
                 ], true);
@@ -43,16 +44,20 @@
                         <div>
                             <p class="zy-eyebrow">{{ $quotation->reference_number }} · v{{ $quotation->revision_number }}</p>
                             <h2 class="zy-portal-panel__title">{{ $quotation->title }}</h2>
-                            <p class="zy-muted">
-                                @if ($quotation->valid_until)
-                                    Valid until {{ $quotation->valid_until->toFormattedDateString() }}
-                                @else
-                                    Validity to be confirmed
-                                @endif
-                                @if ($quotation->total_amount)
-                                    · {{ number_format((float) $quotation->total_amount, 2) }} {{ $quotation->currency }}
-                                @endif
-                            </p>
+                            @if ($shared)
+                                <p class="zy-muted">
+                                    @if ($quotation->valid_until)
+                                        Valid until {{ $quotation->valid_until->toFormattedDateString() }}
+                                    @else
+                                        Validity to be confirmed
+                                    @endif
+                                    @if ($quotation->total_amount)
+                                        · {{ number_format((float) $quotation->total_amount, 2) }} {{ $quotation->currency }}
+                                    @endif
+                                </p>
+                            @else
+                                <p class="zy-muted">Our team is pricing this quotation. We'll notify you as soon as it's ready to review and accept.</p>
+                            @endif
                             @if ($quotation->status === \App\Core\Enums\QuotationStatus::RevisionRequested && $quotation->revision_notes)
                                 <p class="zy-muted" style="margin-top: var(--zy-space-2);">Revision notes: {{ $quotation->revision_notes }}</p>
                             @endif
@@ -67,17 +72,24 @@
                         </div>
                     </div>
                     <div class="zy-portal-actions">
-                        <span class="zy-badge zy-badge--primary">{{ $quotation->status->label() }}</span>
-                        <a href="{{ route('portal.quotations.pdf', $quotation) }}" target="_blank" class="zy-btn zy-btn--ghost zy-btn--sm">
-                            <x-portal.icon name="eye" />
-                            View PDF
-                        </a>
-                        <a href="{{ route('portal.quotations.pdf.download', $quotation) }}" class="zy-btn zy-btn--secondary zy-btn--sm">
-                            <x-portal.icon name="download" />
-                            Download
-                        </a>
+                        <span class="zy-badge zy-badge--primary">{{ $shared ? $quotation->status->label() : 'Being prepared' }}</span>
+                        @if ($shared)
+                            <a href="{{ route('portal.quotations.pdf', $quotation) }}" target="_blank" class="zy-btn zy-btn--ghost zy-btn--sm">
+                                <x-portal.icon name="eye" />
+                                View PDF
+                            </a>
+                            <a href="{{ route('portal.quotations.pdf.download', $quotation) }}" class="zy-btn zy-btn--secondary zy-btn--sm">
+                                <x-portal.icon name="download" />
+                                Download
+                            </a>
+                        @endif
                         @if ($reviewable)
-                            <button type="button" class="zy-btn zy-btn--primary zy-btn--sm" wire:click="accept('{{ $quotation->id }}')">Accept</button>
+                            <button
+                                type="button"
+                                class="zy-btn zy-btn--primary zy-btn--sm"
+                                wire:click="accept('{{ $quotation->id }}')"
+                                wire:confirm="Accept {{ $quotation->reference_number }} for {{ number_format((float) $quotation->total_amount, 2) }} {{ $quotation->currency }}? We'll create your order and invoice."
+                            >Accept quotation</button>
                             <button type="button" class="zy-btn zy-btn--ghost zy-btn--sm" wire:click="reject('{{ $quotation->id }}')" wire:confirm="Reject this quotation?">Reject</button>
                         @endif
                         @if ($quotation->status === \App\Core\Enums\QuotationStatus::Accepted && ! $quotation->purchaseOrder)

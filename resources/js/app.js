@@ -12,8 +12,38 @@ import Pusher from 'pusher-js';
 
 window.Pusher = Pusher;
 
+const lottiePlayers = new Map();
+
+function cssColorToRgba(color) {
+    const probe = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
+    probe.fillStyle = color;
+    probe.fillRect(0, 0, 1, 1);
+    const [r, g, b, a] = probe.getImageData(0, 0, 1, 1).data;
+
+    return [r / 255, g / 255, b / 255, a / 255];
+}
+
+/**
+ * Animations may expose an "ink" color slot; it follows the canvas CSS `color`
+ * so artwork stays visible in both light and dark themes.
+ */
+function applyLottieInk(player, canvas) {
+    if (! player.isLoaded || ! player.getSlotIds().includes('ink')) {
+        return;
+    }
+
+    player.setColorSlot('ink', cssColorToRgba(getComputedStyle(canvas).color));
+}
+
 function mountLotties(root = document) {
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    for (const [canvas, player] of lottiePlayers) {
+        if (! canvas.isConnected) {
+            player.destroy();
+            lottiePlayers.delete(canvas);
+        }
+    }
 
     root.querySelectorAll('[data-zy-lottie]').forEach((canvas) => {
         if (! (canvas instanceof HTMLCanvasElement) || canvas.dataset.zyLottieMounted === '1') {
@@ -22,14 +52,32 @@ function mountLotties(root = document) {
 
         canvas.dataset.zyLottieMounted = '1';
 
-        new DotLottie({
+        const player = new DotLottie({
             canvas,
             src: canvas.dataset.src ?? '',
             loop: canvas.dataset.loop !== '0',
             autoplay: ! reducedMotion && canvas.dataset.autoplay !== '0',
         });
+
+        player.addEventListener('load', () => {
+            const { width, height } = player.animationSize();
+
+            if (width > 0 && height > 0) {
+                canvas.style.aspectRatio = `${width} / ${height}`;
+            }
+
+            applyLottieInk(player, canvas);
+        });
+
+        lottiePlayers.set(canvas, player);
     });
 }
+
+new MutationObserver(() => {
+    requestAnimationFrame(() => {
+        lottiePlayers.forEach((player, canvas) => applyLottieInk(player, canvas));
+    });
+}).observe(document.documentElement, { attributes: true, attributeFilter: ['data-zy-theme'] });
 
 try {
     window.Echo = new Echo({

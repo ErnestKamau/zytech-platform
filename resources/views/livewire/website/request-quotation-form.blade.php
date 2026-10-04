@@ -30,14 +30,6 @@
                         <input id="quote-phone" type="tel" class="zy-input" wire:model="phone" placeholder="+254 …">
                     </div>
                     <div>
-                        <label class="zy-label" for="quote-contact">Preferred contact</label>
-                        <select id="quote-contact" class="zy-input" wire:model="preferredContactMethod">
-                            @foreach ($contactMethods as $method)
-                                <option value="{{ $method->value }}">{{ $method->label() }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
                         <label class="zy-label" for="quote-type">Project type</label>
                         <select id="quote-type" class="zy-input" wire:model="projectType">
                             @foreach ($projectTypes as $type)
@@ -52,18 +44,6 @@
                     <div>
                         <label class="zy-label" for="quote-location">Project location</label>
                         <input id="quote-location" type="text" class="zy-input" wire:model="location" placeholder="Estate, road, or landmark">
-                    </div>
-                    <div>
-                        <label class="zy-label" for="quote-budget">Budget range</label>
-                        <select id="quote-budget" class="zy-input" wire:model="budgetRange">
-                            @foreach ($budgetRanges as $range)
-                                <option value="{{ $range->value }}">{{ $range->label() }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <label class="zy-label" for="quote-timeline">Estimated timeline</label>
-                        <input id="quote-timeline" type="text" class="zy-input" wire:model="estimatedTimeline" placeholder="e.g. Start in 3 months">
                     </div>
                 </div>
 
@@ -81,20 +61,6 @@
                                 <label class="zy-quote-service">
                                     <input type="checkbox" wire:model="selectedServices" value="{{ $service->id }}">
                                     <span>{{ $service->title }}</span>
-                                </label>
-                            @endforeach
-                        </div>
-                    </fieldset>
-                @endif
-
-                @if ($products->isNotEmpty())
-                    <fieldset class="zy-quote-services">
-                        <legend class="zy-label">Products of interest</legend>
-                        <div class="zy-quote-services__grid">
-                            @foreach ($products as $product)
-                                <label class="zy-quote-service">
-                                    <input type="checkbox" wire:model="selectedProducts" value="{{ $product->id }}">
-                                    <span>{{ $product->title }}@if ($product->sku) <small>({{ $product->sku }})</small>@endif</span>
                                 </label>
                             @endforeach
                         </div>

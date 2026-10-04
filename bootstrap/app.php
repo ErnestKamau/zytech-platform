@@ -5,6 +5,7 @@ use App\Http\Middleware\AddPublicCacheHeaders;
 use App\Http\Middleware\CheckPlatformMaintenance;
 use App\Http\Middleware\EnsurePortalAccess;
 use App\Http\Middleware\HandleSeoRedirects;
+use App\Infrastructure\Http\CloudflareProxies;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -32,6 +33,14 @@ return Application::configure(basePath: dirname(__DIR__))
         ['middleware' => ['web', 'auth']],
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->trustProxies(
+            at: CloudflareProxies::all(),
+            headers: Request::HEADER_X_FORWARDED_FOR
+                | Request::HEADER_X_FORWARDED_HOST
+                | Request::HEADER_X_FORWARDED_PORT
+                | Request::HEADER_X_FORWARDED_PROTO,
+        );
+
         $middleware->web(append: [
             CheckPlatformMaintenance::class,
             HandleSeoRedirects::class,

@@ -25,6 +25,7 @@ class Quotation extends BaseModel
         'type',
         'status',
         'subtotal',
+        'tax_rate',
         'tax_amount',
         'discount_amount',
         'total_amount',
@@ -50,6 +51,7 @@ class Quotation extends BaseModel
             'type' => QuotationType::class,
             'status' => QuotationStatus::class,
             'subtotal' => 'decimal:2',
+            'tax_rate' => 'decimal:2',
             'tax_amount' => 'decimal:2',
             'discount_amount' => 'decimal:2',
             'total_amount' => 'decimal:2',
@@ -61,6 +63,14 @@ class Quotation extends BaseModel
             'accepted_at' => 'datetime',
             'rejected_at' => 'datetime',
         ];
+    }
+
+    /**
+     * Unsent quotations are still being priced; clients must not see amounts or PDFs.
+     */
+    public function isSharedWithClient(): bool
+    {
+        return $this->sent_at !== null;
     }
 
     public function request(): BelongsTo
