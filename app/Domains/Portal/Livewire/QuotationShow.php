@@ -10,8 +10,10 @@ use App\Domains\Portal\Services\PortalService;
 use App\Domains\Quotation\Actions\AcceptQuote;
 use App\Domains\Quotation\Actions\RequestQuoteRevision;
 use App\Domains\Quotation\Services\QuotationService;
+use App\Core\Enums\DeliveryStatus;
 use App\Models\Client;
 use App\Models\ClientTimeline;
+use App\Models\NotificationLog;
 use App\Models\ProformaInvoice;
 use App\Models\Quotation;
 use Illuminate\Contracts\View\View;
@@ -148,10 +150,18 @@ final class QuotationShow extends BaseComponent
 
         $proforma = $quotation->proformaInvoices->first();
 
+        $deliveredChannels = NotificationLog::query()
+            ->where('meta->quotation_id', $quotation->id)
+            ->where('status', DeliveryStatus::Sent)
+            ->orderByDesc('created_at')
+            ->get()
+            ->unique('channel');
+
         return view('livewire.portal.quotation-show', [
             'quotation' => $quotation,
             'timeline' => $timeline,
             'proforma' => $proforma instanceof ProformaInvoice ? $proforma : null,
+            'deliveredChannels' => $deliveredChannels,
             'reviewable' => $quotation->isSharedWithClient() && in_array($quotation->status, [
                 QuotationStatus::Sent,
                 QuotationStatus::Viewed,

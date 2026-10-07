@@ -6,7 +6,6 @@ use App\Core\Enums\QuotationStatus;
 use App\Core\Enums\QuotationType;
 use App\Core\Filament\BaseResource;
 use App\Core\Filament\BusinessHistoryAction;
-use App\Domains\Company\Services\CompanyService;
 use App\Domains\Quotation\Services\PricingService;
 use App\Domains\Quotation\Services\QuotationService;
 use App\Filament\Resources\Quotations\Pages\EditQuotation;
@@ -52,7 +51,7 @@ class QuotationResource extends BaseResource
 
     public static function form(Schema $schema): Schema
     {
-        return $schema->columns(3)->components([
+        return $schema->columns(1)->components([
             Wizard::make([
                 Step::make('Client & request')
                     ->icon(Heroicon::OutlinedUser)
@@ -191,24 +190,24 @@ class QuotationResource extends BaseResource
                                 Textarea::make('terms')
                                     ->label('Terms & conditions')
                                     ->rows(8)
-                                    ->live(onBlur: true)
                                     ->helperText('One clause per line; line breaks are kept on the PDF.'),
-                                Textarea::make('notes')->label('Notes to client')->rows(3)->live(onBlur: true),
+                                Textarea::make('notes')->label('Notes to client')->rows(3),
+                            ]),
+                    ]),
+
+                Step::make('Review & send')
+                    ->icon(Heroicon::OutlinedPaperAirplane)
+                    ->schema([
+                        Section::make('Ready to review')
+                            ->description('Save your changes, then open the full document to check it looks right before sending.')
+                            ->schema([
+                                TextEntry::make('review_note')
+                                    ->hiddenLabel()
+                                    ->state('Use "Save & preview PDF" above to save your changes and open the full quotation document in a new tab. Once it looks right, use "Send to client" to email it and make it visible in the client portal.'),
                             ]),
                     ]),
             ])
-                ->persistStepInQueryString()
-                ->columnSpan(2),
-
-            Section::make('Live preview')
-                ->description('Updates as you type. This mirrors the PDF the client will receive.')
-                ->columnSpan(1)
-                ->schema([
-                    TextEntry::make('live_preview_sheet')
-                        ->hiddenLabel()
-                        ->html()
-                        ->state(fn (Get $get, ?Quotation $record): string => static::renderLivePreview($get, $record)),
-                ]),
+                ->persistStepInQueryString(),
         ]);
     }
 
@@ -279,83 +278,6 @@ class QuotationResource extends BaseResource
         );
 
         return 'KES '.number_format($totals[$key], 2);
-    }
-
-    private static function renderLivePreview(Get $get, ?Quotation $record): string
-    {
-        $company = app(CompanyService::class)->current();
-        $items = array_values((array) ($get('items') ?? []));
-        $totals = app(PricingService::class)->summarize($items, (float) $get('tax_rate'), (float) $get('discount_amount'));
-        $sections = $record?->sections()->pluck('title', 'id') ?? collect();
-
-        $clientName = $record?->client?->name ?? $record?->request?->full_name ?? '—';
-        $title = $get('title') ?: ($record?->title ?? 'Untitled quotation');
-        $reference = $record?->reference_number ?? 'Draft';
-
-        $rows = '';
-        foreach ($items as $item) {
-            $label = e($item['label'] ?? '');
-            $qty = rtrim(rtrim(number_format((float) ($item['quantity'] ?? 0), 2), '0'), '.');
-            $unit = e($item['unit'] ?? '');
-            $amount = number_format(app(PricingService::class)->lineTotal((float) ($item['quantity'] ?? 0), (float) ($item['unit_price'] ?? 0)), 2);
-            $optionalBadge = ! empty($item['is_optional']) ? ' <span style="color:#b45309;font-size:9px;">(optional)</span>' : '';
-            $sectionTitle = isset($item['quotation_section_id']) ? e($sections->get($item['quotation_section_id'], '')) : '';
-
-            $rows .= '<tr>'
-                .'<td style="padding:5px 4px;border-bottom:1px solid #ece6df;font-size:10px;color:#6b6560;">'.($sectionTitle !== '' ? $sectionTitle : '—').'</td>'
-                .'<td style="padding:5px 4px;border-bottom:1px solid #ece6df;font-size:11px;">'.$label.$optionalBadge.'</td>'
-                .'<td style="padding:5px 4px;border-bottom:1px solid #ece6df;font-size:11px;text-align:right;">'.$qty.' '.$unit.'</td>'
-                .'<td style="padding:5px 4px;border-bottom:1px solid #ece6df;font-size:11px;text-align:right;">'.$amount.'</td>'
-                .'</tr>';
-        }
-
-        if ($rows === '') {
-            $rows = '<tr><td colspan="4" style="padding:14px 4px;text-align:center;color:#6b6560;font-size:11px;">No line items yet.</td></tr>';
-        }
-
-        $discountRow = (float) $totals['discount_amount'] > 0
-            ? '<tr><td style="padding:3px 4px;font-size:11px;">Discount</td><td></td><td></td><td style="padding:3px 4px;font-size:11px;text-align:right;">− KES '.number_format($totals['discount_amount'], 2).'</td></tr>'
-            : '';
-
-        $subtotalFormatted = number_format($totals['subtotal'], 2);
-        $taxFormatted = number_format($totals['tax_amount'], 2);
-        $totalFormatted = number_format($totals['total_amount'], 2);
-
-        return <<<HTML
-            <div style="border:1px solid #e4ded5;border-radius:6px;background:#fff;padding:16px;font-family:inherit;">
-                <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:10px;">
-                    <div>
-                        <div style="font-weight:700;color:#3b4b31;font-size:13px;">{$company?->name}</div>
-                        <div style="color:#6b6560;font-size:10px;">{$company?->email}</div>
-                    </div>
-                    <div style="text-align:right;">
-                        <div style="font-weight:700;letter-spacing:.05em;color:#3b4b31;font-size:11px;">QUOTATION</div>
-                        <div style="color:#6b6560;font-size:10px;">{$reference}</div>
-                    </div>
-                </div>
-                <div style="border-top:2px solid #5c7349;margin-bottom:10px;"></div>
-                <div style="font-size:10px;color:#6b6560;margin-bottom:2px;">PREPARED FOR</div>
-                <div style="font-weight:600;font-size:12px;margin-bottom:10px;">{$clientName}</div>
-                <div style="font-weight:600;font-size:13px;margin-bottom:8px;">{$title}</div>
-                <table style="width:100%;border-collapse:collapse;">
-                    <thead>
-                        <tr>
-                            <th style="text-align:left;font-size:9px;text-transform:uppercase;color:#4a443e;padding:5px 4px;border-bottom:1px solid #ddd5cc;">Section</th>
-                            <th style="text-align:left;font-size:9px;text-transform:uppercase;color:#4a443e;padding:5px 4px;border-bottom:1px solid #ddd5cc;">Item</th>
-                            <th style="text-align:right;font-size:9px;text-transform:uppercase;color:#4a443e;padding:5px 4px;border-bottom:1px solid #ddd5cc;">Qty</th>
-                            <th style="text-align:right;font-size:9px;text-transform:uppercase;color:#4a443e;padding:5px 4px;border-bottom:1px solid #ddd5cc;">Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody>{$rows}</tbody>
-                </table>
-                <table style="width:60%;margin-left:auto;margin-top:10px;">
-                    <tr><td style="padding:3px 4px;font-size:11px;">Subtotal</td><td></td><td></td><td style="padding:3px 4px;font-size:11px;text-align:right;">KES {$subtotalFormatted}</td></tr>
-                    {$discountRow}
-                    <tr><td style="padding:3px 4px;font-size:11px;">VAT</td><td></td><td></td><td style="padding:3px 4px;font-size:11px;text-align:right;">KES {$taxFormatted}</td></tr>
-                    <tr style="border-top:2px solid #5c7349;"><td style="padding:6px 4px;font-weight:700;color:#3b4b31;font-size:12px;">Total</td><td></td><td></td><td style="padding:6px 4px;font-weight:700;color:#3b4b31;font-size:12px;text-align:right;">KES {$totalFormatted}</td></tr>
-                </table>
-            </div>
-            HTML;
     }
 
     public static function getPages(): array

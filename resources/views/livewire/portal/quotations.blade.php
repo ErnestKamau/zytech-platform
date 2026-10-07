@@ -36,6 +36,7 @@
                     \App\Core\Enums\QuotationStatus::Sent,
                     \App\Core\Enums\QuotationStatus::Viewed,
                 ], true);
+                $sentBy = $shared ? $quotation->sentByUser() : null;
             @endphp
             <a href="{{ route('portal.quotations.show', $quotation) }}" class="zy-portal-panel zy-portal-panel--lift" style="text-decoration:none;color:inherit;">
                 <div class="zy-portal-quote-row">
@@ -55,9 +56,18 @@
                                         · {{ number_format((float) $quotation->total_amount, 2) }} {{ $quotation->currency }}
                                     @endif
                                 </p>
+                                <p class="zy-muted" style="margin-top: var(--zy-space-1);">
+                                    Sent {{ $quotation->sent_at->format('M j, Y · g:i A') }}
+                                    @if ($sentBy)
+                                        by {{ $sentBy->name }}
+                                    @endif
+                                </p>
                             @else
                                 <p class="zy-muted">Our team is pricing this quotation. We'll notify you as soon as it's ready to review and accept.</p>
                             @endif
+                            <p class="zy-muted" style="margin-top: var(--zy-space-1);">
+                                Created {{ $quotation->created_at->format('M j, Y · g:i A') }}
+                            </p>
                             @if ($quotation->salesOrder)
                                 <p class="zy-muted" style="margin-top: var(--zy-space-2);">
                                     Order {{ $quotation->salesOrder->reference_number }}

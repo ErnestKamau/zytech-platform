@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Portal;
 
+use App\Core\Enums\InvoiceStatus;
+use App\Domains\Commerce\Services\InvoicePDFService;
 use App\Domains\Commerce\Services\ProformaInvoicePDFService;
 use App\Domains\Portal\Actions\DownloadDocument;
 use App\Domains\Portal\Repositories\PortalRepository;
 use App\Domains\Quotation\Services\QuotationPDFService;
 use App\Http\Controllers\Controller;
 use App\Models\ClientDocument;
+use App\Models\Invoice;
 use App\Models\ProformaInvoice;
 use App\Models\Quotation;
 use Illuminate\Http\Request;
@@ -86,6 +89,41 @@ final class PortalFileController extends Controller
         );
     }
 
+    public function streamInvoicePdf(
+        Request $request,
+        Invoice $invoice,
+        PortalRepository $portal,
+        InvoicePDFService $pdf,
+    ): StreamedResponse {
+        $this->assertOwnsInvoice($request, $portal, $invoice);
+        $document = $pdf->ensure($invoice);
+
+        return Storage::disk('local')->response(
+            $document->stored_path,
+            basename((string) $document->stored_path),
+            [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="'.$invoice->reference_number.'.pdf"',
+            ],
+        );
+    }
+
+    public function downloadInvoicePdf(
+        Request $request,
+        Invoice $invoice,
+        PortalRepository $portal,
+        InvoicePDFService $pdf,
+    ): StreamedResponse {
+        $this->assertOwnsInvoice($request, $portal, $invoice);
+        $document = $pdf->ensure($invoice);
+
+        return Storage::disk('local')->download(
+            $document->stored_path,
+            $invoice->reference_number.'.pdf',
+            ['Content-Type' => 'application/pdf'],
+        );
+    }
+
     public function downloadDocument(
         Request $request,
         ClientDocument $document,
@@ -124,5 +162,14 @@ final class PortalFileController extends Controller
         abort_unless($user !== null, 403);
         $client = $portal->clientForUser($user) ?? abort(403);
         abort_unless($proformaInvoice->client_id === $client->id, 403);
+    }
+
+    private function assertOwnsInvoice(Request $request, PortalRepository $portal, Invoice $invoice): void
+    {
+        $user = $request->user();
+        abort_unless($user !== null, 403);
+        $client = $portal->clientForUser($user) ?? abort(403);
+        abort_unless($invoice->client_id === $client->id, 403);
+        abort_unless($invoice->status !== InvoiceStatus::Draft, 404);
     }
 }

@@ -24,6 +24,13 @@
         <p class="zy-alert zy-alert--success">{{ session('status') }}</p>
     @endif
 
+    @if ($deliveredChannels->isNotEmpty())
+        <p class="zy-muted" style="margin: 0 0 var(--zy-space-4);">
+            Sent via {{ $deliveredChannels->map(fn ($n) => $n->channel?->label())->filter()->join(', ', ' and ') }}
+            on {{ $deliveredChannels->first()->created_at?->format('d M Y') }}.
+        </p>
+    @endif
+
     <div class="zy-portal-split">
         <div class="zy-portal-stack">
             {{-- Line items --}}

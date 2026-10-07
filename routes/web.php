@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DocumentDeliveryController;
 use App\Http\Controllers\RobotsController;
 use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
@@ -114,3 +115,9 @@ Route::get('/robots.txt', RobotsController::class)->name('robots');
 Route::get('/styleguide', function () {
     return view('styleguide');
 })->name('styleguide');
+
+Route::middleware('signed')->prefix('documents')->name('documents.')->group(function (): void {
+    Route::get('/quotations/{quotation}', [DocumentDeliveryController::class, 'quotation'])->name('quotation');
+    Route::get('/proforma-invoices/{proformaInvoice}', [DocumentDeliveryController::class, 'proforma'])->name('proforma');
+    Route::get('/invoices/{invoice}', [DocumentDeliveryController::class, 'invoice'])->name('invoices.show');
+});

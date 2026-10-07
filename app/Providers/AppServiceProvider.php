@@ -26,14 +26,19 @@ use App\Domains\Client\Policies\ClientDocumentPolicy;
 use App\Domains\Client\Policies\ClientNotePolicy;
 use App\Domains\Client\Policies\ClientPolicy;
 use App\Domains\Commerce\Events\DraftInvoiceCreated;
+use App\Domains\Commerce\Events\InvoiceIssued;
 use App\Domains\Commerce\Events\OrderCancelled;
 use App\Domains\Commerce\Events\OrderPlaced;
 use App\Domains\Commerce\Events\OrderStatusChanged;
 use App\Domains\Commerce\Events\ProformaInvoiceIssued;
+use App\Domains\Commerce\Listeners\GenerateInvoicePdf;
 use App\Domains\Commerce\Listeners\GenerateProformaInvoicePdf;
 use App\Domains\Commerce\Listeners\MergeCartOnLogin;
+use App\Domains\Commerce\Listeners\SendInvoiceEmail;
+use App\Domains\Commerce\Listeners\SendInvoiceWhatsApp;
 use App\Domains\Commerce\Listeners\SendOrderNotification;
 use App\Domains\Commerce\Listeners\SendProformaInvoiceEmail;
+use App\Domains\Commerce\Listeners\SendProformaInvoiceWhatsApp;
 use App\Domains\Commerce\Policies\FulfillmentPolicy;
 use App\Domains\Commerce\Policies\InventoryLevelPolicy;
 use App\Domains\Commerce\Policies\InvoicePolicy;
@@ -43,6 +48,7 @@ use App\Domains\Commerce\Policies\PaymentPolicy;
 use App\Domains\Commerce\Policies\PurchaseOrderPolicy;
 use App\Domains\Commerce\Policies\SalesOrderPolicy;
 use App\Domains\Communication\Policies\AnnouncementPolicy as PlatformAnnouncementPolicy;
+use App\Domains\Communication\Policies\NotificationLogPolicy;
 use App\Domains\Communication\Policies\NotificationTemplatePolicy;
 use App\Domains\Company\Events\BranchCreated;
 use App\Domains\Company\Events\CertificationUpdated;
@@ -231,6 +237,7 @@ use App\Models\MediaFolder;
 use App\Models\MediaTag;
 use App\Models\MeetingRequest;
 use App\Models\NavigationMenu;
+use App\Models\NotificationLog;
 use App\Models\NotificationTemplate;
 use App\Models\Order;
 use App\Models\Partner;
@@ -459,6 +466,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(PortalAnnouncement::class, PortalAnnouncementPolicy::class);
         Gate::policy(Announcement::class, PlatformAnnouncementPolicy::class);
         Gate::policy(NotificationTemplate::class, NotificationTemplatePolicy::class);
+        Gate::policy(NotificationLog::class, NotificationLogPolicy::class);
         Gate::policy(SeoRedirect::class, SeoRedirectPolicy::class);
 
         Gate::define('viewPulse', function (?User $user = null): bool {
@@ -609,6 +617,11 @@ class AppServiceProvider extends ServiceProvider
 
         Event::listen(ProformaInvoiceIssued::class, GenerateProformaInvoicePdf::class);
         Event::listen(ProformaInvoiceIssued::class, SendProformaInvoiceEmail::class);
+        Event::listen(ProformaInvoiceIssued::class, SendProformaInvoiceWhatsApp::class);
+
+        Event::listen(InvoiceIssued::class, GenerateInvoicePdf::class);
+        Event::listen(InvoiceIssued::class, SendInvoiceEmail::class);
+        Event::listen(InvoiceIssued::class, SendInvoiceWhatsApp::class);
 
         Event::listen(OrderPlaced::class, SendOrderNotification::class);
         Event::listen(OrderCancelled::class, SendOrderNotification::class);

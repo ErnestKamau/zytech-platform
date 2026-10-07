@@ -9,6 +9,7 @@ use App\Domains\Communication\Events\NotificationDispatched;
 use App\Domains\Communication\Events\NotificationPushed;
 use App\Domains\Communication\Mail\TemplatedMail;
 use App\Domains\Communication\Notifications\HubDatabaseNotification;
+use App\Domains\Communication\Support\PhoneNumber;
 use App\Models\Client;
 use App\Models\ClientPreference;
 use App\Models\NotificationLog;
@@ -16,6 +17,7 @@ use App\Models\NotificationPreference;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use RuntimeException;
 use Throwable;
 
 final class CommunicationService extends BaseService
@@ -24,6 +26,7 @@ final class CommunicationService extends BaseService
         private readonly TemplateService $templates,
         private readonly ActivityFeedService $feed,
         private readonly TwilioSmsService $sms,
+        private readonly TwilioWhatsAppService $whatsapp,
     ) {}
 
     /**
@@ -72,6 +75,7 @@ final class CommunicationService extends BaseService
                     NotificationChannel::Database => $this->sendDatabase($user, $type, $resolvedSubject, $resolvedBody, $meta),
                     NotificationChannel::Broadcast => $this->sendBroadcast($type, $resolvedSubject, $resolvedBody, $user, $meta),
                     NotificationChannel::Sms => $this->sendSms($user, $resolvedBody, $meta),
+                    NotificationChannel::WhatsApp => $this->sendWhatsApp($type, $user, $resolvedBody, $meta),
                     NotificationChannel::Portal => null,
                 };
 
@@ -143,7 +147,7 @@ final class CommunicationService extends BaseService
             NotificationChannel::Database => $preferences->database_enabled,
             NotificationChannel::Broadcast => $preferences->broadcast_enabled,
             NotificationChannel::Portal => true,
-            NotificationChannel::Sms => true,
+            NotificationChannel::Sms, NotificationChannel::WhatsApp => true,
         };
     }
 
@@ -152,6 +156,7 @@ final class CommunicationService extends BaseService
         return match ($channel) {
             NotificationChannel::Mail => $preferences->email_notifications,
             NotificationChannel::Sms => $preferences->sms_notifications,
+            NotificationChannel::WhatsApp => $preferences->whatsapp_notifications,
             NotificationChannel::Database, NotificationChannel::Broadcast, NotificationChannel::Portal => true,
         };
     }
@@ -173,6 +178,32 @@ final class CommunicationService extends BaseService
         }
 
         $this->sms->send($phone, $body);
+    }
+
+    /**
+     * @param  array<string, mixed>|null  $meta
+     */
+    private function sendWhatsApp(string $type, ?User $user, string $body, ?array $meta): void
+    {
+        $rawPhone = $user?->phone ?: (string) ($meta['phone'] ?? '');
+        $e164 = PhoneNumber::toE164Kenyan($rawPhone);
+
+        if ($e164 === null) {
+            throw new RuntimeException('WhatsApp recipient phone is missing or not a valid Kenyan number.');
+        }
+
+        $templateSid = $meta['whatsapp_template_sid'] ?? $this->whatsapp->templateSidFor($type);
+
+        if ($templateSid === null) {
+            throw new RuntimeException("No approved WhatsApp template configured for notification type [{$type}].");
+        }
+
+        $this->whatsapp->sendTemplate($e164, (string) $templateSid, (array) ($meta['whatsapp_template_vars'] ?? []));
+
+        $mediaUrl = $meta['whatsapp_media_url'] ?? null;
+        if (is_string($mediaUrl) && $mediaUrl !== '') {
+            $this->whatsapp->sendMedia($e164, $mediaUrl);
+        }
     }
 
     /**

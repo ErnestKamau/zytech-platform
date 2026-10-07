@@ -17,6 +17,7 @@
         "laravel/tinker": "^3.0",
         "maatwebsite/excel": "^3.1",
         "resend/resend-php": "^1.8",
+        "saade/filament-fullcalendar": "^4.0",
         "spatie/laravel-activitylog": "^5.0",
         "spatie/laravel-medialibrary": "^11.23",
         "spatie/laravel-permission": "^8.3",

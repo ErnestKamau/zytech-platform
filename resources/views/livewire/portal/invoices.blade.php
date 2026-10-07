@@ -38,6 +38,14 @@
                     </div>
                     <div class="zy-portal-actions">
                         <span class="zy-badge zy-badge--primary">{{ $invoice->status->label() }}</span>
+                        @if ($invoice->status->value !== 'draft')
+                            <a href="{{ route('portal.invoices.view', $invoice) }}" class="zy-btn zy-btn--ghost zy-btn--sm">
+                                <x-portal.icon name="eye" /> View
+                            </a>
+                            <a href="{{ route('portal.invoices.pdf.download', $invoice) }}" class="zy-btn zy-btn--secondary zy-btn--sm">
+                                <x-portal.icon name="download" /> Download
+                            </a>
+                        @endif
                     </div>
                 </div>
                 @if ($invoice->payments->isNotEmpty())

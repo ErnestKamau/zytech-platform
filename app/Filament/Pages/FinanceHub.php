@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Domains\Commerce\Services\FinanceAnalyticsService;
 use App\Filament\Resources\Invoices\InvoiceResource;
+use App\Filament\Resources\NotificationLogs\NotificationLogResource;
 use App\Filament\Resources\Payments\PaymentResource;
 use App\Filament\Resources\ProformaInvoices\ProformaInvoiceResource;
 use App\Models\Invoice;
@@ -44,6 +45,16 @@ class FinanceHub extends AdminHubPage
                 ->label('Payments')
                 ->icon(Heroicon::OutlinedCreditCard)
                 ->url(PaymentResource::getUrl())
+                ->color('gray'),
+            Action::make('billing_calendar')
+                ->label('Billing calendar')
+                ->icon(Heroicon::OutlinedCalendarDays)
+                ->url(BillingCalendar::getUrl())
+                ->color('gray'),
+            Action::make('notification_logs')
+                ->label('Notification log')
+                ->icon(Heroicon::OutlinedInbox)
+                ->url(NotificationLogResource::getUrl())
                 ->color('gray'),
         ];
     }

@@ -18,10 +18,11 @@
         * { box-sizing: border-box; }
         body { margin: 0; font-family: 'Instrument Sans', -apple-system, BlinkMacSystemFont, sans-serif; background: #f1efe9; color: var(--ink); }
         a { color: inherit; }
+        table { border-collapse: collapse; }
 
         .topbar {
             display: flex; align-items: center; justify-content: space-between;
-            padding: 14px 24px; background: #fff; border-bottom: 1px solid var(--line);
+            padding: 14px 28px; background: #fff; border-bottom: 1px solid var(--line);
             position: sticky; top: 0; z-index: 10;
         }
         .topbar .crumb { font-size: 13px; color: var(--muted); }
@@ -36,31 +37,50 @@
         .btn-primary { background: var(--accent-dark); border-color: var(--accent-dark); color: #fff; }
         .btn-primary:hover { background: #2e3b26; }
 
-        .layout { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 0; min-height: calc(100vh - 61px); }
+        .layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 24px; max-width: 1280px; margin: 0 auto; padding: 28px; align-items: start; }
 
-        .canvas-pane { padding: 28px; display: flex; justify-content: center; align-items: flex-start; }
-        .sheet { width: 100%; max-width: 760px; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 12px 32px rgba(28,24,21,.08); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
-        .sheet-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: var(--panel); border-bottom: 1px solid var(--line); font-size: 12px; color: var(--muted); }
-        .sheet embed { width: 100%; height: 80vh; display: block; border: none; }
+        .doc-pane { background: #fff; border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 12px 32px rgba(28,24,21,.06); padding: 40px 48px; }
 
-        .sidebar { background: #fff; border-left: 1px solid var(--line); padding: 0; }
+        /* Shared document-sheet typography (mirrors the PDF) */
+        .doc-pane table { width: 100%; }
+        .doc-pane .doc-muted { color: var(--muted); }
+        .doc-pane .doc-header td { vertical-align: top; }
+        .doc-pane .doc-brand { font-size: 22px; font-weight: 700; color: var(--accent-dark); margin: 0 0 4px; }
+        .doc-pane .doc-title { font-size: 24px; font-weight: 700; letter-spacing: .08em; color: var(--accent-dark); text-align: right; margin: 0; }
+        .doc-pane .doc-meta td { padding: 1px 0; font-size: 12.5px; }
+        .doc-pane .doc-meta td.label { color: var(--muted); text-align: right; padding-right: 8px; }
+        .doc-pane .doc-meta td.value { text-align: right; width: 1%; white-space: nowrap; font-weight: 600; }
+        .doc-pane .doc-draft { display: inline-block; margin-top: 6px; padding: 3px 10px; border: 1px solid var(--amber); color: var(--amber); font-size: 10px; letter-spacing: .1em; border-radius: 4px; }
+        .doc-pane .doc-rule { border-top: 2px solid var(--accent); margin: 20px 0; }
+        .doc-pane .doc-parties td { vertical-align: top; width: 50%; }
+        .doc-pane .doc-eyebrow { font-size: 10px; text-transform: uppercase; letter-spacing: .1em; color: var(--accent); margin: 0 0 4px; font-weight: 700; }
+        .doc-pane .doc-subject { font-size: 16px; font-weight: 700; margin: 22px 0 4px; }
+        .doc-pane .doc-items { margin-top: 12px; }
+        .doc-pane .doc-items th { background: var(--panel); font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: #4a443e; padding: 9px 8px; text-align: left; border-bottom: 1px solid var(--line); }
+        .doc-pane .doc-items td { padding: 9px 8px; border-bottom: 1px solid #ece6df; vertical-align: top; font-size: 13px; }
+        .doc-pane .doc-items .num { text-align: right; white-space: nowrap; }
+        .doc-pane .doc-items .group td { background: var(--panel); font-weight: 700; color: var(--accent-dark); padding-top: 11px; }
+        .doc-pane .doc-optional { font-size: 10px; color: var(--amber); }
+        .doc-pane .doc-totals { width: 44%; margin-left: auto; margin-top: 14px; }
+        .doc-pane .doc-totals td { padding: 5px 8px; font-size: 13px; }
+        .doc-pane .doc-totals td.num { text-align: right; white-space: nowrap; }
+        .doc-pane .doc-totals .grand td { border-top: 2px solid var(--accent); font-weight: 700; font-size: 15px; color: var(--accent-dark); padding-top: 10px; }
+        .doc-pane .doc-h2 { font-size: 13px; color: var(--accent-dark); margin: 26px 0 8px; text-transform: uppercase; letter-spacing: .06em; }
+        .doc-pane .doc-terms { font-size: 12.5px; color: #3d3833; line-height: 1.6; }
+        .doc-pane .doc-payment-box { margin-top: 16px; padding: 12px 14px; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; }
+        .doc-pane .doc-payment-box td { padding: 2px 0; font-size: 12.5px; }
+        .doc-pane .doc-disclaimer { margin-top: 20px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 6px; font-size: 11.5px; color: var(--muted); font-style: italic; }
+        .doc-pane .doc-footer { display: none; }
+
+        .sidebar { background: #fff; border: 1px solid var(--line); border-radius: 10px; }
         .tabs { display: flex; border-bottom: 1px solid var(--line); }
         .tabs input { display: none; }
         .tabs label { flex: 1; text-align: center; padding: 12px 4px; font-size: 12px; font-weight: 600; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; }
-        #tab-summary:checked ~ .tabs label[for="tab-summary"],
         #tab-timeline:checked ~ .tabs label[for="tab-timeline"],
         #tab-delivery:checked ~ .tabs label[for="tab-delivery"] { color: var(--accent-dark); border-bottom-color: var(--accent-dark); }
         .panel { display: none; padding: 18px 20px; }
-        #tab-summary:checked ~ .panels .panel-summary,
         #tab-timeline:checked ~ .panels .panel-timeline,
         #tab-delivery:checked ~ .panels .panel-delivery { display: block; }
-
-        .kv { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px dashed var(--line); font-size: 13px; }
-        .kv:last-child { border-bottom: none; }
-        .kv .k { color: var(--muted); }
-        .kv .v { font-weight: 600; text-align: right; }
-        .totals-box { margin-top: 14px; padding: 12px; background: var(--panel); border-radius: 8px; }
-        .totals-box .grand { font-size: 15px; font-weight: 700; color: var(--accent-dark); border-top: 1px solid var(--line); margin-top: 6px; padding-top: 8px; }
 
         .timeline-item { position: relative; padding-left: 20px; padding-bottom: 16px; border-left: 2px solid var(--line); margin-left: 5px; }
         .timeline-item:last-child { border-color: transparent; padding-bottom: 0; }
@@ -75,6 +95,12 @@
         .chip-sent { background: #eef2e8; color: var(--accent-dark); }
         .chip-failed { background: #fdecea; color: var(--red); }
         .chip-skipped { background: #f4f1ec; color: var(--muted); }
+
+        @media print {
+            .topbar, .sidebar { display: none; }
+            .layout { display: block; padding: 0; max-width: none; }
+            .doc-pane { box-shadow: none; border: none; }
+        }
     </style>
 </head>
 <body>
@@ -90,54 +116,26 @@
             </div>
         </div>
         <div class="actions">
-            <a class="btn" href="{{ $downloadUrl }}" target="_blank" rel="noopener">Download</a>
-            <a class="btn" href="{{ $streamUrl }}" target="_blank" rel="noopener">Print</a>
+            <a class="btn" href="{{ $downloadUrl }}" target="_blank" rel="noopener">Download PDF</a>
+            <button type="button" class="btn btn-primary" onclick="window.print()">Print</button>
         </div>
     </div>
 
     <div class="layout">
-        <div class="canvas-pane">
-            <div class="sheet">
-                <div class="sheet-toolbar">
-                    <span>{{ $docTitle }} · {{ $reference }}</span>
-                    <span>{{ $currency }} {{ number_format((float) $total, 2) }}</span>
-                </div>
-                <embed src="{{ $streamUrl }}" type="application/pdf">
-            </div>
+        <div class="doc-pane">
+            @include($sheetView, $sheetData)
         </div>
 
         <div class="sidebar">
-            <input type="radio" name="tabs" id="tab-summary" checked>
-            <input type="radio" name="tabs" id="tab-timeline">
+            <input type="radio" name="tabs" id="tab-timeline" checked>
             <input type="radio" name="tabs" id="tab-delivery">
 
             <div class="tabs">
-                <label for="tab-summary">Summary</label>
                 <label for="tab-timeline">Timeline</label>
                 <label for="tab-delivery">Delivery</label>
             </div>
 
             <div class="panels">
-                <div class="panel panel-summary">
-                    <div class="kv"><span class="k">Client</span><span class="v">{{ $clientName ?? '—' }}</span></div>
-                    @if ($clientEmail)
-                        <div class="kv"><span class="k">Email</span><span class="v">{{ $clientEmail }}</span></div>
-                    @endif
-                    <div class="kv"><span class="k">Issued</span><span class="v">{{ $issuedDate?->format('d M Y') ?? '—' }}</span></div>
-                    @if ($validUntil)
-                        <div class="kv"><span class="k">{{ $validUntilLabel }}</span><span class="v">{{ $validUntil->format('d M Y') }}</span></div>
-                    @endif
-
-                    <div class="totals-box">
-                        <div class="kv"><span class="k">Subtotal</span><span class="v">{{ $currency }} {{ number_format((float) $subtotal, 2) }}</span></div>
-                        @if ((float) $discount > 0)
-                            <div class="kv"><span class="k">Discount</span><span class="v">− {{ $currency }} {{ number_format((float) $discount, 2) }}</span></div>
-                        @endif
-                        <div class="kv"><span class="k">Tax</span><span class="v">{{ $currency }} {{ number_format((float) $tax, 2) }}</span></div>
-                        <div class="kv grand"><span class="k">Total</span><span class="v">{{ $currency }} {{ number_format((float) $total, 2) }}</span></div>
-                    </div>
-                </div>
-
                 <div class="panel panel-timeline">
                     @forelse ($activities as $activity)
                         <div class="timeline-item">
@@ -150,6 +148,16 @@
                 </div>
 
                 <div class="panel panel-delivery">
+                    @php
+                        $sent = $notifications->where('status', \App\Core\Enums\DeliveryStatus::Sent);
+                        $sentChannels = $sent->unique('channel')->map(fn ($n) => $n->channel?->label())->filter()->values();
+                        $lastSent = $sent->sortByDesc('created_at')->first();
+                    @endphp
+                    @if ($sentChannels->isNotEmpty())
+                        <p style="font-size:13px;margin:0 0 14px;padding:10px 12px;background:var(--panel);border-radius:8px;">
+                            Sent via {{ $sentChannels->join(', ', ' and ') }} on {{ $lastSent?->created_at?->format('d M Y') }}.
+                        </p>
+                    @endif
                     @forelse ($notifications as $notification)
                         <div class="delivery-row">
                             <span>{{ $notification->channel?->label() ?? $notification->channel?->value }} · {{ $notification->created_at?->format('d M Y, H:i') }}</span>

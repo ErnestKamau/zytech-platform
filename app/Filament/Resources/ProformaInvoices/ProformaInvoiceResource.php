@@ -8,6 +8,8 @@ use App\Core\Enums\ProformaInvoiceStatus;
 use App\Core\Filament\BaseResource;
 use App\Core\Filament\BusinessHistoryAction;
 use App\Domains\Communication\Services\CommunicationService;
+use App\Domains\Communication\Services\TwilioWhatsAppService;
+use App\Domains\Communication\Support\PhoneNumber;
 use App\Filament\Resources\ProformaInvoices\Pages\ManageProformaInvoices;
 use App\Models\ProformaInvoice;
 use App\Models\User;
@@ -20,6 +22,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\URL;
 
 class ProformaInvoiceResource extends BaseResource
 {
@@ -104,9 +107,50 @@ class ProformaInvoiceResource extends BaseResource
                     ->label('WhatsApp')
                     ->icon(Heroicon::OutlinedChatBubbleLeftRight)
                     ->color('gray')
-                    ->visible(false)
-                    ->disabled()
-                    ->tooltip('WhatsApp sending is not yet configured.'),
+                    ->visible(fn (): bool => app(TwilioWhatsAppService::class)->configured())
+                    ->requiresConfirmation()
+                    ->modalDescription('Send the proforma invoice PDF to the client via WhatsApp.')
+                    ->action(function (ProformaInvoice $record): void {
+                        $record->loadMissing(['client', 'quotation.request']);
+                        $phone = $record->client?->phone ?? $record->quotation?->request?->phone;
+                        $e164 = PhoneNumber::toE164Kenyan($phone);
+
+                        if ($e164 === null) {
+                            Notification::make()->danger()->title('No valid WhatsApp number on file')->send();
+
+                            return;
+                        }
+
+                        $email = $record->client?->email ?? $record->quotation?->request?->email ?? '';
+                        $name = $record->client?->name ?? $record->quotation?->request?->full_name ?? 'there';
+
+                        $mediaUrl = URL::temporarySignedRoute(
+                            'documents.proforma',
+                            now()->addHours(24),
+                            ['proformaInvoice' => $record->id],
+                        );
+
+                        app(CommunicationService::class)->notify(
+                            type: CommunicationNotificationType::ProformaInvoiceIssued->value,
+                            recipientEmail: $email,
+                            user: $email !== '' ? User::query()->where('email', $email)->first() : null,
+                            client: $record->client,
+                            replacements: ['name' => (string) $name, 'reference' => (string) $record->reference_number],
+                            channels: [NotificationChannel::WhatsApp],
+                            meta: [
+                                'proforma_invoice_id' => $record->id,
+                                'quotation_id' => $record->quotation_id,
+                                'client_id' => $record->client_id,
+                                'phone' => $phone,
+                                'whatsapp_media_url' => $mediaUrl,
+                                'whatsapp_template_vars' => ['1' => (string) $name, '2' => (string) $record->reference_number],
+                            ],
+                            subject: 'Proforma invoice '.$record->reference_number,
+                            body: 'Your proforma invoice '.$record->reference_number.' is ready.',
+                        );
+
+                        Notification::make()->success()->title('WhatsApp message sent')->send();
+                    }),
             ]);
     }
 

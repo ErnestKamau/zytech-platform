@@ -2,11 +2,15 @@
 
 namespace App\Domains\Commerce\Services;
 
+use App\Core\Enums\ClientTimelineEvent;
 use App\Core\Enums\InvoiceStatus;
 use App\Core\Enums\SalesOrderStatus;
 use App\Core\Services\BaseService;
+use App\Domains\Client\Services\TimelineService;
 use App\Domains\Commerce\Events\DraftInvoiceCreated;
+use App\Domains\Commerce\Events\InvoiceIssued;
 use App\Domains\Commerce\Events\SalesOrderCreated;
+use App\Domains\Operations\Services\ActivityLogger;
 use App\Models\Invoice;
 use App\Models\PurchaseOrder;
 use App\Models\Quotation;
@@ -16,6 +20,11 @@ use Illuminate\Support\Str;
 
 final class SalesOrderService extends BaseService
 {
+    public function __construct(
+        private readonly ActivityLogger $activities,
+        private readonly TimelineService $timeline,
+    ) {}
+
     public function findByQuotation(Quotation $quotation): ?SalesOrder
     {
         return SalesOrder::query()
@@ -133,7 +142,27 @@ final class SalesOrderService extends BaseService
             'due_date' => now()->addDays(30)->toDateString(),
         ])->save();
 
-        return $invoice->refresh();
+        $invoice = $invoice->refresh();
+
+        $this->activities->log($invoice, 'invoice.issued', [
+            'reference' => $invoice->reference_number,
+            'total_amount' => (string) $invoice->total_amount,
+        ]);
+
+        $invoice->loadMissing(['client', 'quotation.request']);
+        if ($invoice->client !== null) {
+            $this->timeline->record(
+                $invoice->client,
+                ClientTimelineEvent::InvoiceIssued,
+                'Invoice '.$invoice->reference_number.' issued',
+                number_format((float) $invoice->total_amount, 2).' '.$invoice->currency,
+                ['invoice_id' => $invoice->id, 'quotation_id' => $invoice->quotation_id],
+            );
+        }
+
+        event(new InvoiceIssued($invoice));
+
+        return $invoice;
     }
 
     private function nextReference(string $prefix): string

@@ -1,5 +1,6 @@
 <?php
 
+use App\Domains\Portal\Livewire\BillingCalendar;
 use App\Domains\Portal\Livewire\Dashboard;
 use App\Domains\Portal\Livewire\Documents;
 use App\Domains\Portal\Livewire\Invoices;
@@ -12,6 +13,7 @@ use App\Domains\Portal\Livewire\Quotations;
 use App\Domains\Portal\Livewire\QuotationShow;
 use App\Domains\Portal\Livewire\Support;
 use App\Domains\Portal\Livewire\Timeline;
+use App\Http\Controllers\Portal\PortalDocumentViewerController;
 use App\Http\Controllers\Portal\PortalFileController;
 use App\Http\Middleware\EnsurePortalAccess;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +31,10 @@ Route::middleware(['auth', 'verified', EnsurePortalAccess::class])
         Route::get('/proforma-invoices/{proformaInvoice}/pdf/download', [PortalFileController::class, 'downloadProformaPdf'])->name('proforma.pdf.download');
         Route::get('/orders', Orders::class)->name('orders');
         Route::get('/invoices', Invoices::class)->name('invoices');
+        Route::get('/invoices/{invoice}/pdf', [PortalFileController::class, 'streamInvoicePdf'])->name('invoices.pdf');
+        Route::get('/invoices/{invoice}/pdf/download', [PortalFileController::class, 'downloadInvoicePdf'])->name('invoices.pdf.download');
+        Route::get('/invoices/{invoice}/view', [PortalDocumentViewerController::class, 'invoice'])->name('invoices.view');
+        Route::get('/billing-calendar', BillingCalendar::class)->name('billing-calendar');
         Route::get('/projects', Projects::class)->name('projects');
         Route::get('/documents', Documents::class)->name('documents');
         Route::get('/documents/{document}/download', [PortalFileController::class, 'downloadDocument'])->name('documents.download');

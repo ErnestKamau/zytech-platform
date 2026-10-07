@@ -26,6 +26,14 @@ return [
         'sid' => env('TWILIO_SID'),
         'token' => env('TWILIO_AUTH_TOKEN'),
         'from' => env('TWILIO_FROM'),
+        'whatsapp_from' => env('TWILIO_WHATSAPP_FROM'),
+        'whatsapp_templates' => [
+            'quotation-sent' => env('TWILIO_TEMPLATE_QUOTATION_SENT'),
+            'quotation-accepted' => env('TWILIO_TEMPLATE_QUOTATION_ACCEPTED'),
+            'quotation-rejected' => env('TWILIO_TEMPLATE_QUOTATION_REJECTED'),
+            'proforma-invoice-issued' => env('TWILIO_TEMPLATE_PROFORMA_ISSUED'),
+            'invoice-issued' => env('TWILIO_TEMPLATE_INVOICE_ISSUED'),
+        ],
     ],
 
     'ses' => [

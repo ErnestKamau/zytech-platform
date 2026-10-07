@@ -138,6 +138,13 @@ class Quotation extends BaseModel
         return $this->belongsTo(User::class, 'approved_by');
     }
 
+    public function sentByUser(): ?User
+    {
+        return $this->statusHistory
+            ->firstWhere('to_status', QuotationStatus::Sent->value)
+            ?->changer;
+    }
+
     public function salesOrder(): HasOne
     {
         return $this->hasOne(SalesOrder::class);
