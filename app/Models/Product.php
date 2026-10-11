@@ -53,6 +53,9 @@ class Product extends BaseModel
         'og_image_key',
         'published_at',
         'sort_order',
+        'kra_classification_code',
+        'kra_item_code',
+        'kra_synced_at',
     ];
 
     protected function casts(): array
@@ -70,6 +73,7 @@ class Product extends BaseModel
             'is_featured' => 'boolean',
             'published_at' => 'datetime',
             'sort_order' => 'integer',
+            'kra_synced_at' => 'datetime',
         ];
     }
 

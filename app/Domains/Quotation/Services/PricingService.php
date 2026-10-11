@@ -53,7 +53,7 @@ final class PricingService extends BaseService
 
         return $this->summarize(
             $quotation->items->map(fn ($item): array => $item->only(['quantity', 'unit_price', 'is_optional'])),
-            (float) ($quotation->tax_rate ?? self::DEFAULT_TAX_RATE),
+            (float) ($quotation->tax_rate ?? $quotation->taxRate?->rate ?? self::DEFAULT_TAX_RATE),
             (float) $quotation->discount_amount,
         );
     }

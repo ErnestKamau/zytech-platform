@@ -7,11 +7,13 @@ use App\Filament\Resources\Carts\CartResource;
 use App\Filament\Resources\Fulfillments\FulfillmentResource;
 use App\Filament\Resources\InventoryLevels\InventoryLevelResource;
 use App\Filament\Resources\Orders\OrderResource;
+use App\Filament\Resources\PriceLists\PriceListResource;
 use App\Filament\Resources\ProductCategories\ProductCategoryResource;
 use App\Filament\Resources\Products\ProductResource;
 use App\Filament\Resources\ProductVariants\ProductVariantResource;
 use App\Filament\Resources\PurchaseOrders\PurchaseOrderResource;
 use App\Filament\Resources\SalesOrders\SalesOrderResource;
+use App\Filament\Resources\TaxRates\TaxRateResource;
 use App\Filament\Resources\Units\UnitResource;
 use App\Models\Cart;
 use App\Models\InventoryLevel;
@@ -63,6 +65,8 @@ class CommerceHub extends AdminHubPage
                     $this->hubCard('Brands', BrandResource::class, Heroicon::OutlinedSparkles),
                     $this->hubCard('Variants', ProductVariantResource::class, Heroicon::OutlinedSquares2x2),
                     $this->hubCard('Units', UnitResource::class, Heroicon::OutlinedScale),
+                    $this->hubCard('Tax rates', TaxRateResource::class, Heroicon::OutlinedReceiptPercent),
+                    $this->hubCard('Pricelists', PriceListResource::class, Heroicon::OutlinedTag),
                 ],
             ],
             [

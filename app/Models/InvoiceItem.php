@@ -11,6 +11,7 @@ class InvoiceItem extends BaseModel
     protected $fillable = [
         'invoice_id',
         'sales_order_item_id',
+        'product_id',
         'label',
         'description',
         'quantity',
@@ -38,5 +39,10 @@ class InvoiceItem extends BaseModel
     public function salesOrderItem(): BelongsTo
     {
         return $this->belongsTo(SalesOrderItem::class);
+    }
+
+    public function product(): BelongsTo
+    {
+        return $this->belongsTo(Product::class);
     }
 }

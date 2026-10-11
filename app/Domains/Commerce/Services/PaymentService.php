@@ -70,6 +70,10 @@ final class PaymentService extends BaseService
 
     public function recordForInvoice(Invoice $invoice, array $data): Payment
     {
+        if (in_array($invoice->status, [InvoiceStatus::Void, InvoiceStatus::Cancelled], true)) {
+            throw PaymentException::invoiceNotPayable();
+        }
+
         return $this->recordPayment([...$data, 'invoice_id' => $invoice->id]);
     }
 

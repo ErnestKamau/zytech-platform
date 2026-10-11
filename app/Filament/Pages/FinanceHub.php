@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Domains\Commerce\Services\FinanceAnalyticsService;
+use App\Filament\Resources\EtimsSettings\EtimsSettingResource;
 use App\Filament\Resources\Invoices\InvoiceResource;
 use App\Filament\Resources\NotificationLogs\NotificationLogResource;
 use App\Filament\Resources\Payments\PaymentResource;
@@ -56,6 +57,11 @@ class FinanceHub extends AdminHubPage
                 ->icon(Heroicon::OutlinedInbox)
                 ->url(NotificationLogResource::getUrl())
                 ->color('gray'),
+            Action::make('etims_settings')
+                ->label('eTIMS settings')
+                ->icon(Heroicon::OutlinedShieldCheck)
+                ->url(EtimsSettingResource::getUrl())
+                ->color('gray'),
         ];
     }
 
@@ -73,6 +79,7 @@ class FinanceHub extends AdminHubPage
                     $this->hubCard('Invoices', InvoiceResource::class, Heroicon::OutlinedDocumentCurrencyDollar, count: Invoice::query()->count()),
                     $this->hubCard('Proforma invoices', ProformaInvoiceResource::class, Heroicon::OutlinedDocumentText, count: ProformaInvoice::query()->count()),
                     $this->hubCard('Payments', PaymentResource::class, Heroicon::OutlinedCreditCard, count: Payment::query()->count()),
+                    $this->hubCard('eTIMS settings', EtimsSettingResource::class, Heroicon::OutlinedShieldCheck),
                 ],
             ],
         ];

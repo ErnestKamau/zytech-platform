@@ -14,6 +14,7 @@ class QuotationItem extends BaseModel
     protected $fillable = [
         'quotation_id',
         'quotation_section_id',
+        'product_id',
         'label',
         'description',
         'quantity',
@@ -43,5 +44,10 @@ class QuotationItem extends BaseModel
     public function section(): BelongsTo
     {
         return $this->belongsTo(QuotationSection::class, 'quotation_section_id');
+    }
+
+    public function product(): BelongsTo
+    {
+        return $this->belongsTo(Product::class);
     }
 }

@@ -112,6 +112,11 @@ class Client extends BaseModel
         return $this->belongsToMany(ClientGroup::class, 'client_group', 'client_id', 'client_group_id');
     }
 
+    public function priceLists(): BelongsToMany
+    {
+        return $this->belongsToMany(PriceList::class, 'price_list_client');
+    }
+
     public function projects(): BelongsToMany
     {
         return $this->belongsToMany(Project::class, 'client_project')

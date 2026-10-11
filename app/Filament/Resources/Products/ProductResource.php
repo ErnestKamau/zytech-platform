@@ -7,6 +7,8 @@ use App\Core\Enums\ProductStatus;
 use App\Core\Enums\PurchaseMode;
 use App\Core\Enums\VisibilityStatus;
 use App\Core\Filament\BaseResource;
+use App\Domains\Commerce\Services\Etims\EtimsCatalogSyncService;
+use App\Domains\Commerce\Services\Etims\EtimsSettingsService;
 use App\Domains\Product\Actions\ArchiveProduct;
 use App\Domains\Product\Actions\FeatureProduct;
 use App\Domains\Product\Actions\PublishProduct;
@@ -26,6 +28,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
@@ -200,6 +203,19 @@ class ProductResource extends BaseResource
                             ->columnSpanFull(),
                     ]),
 
+                Section::make('Tax & KRA')
+                    ->columns(2)
+                    ->schema([
+                        TextInput::make('kra_classification_code')
+                            ->label('Classification code (itemClsCd)')
+                            ->helperText('KRA item classification code. Required before syncing to eTIMS.'),
+                        TextInput::make('kra_item_code')
+                            ->label('Registered item code')
+                            ->disabled()
+                            ->dehydrated(false)
+                            ->helperText('Populated after a successful sync.'),
+                    ]),
+
                 Section::make('SEO')
                     ->collapsed()
                     ->columns(1)
@@ -244,6 +260,20 @@ class ProductResource extends BaseResource
                     ->color('danger')
                     ->requiresConfirmation()
                     ->action(fn (Product $record) => app(ArchiveProduct::class)->handle($record)),
+                Action::make('syncToEtims')
+                    ->label('Sync to eTIMS')
+                    ->icon(Heroicon::OutlinedArrowPath)
+                    ->color('gray')
+                    ->visible(fn (): bool => app(EtimsSettingsService::class)->isEnabled())
+                    ->requiresConfirmation()
+                    ->action(function (Product $record): void {
+                        try {
+                            app(EtimsCatalogSyncService::class)->syncProduct($record);
+                            Notification::make()->success()->title('Product synced to eTIMS')->send();
+                        } catch (\Throwable $e) {
+                            Notification::make()->danger()->title('Sync failed')->body($e->getMessage())->send();
+                        }
+                    }),
                 EditAction::make()
                     ->modalWidth(Width::FiveExtraLarge)
                     ->mutateFormDataUsing(function (array $data): array {

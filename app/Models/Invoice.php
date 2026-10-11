@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Core\Enums\EtimsSyncStatus;
 use App\Core\Enums\InvoiceStatus;
+use App\Core\Enums\InvoiceType;
 use App\Core\Models\BaseModel;
 use App\Core\Traits\HasActivity;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -32,12 +34,26 @@ class Invoice extends BaseModel
         'payment_terms',
         'notes',
         'issued_at',
+        'type',
+        'parent_invoice_id',
+        'kra_request_payload',
+        'kra_response_payload',
+        'kra_rcpt_no',
+        'kra_sdc_id',
+        'kra_invc_no',
+        'kra_sync_status',
+        'kra_last_error',
+        'kra_synced_at',
+        'voided_at',
+        'void_reason',
     ];
 
     protected function casts(): array
     {
         return [
             'status' => InvoiceStatus::class,
+            'type' => InvoiceType::class,
+            'kra_sync_status' => EtimsSyncStatus::class,
             'subtotal' => 'decimal:2',
             'tax_amount' => 'decimal:2',
             'discount_amount' => 'decimal:2',
@@ -46,6 +62,8 @@ class Invoice extends BaseModel
             'amount_due' => 'decimal:2',
             'due_date' => 'date',
             'issued_at' => 'datetime',
+            'kra_synced_at' => 'datetime',
+            'voided_at' => 'datetime',
         ];
     }
 
@@ -87,5 +105,21 @@ class Invoice extends BaseModel
     public function domainActivities(): MorphMany
     {
         return $this->morphMany(DomainActivity::class, 'subject')->orderByDesc('created_at');
+    }
+
+    public function parentInvoice(): BelongsTo
+    {
+        return $this->belongsTo(Invoice::class, 'parent_invoice_id');
+    }
+
+    public function creditNotes(): HasMany
+    {
+        return $this->hasMany(Invoice::class, 'parent_invoice_id');
+    }
+
+    public function isVoidable(): bool
+    {
+        return in_array($this->status, [InvoiceStatus::Draft, InvoiceStatus::Issued], true)
+            && (float) $this->amount_paid <= 0;
     }
 }

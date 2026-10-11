@@ -22,4 +22,16 @@ enum LeadStatus: string
             self::Archived => 'Archived',
         };
     }
+
+    public function color(): string
+    {
+        return match ($this) {
+            self::New => 'info',
+            self::Contacted => 'warning',
+            self::Qualified => 'primary',
+            self::Unqualified => 'gray',
+            self::Converted => 'success',
+            self::Archived => 'gray',
+        };
+    }
 }

@@ -16,6 +16,7 @@ use App\Domains\Operations\Services\ActivityLogger;
 use App\Models\Cart;
 use App\Models\Client;
 use App\Models\Order;
+use App\Models\TaxRate;
 use Illuminate\Support\Str;
 
 final class OrderService extends BaseService
@@ -45,9 +46,19 @@ final class OrderService extends BaseService
         }
 
         $order = $this->transaction(function () use ($cart, $client, $details): Order {
+            $taxRate = (float) (TaxRate::query()->where('is_default', true)->first()?->rate ?? 0.0);
+
             $subtotal = $cart->items->sum(
                 fn ($item): float => (float) $item->unit_price * (float) $item->quantity
             );
+
+            $taxAmount = round($cart->items->sum(function ($item) use ($taxRate): float {
+                if (! $item->product?->taxable) {
+                    return 0.0;
+                }
+
+                return (float) $item->unit_price * (float) $item->quantity * $taxRate / 100;
+            }), 2);
 
             $order = Order::query()->create([
                 'order_number' => $this->nextOrderNumber(),
@@ -58,10 +69,10 @@ final class OrderService extends BaseService
                 'fulfillment_method' => $details['fulfillment_method'] ?? FulfillmentMethod::Delivery,
                 'currency' => $cart->currency,
                 'subtotal' => $subtotal,
-                'tax_amount' => 0,
+                'tax_amount' => $taxAmount,
                 'discount_amount' => 0,
                 'shipping_amount' => 0,
-                'total_amount' => $subtotal,
+                'total_amount' => $subtotal + $taxAmount,
                 'contact_name' => $details['contact_name'] ?? $client->name,
                 'contact_email' => $details['contact_email'] ?? $client->email,
                 'contact_phone' => $details['contact_phone'] ?? $client->phone,
@@ -73,6 +84,8 @@ final class OrderService extends BaseService
 
             foreach ($cart->items->values() as $index => $item) {
                 $product = $item->product;
+                $lineTotal = (float) $item->unit_price * (float) $item->quantity;
+                $lineTax = $product?->taxable ? round($lineTotal * $taxRate / 100, 2) : 0.0;
 
                 $order->items()->create([
                     'product_id' => $product?->id,
@@ -82,8 +95,8 @@ final class OrderService extends BaseService
                     'quantity' => $item->quantity,
                     'unit_price' => $item->unit_price,
                     'discount' => 0,
-                    'tax' => 0,
-                    'line_total' => (float) $item->unit_price * (float) $item->quantity,
+                    'tax' => $lineTax,
+                    'line_total' => $lineTotal,
                     'sort_order' => $index,
                 ]);
             }

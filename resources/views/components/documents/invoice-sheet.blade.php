@@ -1,5 +1,6 @@
 @php
     use App\Core\Enums\InvoiceStatus;
+    use App\Domains\Commerce\Services\Etims\EtimsPayloadBuilder;
 
     $currency = $invoice->currency ?: 'KES';
     $money = fn ($value): string => number_format((float) $value, 2);
@@ -9,6 +10,7 @@
     $clientEmail = $client?->email ?? $quotation?->request?->email;
     $clientPhone = $client?->phone ?? $quotation?->request?->phone;
     $row = 0;
+    $scu = $invoice->kra_sdc_id ? EtimsPayloadBuilder::scuInfo($invoice) : null;
 @endphp
 <div class="doc-footer">
     {{ $company?->name ?? 'Zytech Contractors' }} · {{ $invoice->reference_number }}
@@ -124,6 +126,23 @@
         @if ($company?->mpesa_paybill)
             <tr><td class="doc-muted" style="width: 30%">M-Pesa Paybill</td><td>{{ $company->mpesa_paybill }} — {{ $company->mpesa_account_name }}</td></tr>
         @endif
+    </table>
+@endif
+
+@if ($scu)
+    <table style="margin-top: 14px; width: 100%;">
+        <tr>
+            <td style="width: 110px; vertical-align: top;">
+                {!! \SimpleSoftwareIO\QrCode\Facades\QrCode::format('svg')->size(100)->errorCorrection('H')->generate($scu['qr_data']) !!}
+            </td>
+            <td style="vertical-align: top; padding-left: 10px; font-size: 9px; color: #4a443e;">
+                <strong>KRA Fiscal Receipt</strong><br>
+                SDC ID: {{ $scu['sdc_id'] }}<br>
+                Receipt No.: {{ $scu['rcpt_no'] }}<br>
+                Internal Data: {{ $scu['internal_data_formatted'] }}<br>
+                Receipt Signature: {{ $scu['receipt_signature_formatted'] }}
+            </td>
+        </tr>
     </table>
 @endif
 

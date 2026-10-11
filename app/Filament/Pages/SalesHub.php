@@ -5,9 +5,11 @@ namespace App\Filament\Pages;
 use App\Filament\Resources\LeadSources\LeadSourceResource;
 use App\Filament\Resources\QuotationRequests\QuotationRequestResource;
 use App\Filament\Resources\Quotations\QuotationResource;
+use App\Filament\Resources\SalesLeads\SalesLeadResource;
 use App\Filament\Resources\SiteVisits\SiteVisitResource;
 use App\Models\Quotation;
 use App\Models\QuotationRequest;
+use App\Models\SalesLead;
 use App\Models\SiteVisit;
 use Filament\Actions\Action;
 use Filament\Support\Icons\Heroicon;
@@ -39,6 +41,11 @@ class SalesHub extends AdminHubPage
                 ->icon(Heroicon::OutlinedDocumentText)
                 ->url(QuotationResource::getUrl())
                 ->color('gray'),
+            Action::make('leads')
+                ->label('Leads')
+                ->icon(Heroicon::OutlinedUserPlus)
+                ->url(SalesLeadResource::getUrl())
+                ->color('gray'),
         ];
     }
 
@@ -48,6 +55,7 @@ class SalesHub extends AdminHubPage
             [
                 'title' => 'Pipeline',
                 'cards' => [
+                    $this->hubCard('Leads', SalesLeadResource::class, Heroicon::OutlinedUserPlus, count: SalesLead::query()->count()),
                     $this->hubCard('Requests', QuotationRequestResource::class, Heroicon::OutlinedInbox, count: QuotationRequest::query()->count()),
                     $this->hubCard('Quotations', QuotationResource::class, Heroicon::OutlinedDocumentText, count: Quotation::query()->count()),
                     $this->hubCard('Site visits', SiteVisitResource::class, Heroicon::OutlinedMapPin, count: SiteVisit::query()->count()),

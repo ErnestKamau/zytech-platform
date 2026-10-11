@@ -6,12 +6,15 @@ use App\Core\Enums\QuotationStatus;
 use App\Core\Enums\QuotationType;
 use App\Core\Filament\BaseResource;
 use App\Core\Filament\BusinessHistoryAction;
+use App\Domains\Pricing\Services\PriceListResolver;
 use App\Domains\Quotation\Services\PricingService;
 use App\Domains\Quotation\Services\QuotationService;
 use App\Filament\Resources\Quotations\Pages\EditQuotation;
 use App\Filament\Resources\Quotations\Pages\ManageQuotations;
+use App\Models\Product;
 use App\Models\Quotation;
 use App\Models\QuotationSection;
+use App\Models\TaxRate;
 use BackedEnum;
 use DomainException;
 use Filament\Actions\Action;
@@ -31,6 +34,7 @@ use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Components\Wizard;
 use Filament\Schemas\Components\Wizard\Step;
 use Filament\Schemas\Schema;
@@ -105,6 +109,7 @@ class QuotationResource extends BaseResource
                                     ->live()
                                     ->table([
                                         TableColumn::make('Section')->width('10rem'),
+                                        TableColumn::make('Product')->width('12rem'),
                                         TableColumn::make('Item')->markAsRequired(),
                                         TableColumn::make('Description'),
                                         TableColumn::make('Qty')->width('6rem'),
@@ -134,6 +139,29 @@ class QuotationResource extends BaseResource
                                                     'sort_order' => $livewire->getRecord()?->sections()->count() ?? 0,
                                                 ])->getKey();
                                             }),
+                                        Select::make('product_id')
+                                            ->label('Product')
+                                            ->relationship('product', 'title')
+                                            ->searchable()
+                                            ->preload()
+                                            ->live()
+                                            ->afterStateUpdated(function (?string $state, Set $set, Get $get, $livewire): void {
+                                                $product = $state ? Product::find($state) : null;
+
+                                                if ($product === null) {
+                                                    return;
+                                                }
+
+                                                if (blank($get('label'))) {
+                                                    $set('label', $product->title);
+                                                }
+
+                                                $client = $livewire->getRecord()?->client;
+                                                $quantity = (float) ($get('quantity') ?: 1);
+                                                $resolved = app(PriceListResolver::class)->resolve($product, $client, $quantity);
+
+                                                $set('unit_price', (float) ($resolved?->price ?? $product->price_amount ?? 0));
+                                            }),
                                         TextInput::make('label')->required()->maxLength(255)->live(onBlur: true),
                                         TextInput::make('description'),
                                         TextInput::make('quantity')->numeric()->minValue(0)->default(1)->required()->live(onBlur: true),
@@ -154,6 +182,15 @@ class QuotationResource extends BaseResource
                         Section::make('Pricing & tax')
                             ->schema([
                                 Grid::make(4)->schema([
+                                    Select::make('tax_rate_id')
+                                        ->label('Tax rate')
+                                        ->options(fn (): array => TaxRate::query()->where('active', true)->get()
+                                            ->mapWithKeys(fn (TaxRate $rate): array => [
+                                                $rate->id => "{$rate->code} — {$rate->name} ({$rate->rate}%)",
+                                            ])->all())
+                                        ->default(fn (): ?string => TaxRate::query()->where('is_default', true)->first()?->id)
+                                        ->live()
+                                        ->afterStateUpdated(fn (?string $state, Set $set) => $set('tax_rate', TaxRate::find($state)?->rate)),
                                     TextInput::make('tax_rate')
                                         ->label('VAT rate')
                                         ->numeric()

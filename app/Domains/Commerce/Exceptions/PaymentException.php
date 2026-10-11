@@ -15,4 +15,9 @@ final class PaymentException extends DomainException
     {
         return new self('Payment amount must be greater than zero.');
     }
+
+    public static function invoiceNotPayable(): self
+    {
+        return new self('Cannot record a payment against a void or cancelled invoice.');
+    }
 }

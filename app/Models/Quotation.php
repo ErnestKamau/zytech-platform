@@ -26,6 +26,7 @@ class Quotation extends BaseModel
         'status',
         'subtotal',
         'tax_rate',
+        'tax_rate_id',
         'tax_amount',
         'discount_amount',
         'total_amount',
@@ -86,6 +87,11 @@ class Quotation extends BaseModel
     public function client(): BelongsTo
     {
         return $this->belongsTo(Client::class);
+    }
+
+    public function taxRate(): BelongsTo
+    {
+        return $this->belongsTo(TaxRate::class);
     }
 
     public function sections(): HasMany
