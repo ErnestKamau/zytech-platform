@@ -45,11 +45,11 @@
                 </x-slot:actions>
             </x-ui.empty-state>
         @else
-            <div class="zy-grid zy-grid--3">
-                @foreach ($projects as $project)
-                    <x-projects.card :project="$project" />
+            <ol class="zy-projects-timeline">
+                @foreach ($projects as $index => $project)
+                    <x-projects.timeline-row :project="$project" :index="$index" />
                 @endforeach
-            </div>
+            </ol>
         @endif
     </div>
 

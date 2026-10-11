@@ -51,7 +51,17 @@
             <aside class="zy-project-meta">
                 <p class="zy-card__eyebrow">Location</p>
                 <p class="zy-card__title">{{ $project->city ?: $project->county ?: 'Kenya' }}</p>
-                @if ($project->completionYear)
+                @if ($project->startedOn || $project->completedOn)
+                    <p class="zy-card__body">
+                        @if ($project->startedOn && $project->completedOn)
+                            {{ \Illuminate\Support\Carbon::parse($project->startedOn)->format('M Y') }}
+                            &rarr;
+                            {{ \Illuminate\Support\Carbon::parse($project->completedOn)->format('M Y') }}
+                        @elseif ($project->startedOn)
+                            Started {{ \Illuminate\Support\Carbon::parse($project->startedOn)->format('M Y') }}
+                        @endif
+                    </p>
+                @elseif ($project->completionYear)
                     <p class="zy-card__body">Completed {{ $project->completionYear }}</p>
                 @endif
                 <a href="{{ route('contact') }}" class="zy-btn zy-btn--primary">Discuss a similar project</a>
@@ -75,22 +85,24 @@
     @endif
 
     @if (count($project->milestones) > 0)
-        <section class="zy-section">
+        <section class="zy-section zy-project-story">
             <div class="zy-container">
                 <div class="zy-section__header">
-                    <p class="zy-section__eyebrow">Timeline</p>
-                    <h2>Construction milestones</h2>
+                    <p class="zy-section__eyebrow">The build, chapter by chapter</p>
+                    <h2>How this project came together</h2>
                 </div>
                 <ol class="zy-project-timeline">
                     @foreach ($project->milestones as $index => $milestone)
                         <li
-                            class="{{ $milestone->status->value === 'completed' ? 'is-complete' : '' }}"
+                            class="{{ $milestone->status->value === 'completed' ? 'is-complete' : '' }} {{ $index % 2 === 1 ? 'is-reversed' : '' }}"
                             style="animation-delay: {{ $index * 0.1 }}s"
                         >
-                            <span>{{ str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) }}</span>
-                            <div class="zy-project-timeline__body">
-                                <p class="zy-card__title">{{ $milestone->title }}</p>
-                                <p class="zy-card__body">{{ $milestone->description }}</p>
+                            <div class="zy-project-timeline__chapter">
+                                <span class="zy-project-timeline__index">{{ str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) }}</span>
+                                <div class="zy-project-timeline__body">
+                                    <p class="zy-card__title">{{ $milestone->title }}</p>
+                                    <p class="zy-card__body">{{ $milestone->description }}</p>
+                                </div>
                             </div>
                             @if ($milestone->mediaUrl)
                                 <div class="zy-project-timeline__media">
@@ -102,7 +114,7 @@
                                                 x-on:click="open = true"
                                                 aria-label="Play milestone video: {{ $milestone->title }}"
                                             >
-                                                <video muted preload="metadata" src="{{ $milestone->mediaUrl }}"></video>
+                                                <video muted loop autoplay playsinline preload="metadata" src="{{ $milestone->mediaUrl }}"></video>
                                                 <span class="zy-project-timeline__play-icon" aria-hidden="true">▶</span>
                                             </button>
                                             <x-ui.modal show="open" title="{{ $milestone->title }}">

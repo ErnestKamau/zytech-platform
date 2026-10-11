@@ -39,6 +39,182 @@
     align-content: start;
 }
 
+.zy-projects-timeline {
+    position: relative;
+    display: grid;
+    gap: var(--zy-space-16);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.zy-projects-timeline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 1.25rem;
+    width: 2px;
+    background: var(--zy-color-border);
+}
+
+.zy-projects-timeline__row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--zy-space-6);
+    padding-left: var(--zy-space-12);
+}
+
+.zy-projects-timeline__marker {
+    position: absolute;
+    top: var(--zy-space-2);
+    left: 1.25rem;
+    transform: translateX(-50%);
+}
+
+.zy-projects-timeline__node {
+    display: block;
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: 50%;
+    background: var(--zy-sage-500);
+    border: 3px solid var(--zy-color-bg, #fff);
+    box-shadow: 0 0 0 2px var(--zy-sage-500);
+}
+
+.zy-projects-timeline__media {
+    position: relative;
+    display: block;
+    border-radius: var(--zy-radius-lg);
+    overflow: hidden;
+    aspect-ratio: 16 / 10;
+    background: var(--zy-stone-200);
+}
+
+.zy-projects-timeline__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 400ms var(--zy-ease, ease);
+}
+
+.zy-projects-timeline__media:hover img {
+    transform: scale(1.04);
+}
+
+.zy-projects-timeline__badge {
+    position: absolute;
+    top: var(--zy-space-3);
+    left: var(--zy-space-3);
+    padding: var(--zy-space-1) var(--zy-space-3);
+    border-radius: var(--zy-radius-full);
+    background: var(--zy-sage-500);
+    color: #fff;
+    font-size: var(--zy-text-xs);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.zy-projects-timeline__body {
+    display: grid;
+    gap: var(--zy-space-2);
+    align-content: start;
+}
+
+.zy-projects-timeline__title-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.zy-projects-timeline__title {
+    margin: 0;
+}
+
+.zy-projects-timeline__duration {
+    font-size: var(--zy-text-sm);
+    font-weight: 600;
+    color: var(--zy-color-muted);
+}
+
+.zy-projects-timeline__link {
+    margin-top: var(--zy-space-2);
+    font-weight: 700;
+    color: var(--zy-sage-600, var(--zy-sage-500));
+    text-decoration: none;
+}
+
+.zy-projects-timeline__link:hover,
+.zy-projects-timeline__link:focus-visible {
+    text-decoration: underline;
+}
+
+.zy-stage-stepper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--zy-space-1) var(--zy-space-4);
+    margin: var(--zy-space-2) 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.zy-stage-stepper li {
+    display: flex;
+    align-items: center;
+    gap: var(--zy-space-2);
+    font-size: var(--zy-text-xs);
+    color: var(--zy-color-muted);
+}
+
+.zy-stage-stepper__dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--zy-color-border);
+}
+
+.zy-stage-stepper li.is-done .zy-stage-stepper__dot {
+    background: var(--zy-sage-500);
+}
+
+.zy-stage-stepper li.is-current .zy-stage-stepper__dot {
+    background: var(--zy-sage-500);
+    box-shadow: 0 0 0 3px var(--zy-sage-200, rgb(120 160 120 / 0.3));
+}
+
+.zy-stage-stepper li.is-current {
+    color: var(--zy-color-text);
+    font-weight: 700;
+}
+
+.zy-stage-stepper--compact li {
+    font-size: 0.7rem;
+}
+
+@media (min-width: 768px) {
+    .zy-projects-timeline__row {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        align-items: center;
+        padding-left: var(--zy-space-16);
+    }
+
+    .zy-projects-timeline__row.is-reversed .zy-projects-timeline__media {
+        order: 2;
+    }
+
+    .zy-projects-timeline__row.is-reversed .zy-projects-timeline__body {
+        order: 1;
+    }
+
+    .zy-projects-timeline__marker {
+        left: 2rem;
+    }
+
+    .zy-projects-timeline::before {
+        left: 2rem;
+    }
+}
+
 .zy-project-cats {
     display: flex;
     flex-wrap: wrap;
@@ -125,11 +301,15 @@
     }
 }
 
+.zy-project-timeline {
+    gap: var(--zy-space-14);
+}
+
 .zy-project-timeline li {
     display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: var(--zy-space-4);
-    align-items: start;
+    grid-template-columns: 1fr;
+    gap: var(--zy-space-6);
+    align-items: center;
     opacity: 0.75;
     animation: zy-timeline-reveal 300ms var(--zy-ease, ease) both;
 }
@@ -144,7 +324,13 @@
     opacity: 1;
 }
 
-.zy-project-timeline span {
+.zy-project-timeline__chapter {
+    display: flex;
+    gap: var(--zy-space-4);
+    align-items: start;
+}
+
+.zy-project-timeline__index {
     font-size: var(--zy-text-sm);
     font-weight: 700;
     letter-spacing: 0.08em;
@@ -157,10 +343,9 @@
 
 .zy-project-timeline__media {
     position: relative;
-    width: 6.5rem;
-    height: 4.5rem;
-    flex-shrink: 0;
-    border-radius: var(--zy-radius-md);
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border-radius: var(--zy-radius-lg);
     overflow: hidden;
     background: var(--zy-stone-200);
 }
@@ -200,7 +385,13 @@
     justify-content: center;
     color: #fff;
     background: rgb(28 24 21 / 0.35);
-    font-size: var(--zy-text-sm);
+    font-size: var(--zy-text-2xl, 1.5rem);
+    transition: background 200ms var(--zy-ease, ease);
+}
+
+.zy-project-timeline__media-trigger:hover .zy-project-timeline__play-icon,
+.zy-project-timeline__media-trigger:focus-visible .zy-project-timeline__play-icon {
+    background: rgb(28 24 21 / 0.5);
 }
 
 .zy-project-timeline__video {
@@ -209,16 +400,17 @@
     border-radius: var(--zy-radius-md);
 }
 
-@media (max-width: 640px) {
+@media (min-width: 768px) {
     .zy-project-timeline li {
-        grid-template-columns: auto 1fr;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     }
 
-    .zy-project-timeline__media {
-        grid-column: 2;
-        width: 100%;
-        height: auto;
-        aspect-ratio: 16 / 10;
+    .zy-project-timeline li.is-reversed .zy-project-timeline__media {
+        order: 2;
+    }
+
+    .zy-project-timeline li.is-reversed .zy-project-timeline__chapter {
+        order: 1;
     }
 }
 

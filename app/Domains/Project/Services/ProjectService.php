@@ -194,6 +194,8 @@ final class ProjectService extends BaseService
             'category_slug' => $category?->slug ?? '',
             'status_label' => $project->statusLabel(),
             'location_summary' => $project->locationSummary(),
+            'started_on' => $project->started_on?->toDateString(),
+            'completed_on' => $project->completed_on?->toDateString(),
             'milestones' => [],
         ];
 
