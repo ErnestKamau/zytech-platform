@@ -75,6 +75,27 @@ class MediaResource extends BaseResource
                 TextInput::make('alt')
                     ->label('Alt text')
                     ->visibleOn('edit'),
+                TextInput::make('site_key')
+                    ->label('Catalog key')
+                    ->helperText('Optional. Lets this file be picked from image/video dropdowns elsewhere (e.g. Projects) using this key, without editing config files.')
+                    ->alphaDash()
+                    ->visibleOn('edit')
+                    ->rule(function (?Media $record): \Closure {
+                        return function (string $attribute, mixed $value, \Closure $fail) use ($record): void {
+                            if (blank($value)) {
+                                return;
+                            }
+
+                            $exists = Media::query()
+                                ->where('custom_properties->site_key', $value)
+                                ->when($record, fn ($query) => $query->where('id', '!=', $record->id))
+                                ->exists();
+
+                            if ($exists) {
+                                $fail('This catalog key is already used by another file.');
+                            }
+                        };
+                    }),
                 Select::make('tags')
                     ->relationship('tags', 'name')
                     ->multiple()
@@ -100,6 +121,11 @@ class MediaResource extends BaseResource
                     }),
                 TextColumn::make('mime_type')->toggleable(),
                 TextColumn::make('human_readable_size')->label('Size'),
+                TextColumn::make('custom_properties.site_key')
+                    ->label('Catalog key')
+                    ->badge()
+                    ->color('success')
+                    ->placeholder('—'),
                 TextColumn::make('created_at')->dateTime()->since(),
             ])
             ->filters([
@@ -116,12 +142,20 @@ class MediaResource extends BaseResource
                 EditAction::make()
                     ->mutateRecordDataUsing(function (array $data, Media $record): array {
                         $data['alt'] = $record->alt();
+                        $data['site_key'] = $record->siteKey();
 
                         return $data;
                     })
                     ->using(function (Media $record, array $data): Media {
                         $record->name = $data['name'];
                         $record->setCustomProperty('alt', $data['alt'] ?? '');
+
+                        if (blank($data['site_key'] ?? null)) {
+                            $record->forgetCustomProperty('site_key');
+                        } else {
+                            $record->setCustomProperty('site_key', $data['site_key']);
+                        }
+
                         $record->save();
 
                         return $record;

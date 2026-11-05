@@ -3,13 +3,13 @@
 namespace App\Filament\Resources\Projects;
 
 use App\Core\Enums\ConstructionStage;
-use App\Core\Enums\MediaCollection;
 use App\Core\Enums\MediaType;
 use App\Core\Enums\MilestoneStatus;
 use App\Core\Enums\ProjectStatus;
 use App\Core\Enums\ProjectType;
 use App\Core\Enums\VisibilityStatus;
 use App\Core\Filament\BaseResource;
+use App\Domains\Media\Support\MediaCatalog;
 use App\Domains\Project\Actions\ArchiveProject;
 use App\Domains\Project\Actions\FeatureProject;
 use App\Domains\Project\Actions\PublishProject;
@@ -191,16 +191,12 @@ class ProjectResource extends BaseResource
     /** @return array<string, string> */
     public static function mediaImageOptions(): array
     {
-        return collect(config('zyntech-media.images', []))
-            ->mapWithKeys(fn (array $image, string $key): array => [$key => str_replace('_', ' ', $key)])
-            ->all();
+        return MediaCatalog::imageOptions();
     }
 
     /** @return array<string, string> */
     public static function mediaVideoOptions(): array
     {
-        return collect(config('zyntech-media.videos', []))
-            ->mapWithKeys(fn (array $video, string $key): array => [$key => str_replace('_', ' ', $key)])
-            ->all();
+        return MediaCatalog::videoOptions();
     }
 }

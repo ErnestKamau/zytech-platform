@@ -47,6 +47,17 @@ final class MediaRepository
     /**
      * @return Collection<int, Media>
      */
+    public function taggedWithSiteKey(?string $mimePrefix = null): Collection
+    {
+        return Media::query()
+            ->whereNotNull('custom_properties->site_key')
+            ->when($mimePrefix, fn ($query) => $query->where('mime_type', 'like', $mimePrefix.'%'))
+            ->get();
+    }
+
+    /**
+     * @return Collection<int, Media>
+     */
     public function search(string $term, int $limit = 50): Collection
     {
         $like = '%'.str_replace(['%', '_'], ['\%', '\_'], $term).'%';

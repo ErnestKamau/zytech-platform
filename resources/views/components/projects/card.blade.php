@@ -1,10 +1,7 @@
 @props(['project'])
 
 @php
-    $images = config('zyntech-media.images');
-    $image = $project->imageKey && isset($images[$project->imageKey])
-        ? $images[$project->imageKey]
-        : null;
+    $image = \App\Domains\Media\Support\MediaCatalog::image($project->imageKey);
 @endphp
 
 <a href="{{ route('projects.show', $project->slug) }}" class="zy-project-card-link">

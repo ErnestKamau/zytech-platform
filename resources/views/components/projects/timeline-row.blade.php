@@ -1,10 +1,7 @@
 @props(['project', 'index' => 0])
 
 @php
-    $images = config('zyntech-media.images');
-    $image = $project->imageKey && isset($images[$project->imageKey])
-        ? $images[$project->imageKey]
-        : null;
+    $image = \App\Domains\Media\Support\MediaCatalog::image($project->imageKey);
 
     $started = $project->startedOn ? \Illuminate\Support\Carbon::parse($project->startedOn)->format('M Y') : null;
     $completed = $project->completedOn ? \Illuminate\Support\Carbon::parse($project->completedOn)->format('M Y') : null;

@@ -1,10 +1,6 @@
 @php
-    $images = config('zyntech-media.images');
-    $videos = config('zyntech-media.videos');
-    $image = $project->imageKey && isset($images[$project->imageKey])
-        ? $images[$project->imageKey]
-        : $images['paving_gravel_leveling'];
-    $video = $project->videoKey && isset($videos[$project->videoKey]) ? $videos[$project->videoKey] : null;
+    $image = \App\Domains\Media\Support\MediaCatalog::image($project->imageKey) ?? config('zyntech-media.images.paving_gravel_leveling');
+    $video = \App\Domains\Media\Support\MediaCatalog::video($project->videoKey);
 @endphp
 
 <div>
@@ -147,7 +143,7 @@
                 </div>
                 <div class="zy-grid zy-grid--3">
                     @foreach ($galleryItems as $item)
-                        @php $galleryImage = $images[$item->image_key] ?? null; @endphp
+                        @php $galleryImage = \App\Domains\Media\Support\MediaCatalog::image($item->image_key); @endphp
                         @if ($galleryImage)
                             <x-ui.card>
                                 <x-media.cover :src="asset($galleryImage['path'])" :alt="$galleryImage['alt']" />
@@ -172,8 +168,8 @@
                 <div class="zy-project-comparisons">
                     @foreach ($beforeAfter as $comparison)
                         @php
-                            $before = $images[$comparison->before_image_key] ?? null;
-                            $after = $images[$comparison->after_image_key] ?? null;
+                            $before = \App\Domains\Media\Support\MediaCatalog::image($comparison->before_image_key);
+                            $after = \App\Domains\Media\Support\MediaCatalog::image($comparison->after_image_key);
                         @endphp
                         @if ($before && $after)
                             <div class="zy-project-compare" x-data="{ position: 50 }">
@@ -207,7 +203,7 @@
                 </div>
                 <div class="zy-project-updates">
                     @foreach ($progressUpdates as $update)
-                        @php $updateImage = $update->image_key ? ($images[$update->image_key] ?? null) : null; @endphp
+                        @php $updateImage = \App\Domains\Media\Support\MediaCatalog::image($update->image_key); @endphp
                         <x-ui.card>
                             @if ($updateImage)
                                 <x-media.cover :src="asset($updateImage['path'])" :alt="$updateImage['alt']" />
