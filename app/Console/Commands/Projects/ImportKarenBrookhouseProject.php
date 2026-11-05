@@ -16,24 +16,46 @@ use App\Models\Project;
 use App\Models\ProjectCategory;
 use App\Models\ProjectMilestone;
 use Illuminate\Console\Command;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Str;
 
 /**
- * One-off import for the Karen Brookhouse International School project: builds the
- * project + a chronological milestone timeline from a folder of site photos/videos,
- * and publishes one of the clips as the homepage hero slide.
+ * One-off import for the Karen Brookhouse International School project.
+ *
+ * The source folder has WhatsApp re-sends of the same clips under different
+ * filenames/timestamps (confirmed by content hash), so this uses a curated,
+ * deduplicated manifest — one entry per distinct piece of footage — with
+ * titles written from actually reviewing each photo/video frame, instead of
+ * auto-generating generic "Site visit" labels from filename timestamps.
  */
 final class ImportKarenBrookhouseProject extends Command
 {
     protected $signature = 'projects:import-karen-brookhouse
         {--path=/home/ernest/Videos/zyntech : Absolute path to the folder of photos/videos}
-        {--hero=compound walk.mp4 : Filename (within --path) to use as the homepage hero video}
         {--fresh : Delete any previously imported project/slide for this client before importing}';
 
     protected $description = 'Import the Karen Brookhouse International School project timeline and homepage hero video from a local media folder.';
 
     private const SLUG = 'karen-brookhouse-international-school';
+
+    /**
+     * One row per distinct piece of content. `date` is null where no capture
+     * is known to within a real day (used for exactly one clip: compound-work.mp4).
+     *
+     * @var list<array{file: string, title: string, description: string, date: ?string, hero?: bool}>
+     */
+    private const MANIFEST = [
+        ['file' => 'WhatsApp-Image-2026-06-24-at-12.43.31-PM.jpeg', 'title' => 'Site clearance — ballast and compound path laid', 'description' => 'Gravel bedding laid for the compound access path.', 'date' => '2026-06-24'],
+        ['file' => 'WhatsApp-Image-2026-06-24-at-12.43.31-PM-(1).jpeg', 'title' => 'Compound grading and landscaping underway', 'description' => 'Grading and hedge planting in progress around the gravel bed.', 'date' => '2026-06-24'],
+        ['file' => 'compound-work.mp4', 'title' => 'Compound ground works in progress', 'description' => 'Open compound area during ground preparation.', 'date' => null],
+        ['file' => 'WhatsApp-Image-2026-06-24-at-12.48.31-PM.jpeg', 'title' => 'Courtyard seating area completed', 'description' => 'Finished paved courtyard with seating and shade umbrellas.', 'date' => '2026-06-24'],
+        ['file' => 'WhatsApp-Image-2026-07-18-at-4.10.24-AM.jpeg', 'title' => 'Covered walkway structure under construction', 'description' => 'Steel roof framework being erected over the connecting walkway.', 'date' => '2026-07-18'],
+        ['file' => 'WhatsApp-Video-2026-07-18-at-4.10.24-AM-(1).mp4', 'title' => 'Interior strip-out and demolition', 'description' => 'Old flooring and tiling removed ahead of refinishing.', 'date' => '2026-07-18'],
+        ['file' => 'WhatsApp-Video-2026-07-18-at-4.10.24-AM-(2).mp4', 'title' => 'Scaffolding erected on exterior wall', 'description' => 'Scaffolding set up against the building facade for exterior works.', 'date' => '2026-07-18'],
+        ['file' => 'WhatsApp-Video-2026-07-18-at-4.10.24-AM.mp4', 'title' => 'Finished interior — furniture installed', 'description' => 'Completed room with furniture in place.', 'date' => '2026-07-18'],
+        ['file' => 'WhatsApp-Video-2026-09-12-at-11.59.24-AM.mp4', 'title' => 'Door and timber fittings ready for installation', 'description' => 'Timber doors and fittings staged for fitting.', 'date' => '2026-09-12'],
+        ['file' => 'WhatsApp-Image-2026-09-12-at-11.59.22-AM.jpeg', 'title' => 'Completed two-storey building exterior', 'description' => 'Finished exterior with balustrades and landscaping.', 'date' => '2026-09-12'],
+        ['file' => 'interior.mp4', 'title' => 'Completed washroom', 'description' => 'Finished washroom with fittings installed.', 'date' => '2026-09-12'],
+        ['file' => 'compound-walk.mp4', 'title' => 'Completed covered walkway', 'description' => 'Finished covered walkway connecting the building wings.', 'date' => '2026-09-12', 'hero' => true],
+    ];
 
     public function handle(ProjectService $projects, CacheStore $cache): int
     {
@@ -45,7 +67,14 @@ final class ImportKarenBrookhouseProject extends Command
             return self::FAILURE;
         }
 
-        $heroFilename = (string) $this->option('hero');
+        $missing = collect(self::MANIFEST)->reject(fn (array $row): bool => is_file($path.'/'.$row['file']));
+        if ($missing->isNotEmpty()) {
+            foreach ($missing as $row) {
+                $this->error("Missing file: {$row['file']}");
+            }
+
+            return self::FAILURE;
+        }
 
         if ($this->option('fresh')) {
             $this->wipeExisting();
@@ -58,17 +87,9 @@ final class ImportKarenBrookhouseProject extends Command
             return self::FAILURE;
         }
 
-        $files = $this->scanFiles($path);
-
-        if ($files->isEmpty()) {
-            $this->error("No image/video files found in {$path}");
-
-            return self::FAILURE;
-        }
-
-        $dated = $files->filter(fn (array $f): bool => $f['date'] !== null);
-        $startedOn = $dated->min('date');
-        $completedOn = $dated->max('date');
+        $dates = collect(self::MANIFEST)->pluck('date')->filter();
+        $startedOn = $dates->min();
+        $completedOn = $dates->max();
 
         $category = ProjectCategory::query()->firstOrCreate(
             ['slug' => 'education'],
@@ -88,7 +109,7 @@ final class ImportKarenBrookhouseProject extends Command
             'client_name' => 'Karen Brookhouse International School',
             'started_on' => $startedOn,
             'completed_on' => $completedOn,
-            'completion_year' => $completedOn?->year,
+            'completion_year' => $completedOn ? (int) substr($completedOn, 0, 4) : null,
             'is_featured' => true,
             'published_at' => now(),
             'sort_order' => 0,
@@ -96,43 +117,36 @@ final class ImportKarenBrookhouseProject extends Command
 
         $this->info("Created project: {$project->title} ({$project->slug})");
 
-        $ordered = $files->sortBy(
-            fn (array $f): string => $f['date'] !== null
-                ? '0_'.$f['date']->toDateTimeString()
-                : '1_'.$f['name']
-        )->values();
-
         $sortOrder = 0;
-        $dateCounts = [];
+        $heroRow = null;
 
-        foreach ($ordered as $file) {
-            $title = $this->titleFor($file, $dateCounts);
-
+        foreach (self::MANIFEST as $row) {
             $milestone = ProjectMilestone::query()->create([
                 'project_id' => $project->id,
-                'title' => $title,
-                'description' => 'Progress captured on-site.',
+                'title' => $row['title'],
+                'description' => $row['description'],
                 'stage' => $project->construction_stage->value,
                 'status' => MilestoneStatus::Completed,
-                'completed_on' => $file['date'] ?? $completedOn,
+                'completed_on' => $row['date'] ?? $completedOn,
                 'sort_order' => $sortOrder++,
             ]);
 
-            $milestone->addMedia($file['path'])
+            $milestone->addMedia($path.'/'.$row['file'])
                 ->preservingOriginal()
-                ->usingName($title)
+                ->usingName($row['title'])
                 ->toMediaCollection(MediaCollection::MilestoneMedia->value);
 
-            $this->line("  + milestone: {$title}");
+            $this->line("  + milestone: {$row['title']}");
+
+            if (! empty($row['hero'])) {
+                $heroRow = $row;
+            }
         }
 
         $projects->persisted($project);
 
-        $heroKey = $this->normalizeName($heroFilename);
-        $heroFile = $files->first(fn (array $f): bool => $this->normalizeName($f['name']) === $heroKey);
-
-        if ($heroFile === null) {
-            $this->warn("Hero file '{$heroFilename}' not found in {$path} — skipping homepage slide.");
+        if ($heroRow === null) {
+            $this->warn('No manifest row flagged `hero` — skipping homepage slide.');
         } else {
             $slide = HomepageSlide::query()->create([
                 'headline' => 'Built on Kenyan soil, engineered to last.',
@@ -144,77 +158,19 @@ final class ImportKarenBrookhouseProject extends Command
                 'sort_order' => (int) (HomepageSlide::query()->min('sort_order') ?? 0) - 1,
             ]);
 
-            $slide->addMedia($heroFile['path'])
+            $slide->addMedia($path.'/'.$heroRow['file'])
                 ->preservingOriginal()
                 ->usingName($slide->alt_text)
                 ->toMediaCollection(MediaCollection::HomepageSlideMedia->value);
 
             $cache->forget(HomepageCache::SLIDES);
 
-            $this->info("Created homepage hero slide from: {$heroFile['name']}");
+            $this->info("Created homepage hero slide from: {$heroRow['file']}");
         }
 
         $this->info('Done.');
 
         return self::SUCCESS;
-    }
-
-    /**
-     * @return \Illuminate\Support\Collection<int, array{path: string, name: string, date: ?Carbon}>
-     */
-    private function scanFiles(string $path): \Illuminate\Support\Collection
-    {
-        $extensions = ['jpg', 'jpeg', 'png', 'webp', 'mp4', 'mov'];
-
-        return collect(scandir($path) ?: [])
-            ->reject(fn (string $name): bool => in_array($name, ['.', '..'], true))
-            ->filter(fn (string $name): bool => in_array(strtolower(pathinfo($name, PATHINFO_EXTENSION)), $extensions, true))
-            ->map(fn (string $name): array => [
-                'path' => $path.'/'.$name,
-                'name' => $name,
-                'date' => $this->extractDate($name),
-            ])
-            ->values();
-    }
-
-    private function normalizeName(string $filename): string
-    {
-        return Str::slug(pathinfo($filename, PATHINFO_FILENAME));
-    }
-
-    private function extractDate(string $filename): ?Carbon
-    {
-        if (! preg_match('/(\d{4}-\d{2}-\d{2})[\s-]+at[\s-]+(\d{1,2}\.\d{2}\.\d{2})[\s-]*(AM|PM)/i', $filename, $m)) {
-            return null;
-        }
-
-        $time = str_replace('.', ':', $m[2]);
-
-        try {
-            return Carbon::createFromFormat('Y-m-d g:i:s A', "{$m[1]} {$time} {$m[3]}");
-        } catch (\Throwable) {
-            return null;
-        }
-    }
-
-    /**
-     * @param  array{path: string, name: string, date: ?Carbon}  $file
-     * @param  array<string, int>  $dateCounts
-     */
-    private function titleFor(array $file, array &$dateCounts): string
-    {
-        if ($file['date'] === null) {
-            return Str::of(pathinfo($file['name'], PATHINFO_FILENAME))
-                ->replace(['_', '-'], ' ')
-                ->title()
-                ->toString();
-        }
-
-        $key = $file['date']->toDateString();
-        $dateCounts[$key] = ($dateCounts[$key] ?? 0) + 1;
-        $label = 'Site visit — '.$file['date']->format('j M Y');
-
-        return $dateCounts[$key] > 1 ? "{$label} ({$dateCounts[$key]})" : $label;
     }
 
     private function wipeExisting(): void
