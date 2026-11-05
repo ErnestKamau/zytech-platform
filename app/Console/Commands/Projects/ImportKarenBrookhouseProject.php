@@ -40,7 +40,7 @@ final class ImportKarenBrookhouseProject extends Command
      * One row per distinct piece of content. `date` is null where no capture
      * is known to within a real day (used for exactly one clip: compound-work.mp4).
      *
-     * @var list<array{file: string, title: string, description: string, date: ?string, hero?: bool}>
+     * @var list<array{file: string, title: string, description: string, date: ?string, hero?: bool, cover?: bool}>
      */
     private const MANIFEST = [
         ['file' => 'WhatsApp-Image-2026-06-24-at-12.43.31-PM.jpeg', 'title' => 'Site clearance — ballast and compound path laid', 'description' => 'Gravel bedding laid for the compound access path.', 'date' => '2026-06-24'],
@@ -52,7 +52,7 @@ final class ImportKarenBrookhouseProject extends Command
         ['file' => 'WhatsApp-Video-2026-07-18-at-4.10.24-AM-(2).mp4', 'title' => 'Scaffolding erected on exterior wall', 'description' => 'Scaffolding set up against the building facade for exterior works.', 'date' => '2026-07-18'],
         ['file' => 'WhatsApp-Video-2026-07-18-at-4.10.24-AM.mp4', 'title' => 'Finished interior — furniture installed', 'description' => 'Completed room with furniture in place.', 'date' => '2026-07-18'],
         ['file' => 'WhatsApp-Video-2026-09-12-at-11.59.24-AM.mp4', 'title' => 'Door and timber fittings ready for installation', 'description' => 'Timber doors and fittings staged for fitting.', 'date' => '2026-09-12'],
-        ['file' => 'WhatsApp-Image-2026-09-12-at-11.59.22-AM.jpeg', 'title' => 'Completed two-storey building exterior', 'description' => 'Finished exterior with balustrades and landscaping.', 'date' => '2026-09-12'],
+        ['file' => 'WhatsApp-Image-2026-09-12-at-11.59.22-AM.jpeg', 'title' => 'Completed two-storey building exterior', 'description' => 'Finished exterior with balustrades and landscaping.', 'date' => '2026-09-12', 'cover' => true],
         ['file' => 'interior.mp4', 'title' => 'Completed washroom', 'description' => 'Finished washroom with fittings installed.', 'date' => '2026-09-12'],
         ['file' => 'compound-walk.mp4', 'title' => 'Completed covered walkway', 'description' => 'Finished covered walkway connecting the building wings.', 'date' => '2026-09-12', 'hero' => true],
     ];
@@ -131,7 +131,7 @@ final class ImportKarenBrookhouseProject extends Command
                 'sort_order' => $sortOrder++,
             ]);
 
-            $milestone->addMedia($path.'/'.$row['file'])
+            $media = $milestone->addMedia($path.'/'.$row['file'])
                 ->preservingOriginal()
                 ->usingName($row['title'])
                 ->toMediaCollection(MediaCollection::MilestoneMedia->value);
@@ -140,6 +140,14 @@ final class ImportKarenBrookhouseProject extends Command
 
             if (! empty($row['hero'])) {
                 $heroRow = $row;
+            }
+
+            if (! empty($row['cover'])) {
+                $media->setCustomProperty('site_key', self::SLUG.'-cover');
+                $media->save();
+                $project->image_key = self::SLUG.'-cover';
+                $project->save();
+                $this->info("Set project cover image from: {$row['file']}");
             }
         }
 
