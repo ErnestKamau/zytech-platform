@@ -15,11 +15,10 @@
         <p class="zy-alert zy-alert--success" style="margin-bottom: var(--zy-space-4);">{{ session('status') }}</p>
     @endif
 
+    <x-portal.status-tabs :tabs="$statusTabs" :active="$statusTab" />
+
     <x-portal.list-toolbar
         search-model="search"
-        filter-model="status"
-        :filter-options="$statusOptions"
-        filter-label="Status"
         placeholder="Search quotations…"
         export-action="export"
     />
@@ -79,7 +78,8 @@
                         </div>
                     </div>
                     <div class="zy-portal-actions">
-                        <span class="zy-badge zy-badge--primary">{{ $shared ? $quotation->status->label() : 'Being prepared' }}</span>
+                        @php $statusVariant = ['gray' => 'neutral', 'info' => 'info', 'warning' => 'warning', 'success' => 'success', 'danger' => 'danger'][$quotation->status->color()] ?? 'neutral'; @endphp
+                        <span class="zy-badge zy-badge--{{ $statusVariant }}">{{ $shared ? $quotation->status->label() : 'Being prepared' }}</span>
                         @if ($reviewable)
                             <span class="zy-btn zy-btn--primary zy-btn--sm">Review quotation</span>
                         @elseif ($shared)

@@ -7,11 +7,13 @@ use App\Core\Enums\QuotationType;
 use App\Core\Filament\BaseResource;
 use App\Core\Filament\BusinessHistoryAction;
 use App\Domains\Pricing\Services\PriceListResolver;
+use App\Domains\Project\Actions\ConvertQuotationToProject;
 use App\Domains\Quotation\Services\PricingService;
 use App\Domains\Quotation\Services\QuotationService;
 use App\Filament\Resources\Quotations\Pages\EditQuotation;
 use App\Filament\Resources\Quotations\Pages\ManageQuotations;
 use App\Models\Product;
+use App\Models\ProjectCategory;
 use App\Models\Quotation;
 use App\Models\QuotationSection;
 use App\Models\TaxRate;
@@ -285,6 +287,36 @@ class QuotationResource extends BaseResource
                         }
 
                         Notification::make()->success()->title('Quotation sent')->send();
+                    }),
+                Action::make('convert_to_project')
+                    ->label('Convert to project')
+                    ->icon(Heroicon::OutlinedBuildingOffice2)
+                    ->color('gray')
+                    ->visible(fn (Quotation $record): bool => $record->status === QuotationStatus::Accepted
+                        && $record->converted_project_id === null)
+                    ->schema([
+                        Select::make('project_category_id')
+                            ->label('Project category')
+                            ->options(fn (): array => ProjectCategory::query()->orderBy('name')->pluck('name', 'id')->all())
+                            ->searchable()
+                            ->required(),
+                        TextInput::make('title')
+                            ->label('Project title')
+                            ->default(fn (Quotation $record): string => $record->title)
+                            ->required()
+                            ->maxLength(255),
+                    ])
+                    ->modalDescription('Creates a Draft project pre-filled from this quotation. Publish it once real work starts.')
+                    ->action(function (Quotation $record, array $data): void {
+                        try {
+                            $project = app(ConvertQuotationToProject::class)->handle($record, $data);
+                        } catch (DomainException $exception) {
+                            Notification::make()->danger()->title('Not converted')->body($exception->getMessage())->send();
+
+                            return;
+                        }
+
+                        Notification::make()->success()->title('Project created')->body($project->title.' is now a Draft project.')->send();
                     }),
                 Action::make('prepare_revision')
                     ->label('Prepare revision')

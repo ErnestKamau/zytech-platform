@@ -9,6 +9,12 @@
                 <p class="zy-eyebrow" style="color: rgb(255 255 255 / 0.75);">Get a quote</p>
                 <h1 style="color: #fff;">Request a quotation</h1>
                 <p>Tell us about your project across Nairobi, Kiambu, or nationwide — we respond within one business day.</p>
+                <x-ui.whatsapp-link
+                    message="Hi Zytech, I'd like to request a quote for a project."
+                    class="zy-btn zy-btn--frost zy-btn--sm"
+                >
+                    Prefer WhatsApp? Chat with us instead
+                </x-ui.whatsapp-link>
             </x-media.banner>
         </div>
 

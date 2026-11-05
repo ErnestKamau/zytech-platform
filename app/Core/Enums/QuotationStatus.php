@@ -32,4 +32,15 @@ enum QuotationStatus: string
             self::Completed => 'Completed',
         };
     }
+
+    public function color(): string
+    {
+        return match ($this) {
+            self::Draft, self::Pending, self::Reviewing, self::Preparing => 'gray',
+            self::Sent, self::Viewed => 'info',
+            self::RevisionRequested => 'warning',
+            self::Accepted, self::Completed => 'success',
+            self::Rejected, self::Expired => 'danger',
+        };
+    }
 }

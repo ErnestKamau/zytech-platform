@@ -4,7 +4,15 @@
         title="Support"
         lead="Open a ticket when you need account or project assistance."
         icon="ticket"
-    />
+    >
+        <x-ui.whatsapp-link
+            message="Hi Zytech, I need help with my account."
+            class="zy-btn zy-btn--secondary zy-btn--sm"
+        >
+            <x-portal.icon name="chat" />
+            Chat on WhatsApp
+        </x-ui.whatsapp-link>
+    </x-portal.page-header>
 
     <div class="zy-portal-split zy-portal-split--elevated">
         <aside class="zy-portal-panel">

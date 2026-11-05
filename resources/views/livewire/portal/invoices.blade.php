@@ -6,6 +6,8 @@
         icon="document"
     />
 
+    <x-portal.status-tabs :tabs="$statusTabs" :active="$statusTab" />
+
     <x-portal.list-toolbar
         search-model="search"
         placeholder="Search invoices…"
@@ -37,7 +39,8 @@
                         </div>
                     </div>
                     <div class="zy-portal-actions">
-                        <span class="zy-badge zy-badge--primary">{{ $invoice->status->label() }}</span>
+                        @php $statusVariant = ['gray' => 'neutral', 'info' => 'info', 'warning' => 'warning', 'success' => 'success', 'danger' => 'danger'][$invoice->status->color()] ?? 'neutral'; @endphp
+                        <span class="zy-badge zy-badge--{{ $statusVariant }}">{{ $invoice->status->label() }}</span>
                         @if ($invoice->status->value !== 'draft')
                             <a href="{{ route('portal.invoices.view', $invoice) }}" class="zy-btn zy-btn--ghost zy-btn--sm">
                                 <x-portal.icon name="eye" /> View

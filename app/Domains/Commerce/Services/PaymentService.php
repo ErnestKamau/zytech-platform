@@ -116,6 +116,12 @@ final class PaymentService extends BaseService
      */
     public function recalculateOrderPaymentStatus(Order $order): Order
     {
+        // Callers often pass a cached belongsTo relation (e.g. $payment->order).
+        // Re-fetching here keeps forceFill()'s dirty-tracking honest against the
+        // true current row instead of a stale "original" snapshot that could
+        // coincidentally match the freshly computed value and get skipped.
+        $order = $order->fresh() ?? $order;
+
         $paid = (float) $order->payments()
             ->where('status', PaymentStatus::Completed)
             ->sum('amount');
@@ -139,6 +145,13 @@ final class PaymentService extends BaseService
      */
     public function recalculateInvoiceBalance(Invoice $invoice): Invoice
     {
+        // Callers often pass a cached belongsTo relation (e.g. $payment->invoice).
+        // Re-fetching here keeps forceFill()'s dirty-tracking honest against the
+        // true current row instead of a stale "original" snapshot that could
+        // coincidentally match the freshly computed value and get skipped —
+        // silently leaving the real, different DB value in place.
+        $invoice = $invoice->fresh() ?? $invoice;
+
         $paid = (float) $invoice->payments()
             ->where('status', PaymentStatus::Completed)
             ->sum('amount');
@@ -147,7 +160,13 @@ final class PaymentService extends BaseService
         $due = max($total - $paid, 0);
 
         $status = match (true) {
-            $paid <= 0 => $invoice->status,
+            // A refund can bring $paid back to zero after the invoice was
+            // already marked Paid/PartiallyPaid; that must revert the status
+            // rather than leave it stale, but an invoice that was never paid
+            // (Draft, Void, Cancelled, Issued, Overdue) must stay untouched.
+            $paid <= 0 => in_array($invoice->status, [InvoiceStatus::Paid, InvoiceStatus::PartiallyPaid], true)
+                ? InvoiceStatus::Issued
+                : $invoice->status,
             $paid < $total => InvoiceStatus::PartiallyPaid,
             default => InvoiceStatus::Paid,
         };
