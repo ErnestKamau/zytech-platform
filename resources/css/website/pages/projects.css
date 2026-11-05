@@ -345,9 +345,12 @@
     position: relative;
     width: 100%;
     aspect-ratio: 16 / 10;
+    max-height: 420px;
     border-radius: var(--zy-radius-lg);
     overflow: hidden;
     background: var(--zy-stone-200);
+    border: 1px solid var(--zy-color-border);
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.08);
 }
 
 .zy-project-timeline__image,

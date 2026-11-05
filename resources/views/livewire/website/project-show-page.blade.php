@@ -114,7 +114,7 @@
                                                 <span class="zy-project-timeline__play-icon" aria-hidden="true">▶</span>
                                             </button>
                                             <x-ui.modal show="open" title="{{ $milestone->title }}">
-                                                <video controls autoplay class="zy-project-timeline__video" src="{{ $milestone->mediaUrl }}"></video>
+                                                <video controls autoplay muted class="zy-project-timeline__video" src="{{ $milestone->mediaUrl }}"></video>
                                             </x-ui.modal>
                                         </div>
                                     @else
